@@ -79,6 +79,8 @@ Each task prompts for paths, package IDs, and budgets so you can reuse them for 
 ```
 
 - **Frontend**: Provides a ready-to-wire React dashboard with components, hooks, and a lightweight utility for selecting Sui RPC endpoints. Run `npm install && npm run dev` inside `frontend/` to start iterating.
+- **Frontend**: Provides a ready-to-wire React dashboard with components, hooks, and a lightweight utility for selecting Sui RPC endpoints. Run `npm install && npm run dev` inside `frontend/` to start iterating.
+- **Dashboard data provider**: `frontend/src/providers/DashboardDataProvider.tsx` centralizes token summary polling, job queue polling, and the WebSocket event stream. Any component can call `useDashboardData()` to get the latest metrics plus refresh helpers, so the UI stays in sync without duplicating fetch logic.
 - **Backend**: Express API plus WebSocket broadcaster for live event feeds. Use `npm install && npm run dev` inside `backend/` to spin it up.
 - **Smart contract**: Minimal Move package that exposes a `crozz_token` module. Point the address in `Move.toml` to your published account before deployment.
 - **Configuration**: `.env` centralizes shared secrets (admin tokens, RPC URLs, keys) and `docker-compose.yml` wires frontend + backend containers for local orchestration.
@@ -92,6 +94,20 @@ docker compose up --build
 ```
 
 This will build both images and expose the backend on `localhost:4000` and the Vite dev server on `localhost:5173` with hot reload.
+
+### Configure the realtime dashboard provider
+
+The new `DashboardDataProvider` expects both the REST API and the WebSocket stream to be reachable from the browser. Create `frontend/.env` (or set env vars in your shell) with at least:
+
+```
+VITE_CROZZ_API_BASE_URL=http://localhost:4000
+VITE_CROZZ_ADMIN_TOKEN=changeme        # must match backend ADMIN_TOKEN for /api/admin/jobs
+VITE_CROZZ_WS_URL=ws://localhost:4000/events   # optional; auto-derived when omitted
+```
+
+- `TokenOverview`, `EventsFeed`, and `JobQueue` all read from the provider instead of fetching on their own. Use the refresh buttons on each card to trigger an immediate re-fetch without waiting for the background interval (15s for token summary, 5s for jobs).
+- When `VITE_CROZZ_ADMIN_TOKEN` is missing, the provider will surface a friendly error instead of spamming unauthorized requests, so the rest of the dashboard keeps working.
+- The Job Queue card now includes a drill-down modal to inspect payloads/results for each job; no extra wiring is needed as long as the admin token is set.
 
 ### Automate Sui deployment flows
 
@@ -201,6 +217,14 @@ operations.
 	your queue stays untouched until the configuration is present.
 - Job metadata now includes `status`, `attempts`, `error`, and `result` fields; failed jobs are automatically retried up
 	to three times with exponential back-off before being marked `failed` for manual intervention.
+
+#### Enable real transaction execution (beyond dry run)
+
+1. **Collect on-chain artifacts** – publish your Move package, then note the `CROZZ_PACKAGE_ID`, `CROZZ_TREASURY_CAP_ID`, `CROZZ_ADMIN_CAP_ID`, shared registry/object IDs, and confirm they all live on the same network as your backend RPC URL.
+2. **Fund a signing account** – export an Ed25519 private key from `sui keytool` (prefix with `ed25519:`) and keep it in a secrets manager. Make sure the account holds enough SUI for repeated mint/burn/distribute calls.
+3. **Update backend `.env`** – set `CROZZ_EXECUTOR_DRY_RUN=false` plus the IDs above, `SUI_ADMIN_PRIVATE_KEY`, and (optionally) `CROZZ_DEFAULT_SIGNER` for fallback recipients. Restart the backend so `[tx-executor] Worker started with interval ...` appears in the logs.
+4. **Test the loop** – queue a mint/burn/distribute job from the dashboard or API; watch `/api/admin/jobs` and the WebSocket feed progress from `queued → completed`, then verify the digest on Sui Explorer.
+5. **Harden for production** – move secrets out of `.env`, add log aggregation/alerts for failed jobs, tune `SUI_DEFAULT_GAS_BUDGET`, and adjust the executor’s `pollInterval`/`maxAttempts` once you know typical load.
 
 ### Bash smoke test (macOS/Linux)
 
@@ -345,12 +369,9 @@ The legacy docs link for the TypeScript SDK currently returns a 404, so start fr
 
 #### Job queue dashboard card
 
-- `frontend/src/components/Dashboard/JobQueue.tsx` polls `/api/admin/jobs` every five seconds and visualizes each job’s
-	status, attempts, and latest error/result. It automatically handles loading/error states for you.
-- Configure both backend `ADMIN_TOKEN` and frontend `VITE_CROZZ_ADMIN_TOKEN` with the same secret so the card can send
-	the required `Authorization: Bearer` header.
-- If `VITE_CROZZ_ADMIN_TOKEN` is missing, the UI displays a friendly reminder instead of repeatedly issuing unauthorized
-	requests.
+- `frontend/src/components/Dashboard/JobQueue.tsx` now consumes `useDashboardData`, so it shares the same polling cadence and cache as the rest of the dashboard. Manual refresh is available via the button on the card, and clicking a row opens a modal with payload/result JSON.
+- Configure both backend `ADMIN_TOKEN` and frontend `VITE_CROZZ_ADMIN_TOKEN` with the same secret so the provider can send the required `Authorization: Bearer` header to `/api/admin/jobs`.
+- When the admin token is missing, the provider returns a descriptive error which the card renders instead of repeatedly issuing unauthorized requests.
 
 **Wallet integration**
 
