@@ -55,19 +55,25 @@ const WalletConsole = () => {
   };
 
   return (
-    <Card title="Wallet Console">
-      <div className="wallet-console">
-        <div className="wallet-console__header">
-          <ConnectButton />
-          {account ? (
-            <p className="wallet-console__status">
-              Connected as <span>{account.address}</span>
-            </p>
-          ) : (
-            <p className="wallet-console__status">
-              Connect a wallet to run Sui calls.
-            </p>
-          )}
+    <Card
+      title="Wallet console"
+      description="Connect an admin wallet to inspect CROZZ metadata objects directly."
+    >
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white/60 p-4 dark:border-slate-800 dark:bg-slate-900/40">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600 dark:text-slate-300">
+            <ConnectButton />
+            {account ? (
+              <p>
+                Connected as
+                <span className="ml-2 font-mono text-xs text-slate-900 dark:text-white">
+                  {account.address}
+                </span>
+              </p>
+            ) : (
+              <p>Connect a wallet to run Sui calls.</p>
+            )}
+          </div>
         </div>
 
         <Button
@@ -78,8 +84,16 @@ const WalletConsole = () => {
           {loading ? "Fetching on-chain data…" : "Read metadata object"}
         </Button>
 
-        {error && <p className="wallet-console__error">{error}</p>}
-        {payload && <pre className="wallet-console__payload">{payload}</pre>}
+        {error && (
+          <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
+            {error}
+          </p>
+        )}
+        {payload && (
+          <pre className="max-h-72 overflow-auto rounded-2xl border border-slate-200/70 bg-slate-950/90 p-4 text-xs text-emerald-200 dark:border-slate-800">
+            {payload}
+          </pre>
+        )}
       </div>
     </Card>
   );

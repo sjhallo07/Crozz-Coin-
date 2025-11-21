@@ -1,9 +1,9 @@
 import { SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
-import { Theme } from "@radix-ui/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { defaultNetwork, networkConfig } from "../networkConfig";
+import { ThemeProvider } from "./ThemeProvider";
 
 const queryClient = new QueryClient();
 
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const SuiProviders = ({ children }: Props) => (
-  <Theme appearance="light">
+  <ThemeProvider>
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider
         networks={networkConfig}
@@ -24,5 +24,5 @@ export const SuiProviders = ({ children }: Props) => (
         </WalletProvider>
       </SuiClientProvider>
     </QueryClientProvider>
-  </Theme>
+  </ThemeProvider>
 );

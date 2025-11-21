@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  :root.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply min-h-screen bg-slate-50 text-slate-900 antialiased font-sans;
+    background-image: radial-gradient(
+        circle at 25% 25%,
+        rgba(90, 107, 255, 0.12),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 75% 0%,
+        rgba(56, 189, 248, 0.12),
+        transparent 35%
+      ),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.05), transparent 65%);
+    background-attachment: fixed;
+  }
+
+  html.dark body {
+    @apply bg-slate-950 text-slate-100;
+    background-image: radial-gradient(
+        circle at 25% 25%,
+        rgba(90, 107, 255, 0.22),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 75% 0%,
+        rgba(56, 189, 248, 0.25),
+        transparent 35%
+      ),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.85), transparent 65%);
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  ::selection {
+    @apply bg-brand-500/30 text-current;
+  }
+}
+
+@layer components {
+  .dashboard-shell {
+    @apply relative mx-auto flex max-w-7xl flex-col gap-10 px-4 pb-16 pt-8 sm:px-6 lg:px-8;
+  }
+
+  .dashboard-grid {
+    @apply grid gap-6 lg:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .dashboard-grid--wide {
+    @apply grid gap-6 lg:grid-cols-3;
+  }
+}

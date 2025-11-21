@@ -1,19 +1,51 @@
 import { useTokenData } from "../../hooks/useTokenData";
 import Card from "../UI/Card";
 
+const metricConfig = [
+  { key: "totalSupply", label: "Total supply", helper: "All minted CROZZ" },
+  { key: "circulating", label: "Circulating", helper: "In active wallets" },
+  { key: "holderCount", label: "Holders", helper: "Unique addresses" },
+] as const;
+
 const TokenOverview = () => {
   const { data, isLoading } = useTokenData();
 
   return (
-    <Card title="Crozz Coin Token Overview">
+    <Card
+      title="Token overview"
+      description="Snapshot sourced from the backend supply aggregator."
+    >
       {isLoading ? (
-        <p>Loading supply metrics…</p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {metricConfig.map((metric) => (
+            <div
+              key={metric.key}
+              className="animate-pulse rounded-2xl bg-slate-100/70 p-4 dark:bg-slate-800/60"
+            >
+              <div className="h-4 w-24 rounded bg-white/40" />
+              <div className="mt-4 h-6 w-32 rounded bg-white/60" />
+            </div>
+          ))}
+        </div>
       ) : (
-        <ul>
-          <li>Total Supply: {data.totalSupply}</li>
-          <li>Circulating: {data.circulating}</li>
-          <li>Holders: {data.holderCount}</li>
-        </ul>
+        <dl className="grid gap-4 md:grid-cols-3">
+          {metricConfig.map((metric) => (
+            <div
+              key={metric.key}
+              className="rounded-2xl border border-slate-200/70 bg-white/60 p-4 text-slate-900 shadow-sm dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-white"
+            >
+              <dt className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                {metric.label}
+              </dt>
+              <dd className="mt-2 text-2xl font-semibold">
+                {String(data[metric.key as keyof typeof data] ?? "—")}
+              </dd>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                {metric.helper}
+              </p>
+            </div>
+          ))}
+        </dl>
       )}
     </Card>
   );

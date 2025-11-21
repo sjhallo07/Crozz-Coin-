@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.5",
     "@mysten/dapp-kit": "^0.16.6",
     "@mysten/sui.js": "^0.54.1",
     "@radix-ui/themes": "^3.2.1",
@@ -19,6 +20,7 @@
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.0",
@@ -26,6 +28,6 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.4.5",
-    "vite": "^5.1.4"
+    "vite": "^7.2.4"
   }
 }

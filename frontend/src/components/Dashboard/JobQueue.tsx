@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Card from "../UI/Card";
 
 const API_BASE =
@@ -14,6 +14,15 @@ interface JobRecord {
   updatedAt?: string;
   createdAt?: string;
 }
+
+const statusStyles: Record<string, string> = {
+  queued: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
+  pending:
+    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
+  completed:
+    "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
+  failed: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300",
+};
 
 const JobQueue = () => {
   const [jobs, setJobs] = useState<JobRecord[]>([]);
@@ -57,40 +66,92 @@ const JobQueue = () => {
     };
   }, []);
 
+  const emptyState = useMemo(() => {
+    if (loading) {
+      return (
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Loading recent jobs…
+        </p>
+      );
+    }
+
+    if (error) {
+      return (
+        <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
+          {error}
+        </p>
+      );
+    }
+
+    if (jobs.length === 0) {
+      return (
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Queue is empty. Submit a mint/burn/distribution to populate it.
+        </p>
+      );
+    }
+
+    return null;
+  }, [loading, error, jobs.length]);
+
   return (
-    <Card title="Job Queue">
-      {loading && <p>Loading recent jobs…</p>}
-      {error && <p className="error">{error}</p>}
-      {!loading && !error && jobs.length === 0 && <p>No jobs yet.</p>}
-      {!loading && !error && jobs.length > 0 && (
-        <ul className="job-list">
+    <Card
+      title="Job queue"
+      description="Polled every 5s using the admin bearer token."
+    >
+      {emptyState ? (
+        emptyState
+      ) : (
+        <ul className="space-y-3">
           {jobs.map((job) => (
-            <li key={job.id}>
-              <div className="job-list__header">
-                <strong>{job.type}</strong>
-                <span className={`badge badge-${job.status}`}>
+            <li
+              key={job.id}
+              className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/50"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    {job.type}
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Attempts: {job.attempts}
+                  </p>
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    statusStyles[job.status] ??
+                    "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                  }`}
+                >
                   {job.status}
                 </span>
               </div>
-              <dl>
-                <div>
-                  <dt>ID</dt>
-                  <dd>{job.id}</dd>
+
+              <dl className="mt-4 grid gap-3 text-xs text-slate-500 dark:text-slate-400 md:grid-cols-2">
+                <div className="space-y-1 break-all">
+                  <dt className="font-semibold text-slate-400 dark:text-slate-500">
+                    Job ID
+                  </dt>
+                  <dd className="font-mono text-[11px]">{job.id}</dd>
                 </div>
-                <div>
-                  <dt>Attempts</dt>
-                  <dd>{job.attempts}</dd>
+                <div className="space-y-1">
+                  <dt className="font-semibold text-slate-400 dark:text-slate-500">
+                    Updated
+                  </dt>
+                  <dd>
+                    {job.updatedAt
+                      ? new Date(job.updatedAt).toLocaleTimeString()
+                      : "—"}
+                  </dd>
                 </div>
                 {job.error && (
-                  <div>
-                    <dt>Error</dt>
-                    <dd>{job.error}</dd>
-                  </div>
-                )}
-                {job.updatedAt && (
-                  <div>
-                    <dt>Updated</dt>
-                    <dd>{new Date(job.updatedAt).toLocaleTimeString()}</dd>
+                  <div className="space-y-1 md:col-span-2">
+                    <dt className="font-semibold text-slate-400 dark:text-slate-500">
+                      Error
+                    </dt>
+                    <dd className="text-rose-500 dark:text-rose-400">
+                      {job.error}
+                    </dd>
                   </div>
                 )}
               </dl>
