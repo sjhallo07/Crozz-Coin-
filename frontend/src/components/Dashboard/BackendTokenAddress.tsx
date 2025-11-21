@@ -1,10 +1,18 @@
 import axios from "axios";
-import type { ChangeEvent } from "react";
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 
-const initialForm = {
+interface BackendFormState {
+  packageId: string;
+  module: string;
+  functionName: string;
+  creator: string;
+  collection: string;
+  name: string;
+}
+
+const initialForm: BackendFormState = {
   packageId: import.meta.env.VITE_CROZZ_PACKAGE_ID ?? "",
   module: import.meta.env.VITE_CROZZ_MODULE ?? "crozz_token",
   functionName: import.meta.env.VITE_CROZZ_VIEW_FUNCTION ?? "get_icon_url",
@@ -13,8 +21,10 @@ const initialForm = {
   name: "",
 };
 
+const API_BASE_URL = import.meta.env.VITE_CROZZ_API_BASE_URL ?? "http://localhost:4000";
+
 const BackendTokenAddress = () => {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState<BackendFormState>(initialForm);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,7 +45,7 @@ const BackendTokenAddress = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/sui/token-address", {
+      const response = await axios.post(`${API_BASE_URL}/api/sui/token-address`, {
         packageId: form.packageId,
         module: form.module,
         functionName: form.functionName,

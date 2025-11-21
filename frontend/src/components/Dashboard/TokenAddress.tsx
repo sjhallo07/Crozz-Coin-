@@ -33,8 +33,12 @@ const TokenAddress = () => {
         gasBudget: GAS_BUDGET,
       });
 
-      const returnValue = response.effects?.events?.[0]?.parsedJson ?? response.txDigest;
-      setTokenAddress(typeof returnValue === "string" ? returnValue : JSON.stringify(returnValue));
+      const humanReadable = response.results?.length
+        ? JSON.stringify(response.results, null, 2)
+        : response.effects?.events?.[0]?.parsedJson
+          ? JSON.stringify(response.effects.events[0].parsedJson, null, 2)
+          : response.txDigest;
+      setTokenAddress(typeof humanReadable === "string" ? humanReadable : JSON.stringify(humanReadable));
     } catch (err) {
       console.error(err);
       setError("Unable to fetch token data. Check console for details.");
