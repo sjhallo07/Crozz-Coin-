@@ -18,11 +18,11 @@ param(
 )
 
 function Invoke-SuiCommand {
-    param([string[]]$Args)
-    Write-Host "\n> $SuiBinary $($Args -join ' ')" -ForegroundColor Cyan
-    $output = & $SuiBinary @Args
+    param([string[]]$CommandArgs)
+    Write-Host "\n> $SuiBinary $($CommandArgs -join ' ')" -ForegroundColor Cyan
+    $output = & $SuiBinary @CommandArgs
     if ($LASTEXITCODE -ne 0) {
-        throw "Command failed: $SuiBinary $($Args -join ' ')"
+        throw "Command failed: $SuiBinary $($CommandArgs -join ' ')"
     }
     return $output
 }
