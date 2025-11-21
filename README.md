@@ -172,6 +172,8 @@ CROZZ_REGISTRY_INITIAL_SHARED_VERSION=1
 - `POST /api/tokens/burn { coinId }` → Burns any CROZZ coin object that the backend signer currently owns.
 - `POST /api/tokens/transfer { coinId, recipient }` → Uses the plain `transfer` entry point to distribute CROZZ owned by
 	the signer to another address.
+- `GET /api/admin/jobs` → (Requires `Authorization: Bearer ADMIN_TOKEN`) Returns up to 100 recent jobs so you can monitor
+	queued/completed/failed states in the dashboard.
 
 Each endpoint records a short audit log via `TransactionService` so the WebSocket/event feed can stay in sync with admin
 operations.
@@ -340,6 +342,15 @@ The legacy docs link for the TypeScript SDK currently returns a 404, so start fr
 - The `WalletConsole` dashboard card (under `frontend/src/components/Dashboard/WalletConsole.tsx`) shows the active wallet address and, once connected, lets you fetch the metadata object defined by `VITE_CROZZ_METADATA_ID` directly through the connected Sui client.
 
 > Tip: The providers automatically pick up the same package/module/view env vars that `TokenAddress` and other helpers use, so you only define them once.
+
+#### Job queue dashboard card
+
+- `frontend/src/components/Dashboard/JobQueue.tsx` polls `/api/admin/jobs` every five seconds and visualizes each job’s
+	status, attempts, and latest error/result. It automatically handles loading/error states for you.
+- Configure both backend `ADMIN_TOKEN` and frontend `VITE_CROZZ_ADMIN_TOKEN` with the same secret so the card can send
+	the required `Authorization: Bearer` header.
+- If `VITE_CROZZ_ADMIN_TOKEN` is missing, the UI displays a friendly reminder instead of repeatedly issuing unauthorized
+	requests.
 
 **Wallet integration**
 

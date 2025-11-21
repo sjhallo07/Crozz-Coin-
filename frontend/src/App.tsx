@@ -1,5 +1,6 @@
 import BackendTokenAddress from "./components/Dashboard/BackendTokenAddress";
 import EventsFeed from "./components/Dashboard/EventsFeed";
+import JobQueue from "./components/Dashboard/JobQueue";
 import TokenActions from "./components/Dashboard/TokenActions";
 import TokenAddress from "./components/Dashboard/TokenAddress";
 import TokenOverview from "./components/Dashboard/TokenOverview";
@@ -13,6 +14,7 @@ const App = () => (
       <TokenOverview />
       <TokenActions />
       <EventsFeed />
+      <JobQueue />
       <TokenAddress />
       <BackendTokenAddress />
       <WalletConsole />

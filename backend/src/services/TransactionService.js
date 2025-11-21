@@ -75,8 +75,8 @@ class TransactionService {
     }
   }
 
-  list() {
-    return this.queue.slice(-50).reverse();
+  list({ limit = 50 } = {}) {
+    return this.queue.slice(-limit).reverse();
   }
 }
 
