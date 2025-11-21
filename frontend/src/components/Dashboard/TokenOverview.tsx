@@ -5,7 +5,7 @@ const TokenOverview = () => {
   const { data, isLoading } = useTokenData();
 
   return (
-    <Card title="Crozz Token Overview">
+    <Card title="Crozz Coin Token Overview">
       {isLoading ? (
         <p>Loading supply metrics…</p>
       ) : (

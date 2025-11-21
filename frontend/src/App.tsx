@@ -3,6 +3,7 @@ import EventsFeed from "./components/Dashboard/EventsFeed";
 import TokenActions from "./components/Dashboard/TokenActions";
 import TokenAddress from "./components/Dashboard/TokenAddress";
 import TokenOverview from "./components/Dashboard/TokenOverview";
+import WalletConsole from "./components/Dashboard/WalletConsole";
 import Header from "./components/Layout/Header";
 
 const App = () => (
@@ -14,6 +15,7 @@ const App = () => (
       <EventsFeed />
       <TokenAddress />
       <BackendTokenAddress />
+      <WalletConsole />
     </section>
   </main>
 );

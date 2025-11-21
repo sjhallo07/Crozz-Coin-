@@ -29,12 +29,12 @@ hide common build artifacts.
 
 Launch the VS Code command palette and choose **Tasks: Run Task** to access:
 
-| Task | What it does |
-| --- | --- |
-| `Sui: Move build` | Runs `sui move build` against the package path you supply. |
-| `Sui: Move test` | Executes `sui move test` for the selected package. |
-| `Sui: Publish package` | Publishes a Move package via `sui client publish`, prompting for gas budget. |
-| `Sui: Call Move function` | Invokes any module/function combo through `sui client call`. |
+| Task                      | What it does                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| `Sui: Move build`         | Runs `sui move build` against the package path you supply.                   |
+| `Sui: Move test`          | Executes `sui move test` for the selected package.                           |
+| `Sui: Publish package`    | Publishes a Move package via `sui client publish`, prompting for gas budget. |
+| `Sui: Call Move function` | Invokes any module/function combo through `sui client call`.                 |
 
 Each task prompts for paths, package IDs, and budgets so you can reuse them for every Move project inside the repo.
 
@@ -148,6 +148,33 @@ chain access.
 
    Internally the backend calls `suiClient.call({...})` with the supplied args and returns the raw SDK response under
    `tokenAddress`.
+
+### Token orchestration endpoints
+
+The backend now exposes first-class helpers for every CROZZ administrative flow. Configure the signer and on-chain
+capabilities inside `.env`:
+
+```
+SUI_PRIVATE_KEY=ed25519:BASE64_KEY
+CROZZ_PACKAGE_ID=0xPACKAGE
+CROZZ_MODULE=crozz_token
+CROZZ_TREASURY_CAP_ID=0xTREASURY_CAP
+CROZZ_METADATA_ID=0xMETADATA
+CROZZ_ADMIN_CAP_ID=0xADMIN_CAP
+CROZZ_REGISTRY_ID=0xREGISTRY
+CROZZ_REGISTRY_INITIAL_SHARED_VERSION=1
+```
+
+- `GET /api/tokens/summary` → Reads coin metadata, supply, and counts the verification registry entries to feed the
+	dashboard overview card.
+- `POST /api/tokens/mint { amount, recipient }` → Calls `mint` with the configured `TreasuryCap` and returns the
+	transaction digest.
+- `POST /api/tokens/burn { coinId }` → Burns any CROZZ coin object that the backend signer currently owns.
+- `POST /api/tokens/transfer { coinId, recipient }` → Uses the plain `transfer` entry point to distribute CROZZ owned by
+	the signer to another address.
+
+Each endpoint records a short audit log via `TransactionService` so the WebSocket/event feed can stay in sync with admin
+operations.
 
 ### Bash smoke test (macOS/Linux)
 
@@ -270,6 +297,14 @@ export async function mintCrozz({
 
 The legacy docs link for the TypeScript SDK currently returns a 404, so start from [docs.sui.io](https://docs.sui.io/) → **Developers** to locate the latest SDK reference and API examples.
 
+#### Built-in Sui dApp Kit wiring
+
+- `frontend/src/main.tsx` now wraps the app with `SuiProviders`, which in turn layers `@tanstack/react-query`, `@mysten/dapp-kit`'s `SuiClientProvider`, and the wallet provider plus Radix UI themes + `react-hot-toast`.
+- `frontend/src/networkConfig.ts` centralizes RPC + package IDs. Set `VITE_SUI_NETWORK` (defaults to `testnet`) or override the node URL with `VITE_SUI_RPC_URL` in `frontend/.env` to point at localnet or a gateway like Shinami.
+- The `WalletConsole` dashboard card (under `frontend/src/components/Dashboard/WalletConsole.tsx`) shows the active wallet address and, once connected, lets you fetch the metadata object defined by `VITE_CROZZ_METADATA_ID` directly through the connected Sui client.
+
+> Tip: The providers automatically pick up the same package/module/view env vars that `TokenAddress` and other helpers use, so you only define them once.
+
 **Wallet integration**
 
 - Support wallets such as Suiet, Ethos, or the Sui Wallet extension so end users can sign transactions you craft via the SDK.
@@ -286,3 +321,112 @@ The legacy docs link for the TypeScript SDK currently returns a 404, so start fr
 	`http://localhost:4000/api/sui/token-address` and then renders the JSON response.
 - This pattern is handy when you want the server to hold the signer or to gate access with middleware before calling
 	Sui.
+
+### Step-by-step React frontend integration (Sui dApp Kit)
+
+If you prefer to scaffold a wallet-connected dApp (instead of the simple demo cards in `frontend/`), reuse the
+official flow from the Sui docs ("Connect a frontend to a Move package"):
+
+1. **Prereqs**
+
+	- Move package already deployed (see the smart-contract folder or your own package).
+	- Node.js + `pnpm` (or `npm`) installed.
+	- A supported wallet (Slush, Sui Wallet, Ethos, etc.).
+
+2. **Project layout** (example)
+
+	```
+	sui-stack-app/
+	  move/
+	    hello-world/
+	  ui/
+	    src/
+	      App.tsx
+	      CreateGreeting.tsx
+	      Greeting.tsx
+	      constants.ts
+	      networkConfig.ts
+	      main.tsx
+	    package.json
+	    vite.config.mts
+	```
+
+3. **Wire your package + network**
+
+	```ts
+	// src/constants.ts
+	export const TESTNET_HELLO_WORLD_PACKAGE_ID = "0xYOUR_PACKAGE_ID";
+
+	// src/networkConfig.ts
+	import { TESTNET_HELLO_WORLD_PACKAGE_ID } from "./constants";
+
+	export const networkConfig = {
+	  testnet: {
+	    url: "https://fullnode.testnet.sui.io:443",
+	    packageId: TESTNET_HELLO_WORLD_PACKAGE_ID,
+	  },
+	};
+	```
+
+4. **Install dependencies**
+
+	```
+	cd ui
+	pnpm install
+	```
+
+5. **Run the app**
+
+	```
+	pnpm dev
+	```
+
+6. **Connect wallet + interact**
+
+	- Click "Connect Wallet" (the Sui dApp Kit ships Slush/Sui wallet connectors).
+	- Fire entry functions (e.g., `create`, `update`) from the UI and approve in the wallet popup.
+
+7. **Bootstrap entry point**
+
+	```tsx
+	// src/main.tsx
+	import "@mysten/dapp-kit/dist/index.css";
+	import "@radix-ui/themes/styles.css";
+	import { SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
+	import { Theme } from "@radix-ui/themes";
+	import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+	import { Toaster } from "react-hot-toast";
+	import App from "./App";
+	import { networkConfig } from "./networkConfig";
+
+	const queryClient = new QueryClient();
+
+	ReactDOM.createRoot(document.getElementById("root")!).render(
+	  <React.StrictMode>
+	    <Theme appearance="light">
+	      <QueryClientProvider client={queryClient}>
+	        <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+	          <WalletProvider autoConnect>
+	            <>
+	              <Toaster position="top-center" />
+	              <App />
+	            </>
+	          </WalletProvider>
+	        </SuiClientProvider>
+	      </QueryClientProvider>
+	    </Theme>
+	  </React.StrictMode>
+	);
+	```
+
+8. **Call Move functions**
+
+	Inside components such as `CreateGreeting.tsx`, use the dApp Kit hooks (e.g., `useSignAndExecuteTransactionBlock`) to
+	build a transaction targeting your module and submit it through the connected wallet.
+
+> References: [Sui Docs – App Frontends](https://docs.sui.io/guides/developer/app-frontends), Sui dApp Kit, Slush
+> wallet.
+
+### Branding assets
+
+- The header now renders `/crozz-logo.png`, copied into `frontend/public`. Swap the file with any other PNG/SVG to rebrand the dashboard instantly (Vite serves anything under `public/` at the site root).

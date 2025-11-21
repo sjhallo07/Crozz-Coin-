@@ -15,4 +15,32 @@ router.post("/mint", (req, res) => {
   res.status(202).json(record);
 });
 
+router.post("/burn", (req, res) => {
+  const { amount, owner } = req.body ?? {};
+  if (!amount) {
+    return res.status(400).json({ error: "amount is required" });
+  }
+
+  const record = transactionService.enqueue({
+    type: "burn",
+    payload: { amount, owner },
+  });
+
+  res.status(202).json(record);
+});
+
+router.post("/distribute", (req, res) => {
+  const { distributions } = req.body ?? {};
+  if (!Array.isArray(distributions) || distributions.length === 0) {
+    return res.status(400).json({ error: "distributions array is required" });
+  }
+
+  const record = transactionService.enqueue({
+    type: "distribute",
+    payload: { distributions },
+  });
+
+  res.status(202).json(record);
+});
+
 export default router;

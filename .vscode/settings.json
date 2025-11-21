@@ -44,10 +44,16 @@
   },
   "[markdown]": {
     "editor.wordWrap": "bounded",
-    "editor.quickSuggestions": false,
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    },
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
+  "cSpell.words": ["Crozz"],
+  "chat.agent.maxRequests": 50
 }
