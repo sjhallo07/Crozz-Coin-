@@ -1,0 +1,53 @@
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "workbench.startupEditor": "welcomePage",
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.inlineSuggest.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.suggestSelection": "first",
+  "files.associations": {
+    "*.move": "move",
+    "Move.toml": "toml"
+  },
+  "files.exclude": {
+    "**/target": true,
+    "**/.turbo": true
+  },
+  "files.watcherExclude": {
+    "**/target/**": true,
+    "**/.sui/**": true
+  },
+  "explorer.excludeGitIgnore": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
+  },
+  "github.copilot.inlineSuggest.enable": true,
+  "github.copilot.suggestionDelay": 75,
+  "github.copilot.chat.enable": true,
+  "github.copilot.chat.search.enabled": true,
+  "github.copilot.editor.enableCodeActions": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[move]": {
+    "editor.defaultFormatter": "mysten.move",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.wordWrap": "bounded",
+    "editor.quickSuggestions": false,
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+}
