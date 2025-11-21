@@ -176,6 +176,30 @@ CROZZ_REGISTRY_INITIAL_SHARED_VERSION=1
 Each endpoint records a short audit log via `TransactionService` so the WebSocket/event feed can stay in sync with admin
 operations.
 
+#### Background transaction executor
+
+- A new worker (`backend/src/services/TransactionExecutor.js`) wakes up every few seconds, dequeues pending jobs from
+	`TransactionService`, builds the appropriate `TransactionBlock`, signs with the admin key, and submits to Sui.
+- Enable it by copying `.env.example` → `.env` (backend root) and supplying:
+
+	```
+	SUI_RPC_URL=https://fullnode.testnet.sui.io
+	SUI_DEFAULT_GAS_BUDGET=10000000
+	SUI_ADMIN_PRIVATE_KEY=ed25519:BASE64_KEY
+	CROZZ_PACKAGE_ID=0xPACKAGE
+	CROZZ_TREASURY_CAP_ID=0xTREASURY_CAP
+	CROZZ_MODULE=crozz_token
+	CROZZ_DEFAULT_SIGNER=0xADMIN (optional fallback recipient)
+	CROZZ_EXECUTOR_DRY_RUN=false
+	```
+
+- Set `CROZZ_EXECUTOR_DRY_RUN=true` to simulate execution without hitting the chain (handy for CI/local smoke tests). In
+	dry-run mode, jobs are marked `completed` with a `mock: true` payload after validating inputs.
+- When `SUI_ADMIN_PRIVATE_KEY` or object IDs are missing, the worker does **not** start and the server logs a warning so
+	your queue stays untouched until the configuration is present.
+- Job metadata now includes `status`, `attempts`, `error`, and `result` fields; failed jobs are automatically retried up
+	to three times with exponential back-off before being marked `failed` for manual intervention.
+
 ### Bash smoke test (macOS/Linux)
 
 Prefer a lightweight sanity check from a Unix shell? Use the scripted flow in `scripts/test_crozz.sh`:

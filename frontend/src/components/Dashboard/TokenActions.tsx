@@ -38,10 +38,9 @@ const TokenActions = () => {
   };
 
   const handleBurn = async () => {
-    const amount = window.prompt("Enter amount to burn (e.g. 100)");
-    const owner = window.prompt("Owner address (optional)");
-    if (!amount) return;
-    await post("burn", { amount, owner });
+    const coinId = window.prompt("Enter the CROZZ coin object ID to burn");
+    if (!coinId) return;
+    await post("burn", { coinId });
   };
 
   const handleDistribute = async () => {

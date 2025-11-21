@@ -16,14 +16,14 @@ router.post("/mint", (req, res) => {
 });
 
 router.post("/burn", (req, res) => {
-  const { amount, owner } = req.body ?? {};
-  if (!amount) {
-    return res.status(400).json({ error: "amount is required" });
+  const { coinId } = req.body ?? {};
+  if (!coinId) {
+    return res.status(400).json({ error: "coinId is required" });
   }
 
   const record = transactionService.enqueue({
     type: "burn",
-    payload: { amount, owner },
+    payload: { coinId },
   });
 
   res.status(202).json(record);

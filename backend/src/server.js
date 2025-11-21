@@ -1,9 +1,11 @@
 import cors from "cors";
+import "dotenv/config";
 import express from "express";
 import adminRouter from "./routes/admin.js";
 import eventsRouter from "./routes/events.js";
 import suiRouter from "./routes/sui.js";
 import tokensRouter from "./routes/tokens.js";
+import { transactionExecutor } from "./services/TransactionExecutor.js";
 import { webSocketService } from "./services/WebSocketService.js";
 
 const app = express();
@@ -21,3 +23,4 @@ const server = app.listen(port, () => {
 });
 
 webSocketService.attach(server);
+transactionExecutor.start();
