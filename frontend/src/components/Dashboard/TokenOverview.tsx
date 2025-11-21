@@ -1,4 +1,6 @@
-import { useTokenData } from "../../hooks/useTokenData";
+import { useState } from "react";
+import { useDashboardData } from "../../providers/DashboardDataProvider";
+import Button from "../UI/Button";
 import Card from "../UI/Card";
 
 const metricConfig = [
@@ -8,14 +10,38 @@ const metricConfig = [
 ] as const;
 
 const TokenOverview = () => {
-  const { data, isLoading } = useTokenData();
+  const { tokenSummary, summaryLoading, summaryError, refreshSummary } =
+    useDashboardData();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refreshSummary();
+    setRefreshing(false);
+  };
 
   return (
     <Card
       title="Token overview"
       description="Snapshot sourced from the backend supply aggregator."
+      actions={
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          {refreshing ? "Refreshing…" : "Refresh"}
+        </Button>
+      }
     >
-      {isLoading ? (
+      {summaryError && (
+        <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
+          {summaryError}
+        </p>
+      )}
+
+      {summaryLoading ? (
         <div className="grid gap-4 md:grid-cols-3">
           {metricConfig.map((metric) => (
             <div
@@ -38,7 +64,9 @@ const TokenOverview = () => {
                 {metric.label}
               </dt>
               <dd className="mt-2 text-2xl font-semibold">
-                {String(data[metric.key as keyof typeof data] ?? "—")}
+                {String(
+                  tokenSummary[metric.key as keyof typeof tokenSummary] ?? "—"
+                )}
               </dd>
               <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {metric.helper}

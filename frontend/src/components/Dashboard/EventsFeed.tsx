@@ -1,17 +1,35 @@
-import { useWebSocket } from "../../hooks/useWebSocket";
+import { useDashboardData } from "../../providers/DashboardDataProvider";
 import Card from "../UI/Card";
 
 const EventsFeed = () => {
-  const events = useWebSocket();
+  const { events, eventsConnected } = useDashboardData();
 
   return (
     <Card
       title="Live events"
       description="WebSocket stream emitted by the backend dispatcher."
+      actions={
+        <span
+          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+            eventsConnected
+              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+              : "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200"
+          }`}
+        >
+          <span
+            className={`inline-block h-2 w-2 rounded-full ${
+              eventsConnected ? "bg-emerald-500" : "bg-amber-400"
+            }`}
+          />
+          {eventsConnected ? "Connected" : "Reconnecting…"}
+        </span>
+      }
     >
       {events.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300/70 bg-white/40 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
-          Listening for mint/burn/distribution activity…
+          {eventsConnected
+            ? "Listening for mint/burn/distribution activity…"
+            : "Waiting for socket to reconnect"}
         </div>
       ) : (
         <ul className="space-y-3">
