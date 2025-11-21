@@ -266,6 +266,18 @@ export default function TokenAddress() {
 }
 ```
 
+### Crozz integration roadmap (next steps)
+
+Use this lightweight checklist to continue wiring the dashboard, backend, and Move contracts together:
+
+1. **Transaction executor service** – Extend the backend with a worker (e.g., `TransactionExecutor`) that reads from `TransactionService.queue`, builds `TransactionBlock`s via `@mysten/sui.js`, signs them with an admin key (or forwards to a wallet), submits to Sui, and updates job records with status/digests. Include retry/backoff and structured logging. This unlocks real mint/burn/distribute execution beyond queueing.
+2. **Wallet-integrated admin UI** – Replace the prompt-based `TokenActions` inputs with proper forms and leverage `@mysten/dapp-kit` so privileged flows can be signed directly in-wallet when desired. Add success/error toasts, optimistic updates to `useTokenData`, and integrate the new backend responses.
+3. **Anti-bot + freeze controls** – Expose Move functions such as `verify_human`, `guarded_transfer`, `freeze_wallet`, and `toggle_global_freeze` via REST endpoints (with admin auth) and corresponding dashboard cards. Surface registry state, freeze status, and audit events to the live feed.
+4. **Data + oracle integrations** – Finish collecting docs and wiring services for LayerZero messaging, Sui indexer APIs, Goldsky and Dune data sinks, Terraform/Dubhe infra-as-code, plus oracle price feeds (Pyth, Switchboard). Capture any missing references in `/docs/` so future contributors have a single knowledge base.
+5. **Security + QA** – Add automated Move Prover checks, SuiSecBlockList validation, end-to-end smoke suites (CI job that runs backend/frontend tests), and environment provisioning scripts that hydrate `.env` files from a secrets manager. Use the new `.env.example` as the template for required variables across backend + Vite frontend.
+
+Tracking these milestones alongside the existing APIs will ensure the CROZZ dashboard exercises every contract capability—minting, distribution, registry verification, and cross-chain data ingestion—while staying production ready.
+
 Sample mint helper (executed after a wallet signs the transaction block):
 
 ```
