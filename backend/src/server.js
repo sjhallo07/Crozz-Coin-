@@ -21,6 +21,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint for Kubernetes probes
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
+// Readiness check endpoint
+app.get("/ready", (req, res) => {
+  // Add any readiness checks here (database, external services, etc.)
+  res.status(200).json({ status: "ready", timestamp: new Date().toISOString() });
+});
+
 app.use("/api/tokens", tokensRouter);
 app.use("/api/events", eventsRouter);
 app.use("/api/admin", adminRouter);

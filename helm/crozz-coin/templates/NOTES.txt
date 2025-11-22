@@ -1,0 +1,59 @@
+Thank you for installing {{ .Chart.Name }} version {{ .Chart.Version }}!
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+{{ if .Values.ingress.enabled }}
+Your application will be available at:
+{{- range .Values.ingress.hosts }}
+  - https://{{ .host }}
+{{- end }}
+{{ else }}
+To access your application:
+
+1. Get the backend URL:
+   export BACKEND_POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=crozz-backend" -o jsonpath="{.items[0].metadata.name}")
+   kubectl --namespace {{ .Release.Namespace }} port-forward $BACKEND_POD 4000:4000
+
+2. Get the frontend URL:
+   export FRONTEND_POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=crozz-frontend" -o jsonpath="{.items[0].metadata.name}")
+   kubectl --namespace {{ .Release.Namespace }} port-forward $FRONTEND_POD 8080:80
+
+Then visit http://127.0.0.1:4000 (backend) and http://127.0.0.1:8080 (frontend)
+{{ end }}
+
+Security Features Enabled:
+{{ if .Values.security.networkPolicy.enabled }}✓ Network Policies{{ else }}✗ Network Policies{{ end }}
+{{ if .Values.security.rbac.create }}✓ RBAC{{ else }}✗ RBAC{{ end }}
+{{ if .Values.security.podSecurityPolicy.enabled }}✓ Pod Security Standards{{ else }}✗ Pod Security Standards{{ end }}
+{{ if .Values.security.sealedSecrets.enabled }}✓ Sealed Secrets{{ else }}✗ Sealed Secrets (consider enabling for production){{ end }}
+
+{{ if .Values.monitoring.enabled }}
+Monitoring:
+{{ if .Values.monitoring.prometheus.enabled }}✓ Prometheus metrics available at /metrics{{ end }}
+{{ if .Values.monitoring.grafana.enabled }}✓ Grafana dashboards ready{{ end }}
+{{ end }}
+
+{{ if eq .Values.backend.autoscaling.enabled true }}
+Autoscaling:
+✓ Backend HPA: {{ .Values.backend.autoscaling.minReplicas }}-{{ .Values.backend.autoscaling.maxReplicas }} replicas
+✓ Frontend HPA: {{ .Values.frontend.autoscaling.minReplicas }}-{{ .Values.frontend.autoscaling.maxReplicas }} replicas
+{{ end }}
+
+IMPORTANT SECURITY NOTES:
+1. Update all secrets in values.yaml or use external secret management
+2. Configure TLS certificates for ingress
+3. Review and apply appropriate network policies
+4. Enable sealed-secrets for production deployments
+5. Configure backup and disaster recovery procedures
+
+For hybrid cloud deployment:
+- AWS: Apply k8s/hybrid-cloud/aws-deployment.yaml
+- GCP: Apply k8s/hybrid-cloud/gcp-deployment.yaml
+- Azure: Apply k8s/hybrid-cloud/azure-deployment.yaml
+
+Documentation: https://github.com/sjhallo07/Crozz-Coin-

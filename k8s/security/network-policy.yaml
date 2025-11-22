@@ -1,0 +1,108 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: crozz-backend-network-policy
+  namespace: crozz-coin
+spec:
+  podSelector:
+    matchLabels:
+      app: crozz-backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow traffic from frontend
+  - from:
+    - podSelector:
+        matchLabels:
+          app: crozz-frontend
+    ports:
+    - protocol: TCP
+      port: 4000
+  # Allow traffic from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 4000
+  # Allow monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 4000
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+  # Allow external API calls (Sui blockchain)
+  - to:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: crozz-frontend-network-policy
+  namespace: crozz-coin
+spec:
+  podSelector:
+    matchLabels:
+      app: crozz-frontend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow traffic from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  # Allow DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+  # Allow calls to backend
+  - to:
+    - podSelector:
+        matchLabels:
+          app: crozz-backend
+    ports:
+    - protocol: TCP
+      port: 4000
+---
+# Default deny all ingress and egress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: crozz-coin
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress

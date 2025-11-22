@@ -1,0 +1,54 @@
+{
+  "dashboard": {
+    "title": "Crozz Coin Dashboard",
+    "tags": ["crozz", "blockchain"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Backend Pod Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(kube_pod_status_phase{namespace=\"crozz-coin\",pod=~\"crozz-backend-.*\",phase=\"Running\"})"
+          }
+        ]
+      },
+      {
+        "title": "Frontend Pod Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(kube_pod_status_phase{namespace=\"crozz-coin\",pod=~\"crozz-frontend-.*\",phase=\"Running\"})"
+          }
+        ]
+      },
+      {
+        "title": "CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{namespace=\"crozz-coin\"}[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{namespace=\"crozz-coin\"}"
+          }
+        ]
+      },
+      {
+        "title": "HTTP Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{namespace=\"crozz-coin\"}[5m])"
+          }
+        ]
+      }
+    ]
+  }
+}

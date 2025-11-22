@@ -1,0 +1,191 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crozz-backend
+  namespace: crozz-coin
+  labels:
+    app: crozz-backend
+    tier: backend
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: crozz-backend
+  template:
+    metadata:
+      labels:
+        app: crozz-backend
+        tier: backend
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: crozz-backend-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - crozz-backend
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: backend
+        image: crozz-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 4000
+          protocol: TCP
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: PORT
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: NODE_ENV
+        - name: SUI_RPC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: SUI_RPC_URL
+        - name: SUI_DEFAULT_GAS_BUDGET
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: SUI_DEFAULT_GAS_BUDGET
+        - name: CROZZ_MODULE
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: CROZZ_MODULE
+        - name: CROZZ_EXECUTOR_DRY_RUN
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: CROZZ_EXECUTOR_DRY_RUN
+        - name: JWT_ISSUER
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: JWT_ISSUER
+        - name: JWT_ACCESS_TTL_MS
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: JWT_ACCESS_TTL_MS
+        - name: JWT_REFRESH_TTL_MS
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: JWT_REFRESH_TTL_MS
+        - name: BCRYPT_SALT_ROUNDS
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-backend-config
+              key: BCRYPT_SALT_ROUNDS
+        # Secrets
+        - name: SUI_ADMIN_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: SUI_ADMIN_PRIVATE_KEY
+        - name: ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: ADMIN_TOKEN
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: JWT_SECRET
+        - name: CROZZ_PACKAGE_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_PACKAGE_ID
+        - name: CROZZ_TREASURY_CAP_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_TREASURY_CAP_ID
+        - name: CROZZ_ADMIN_CAP_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_ADMIN_CAP_ID
+        - name: CROZZ_REGISTRY_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_REGISTRY_ID
+        - name: CROZZ_METADATA_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_METADATA_ID
+        - name: CROZZ_DEFAULT_SIGNER
+          valueFrom:
+            secretKeyRef:
+              name: crozz-backend-secrets
+              key: CROZZ_DEFAULT_SIGNER
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+      volumes:
+      - name: data
+        emptyDir: {}

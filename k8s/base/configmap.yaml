@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crozz-backend-config
+  namespace: crozz-coin
+  labels:
+    app: crozz-backend
+data:
+  SUI_RPC_URL: "https://fullnode.testnet.sui.io"
+  SUI_DEFAULT_GAS_BUDGET: "10000000"
+  PORT: "4000"
+  CROZZ_MODULE: "crozz_token"
+  CROZZ_EXECUTOR_DRY_RUN: "false"
+  JWT_ISSUER: "crozz-auth"
+  JWT_ACCESS_TTL_MS: "900000"
+  JWT_REFRESH_TTL_MS: "2592000000"
+  PASSWORD_RESET_TTL_MS: "900000"
+  BCRYPT_SALT_ROUNDS: "12"
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crozz-frontend-config
+  namespace: crozz-coin
+  labels:
+    app: crozz-frontend
+data:
+  VITE_CROZZ_API_BASE_URL: "http://crozz-backend-service:4000"
+  VITE_CROZZ_MODULE: "crozz_token"
+  VITE_CROZZ_VIEW_FUNCTION: "get_icon_url"
+  VITE_CROZZ_GAS_BUDGET: "10000000"
+  VITE_SUI_CLOCK_OBJECT: "0x6"
