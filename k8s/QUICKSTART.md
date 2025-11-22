@@ -154,6 +154,33 @@ az aks create \
 kubectl apply -f k8s/hybrid-cloud/azure-deployment.yaml
 ```
 
+### IBM Cloud IKS (FREE TIER) ⭐
+```bash
+# Install IBM Cloud CLI
+curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+ibmcloud login
+ibmcloud plugin install kubernetes-service
+
+# Create FREE cluster (no credit card!)
+ibmcloud ks cluster create classic \
+  --name crozz-coin-free \
+  --location dal13 \
+  --machine-type free \
+  --workers 1
+
+# Configure kubectl
+ibmcloud ks cluster config --cluster crozz-coin-free
+
+# Deploy with free tier optimizations
+kubectl apply -f k8s/hybrid-cloud/ibm-deployment.yaml
+kubectl scale deployment --all --replicas=1 -n crozz-coin
+```
+
+**Why IBM Cloud Free Tier?**
+- ✅ Forever FREE (no expiration)
+- ✅ No credit card required
+- ✅ Perfect for your existing free tier account!
+
 ## 📖 Documentation
 
 - **Full Guide**: [k8s/README.md](./README.md)

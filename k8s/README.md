@@ -184,12 +184,19 @@ All cloud infrastructure uses **hourly billing** with no commitments:
 
 **You only pay for what you use!** Stop the cluster when not needed.
 
-### FREE Testing: 90 Days
+### FREE Testing Options
 
 **Cloud Free Trials:**
 - ✅ **AWS**: $300 credits for 90 days ([Sign up](https://aws.amazon.com/free/))
 - ✅ **GCP**: $300 credits for 90 days ([Sign up](https://cloud.google.com/free/))
 - ✅ **Azure**: $200 credits for 30 days ([Sign up](https://azure.microsoft.com/free/))
+- ✅ **IBM Cloud**: Always Free Tier - Never expires! ([Sign up](https://cloud.ibm.com/registration)) ⭐
+
+**IBM Cloud Free Tier (Recommended for Long-term Testing):**
+- 1 worker node (2 vCPU, 4GB RAM) - **Forever FREE**
+- 20GB storage included
+- No credit card required
+- Perfect for development and testing
 
 **Local Testing (Unlimited):**
 ```bash
@@ -341,6 +348,69 @@ spec:
    ```bash
    kubectl apply -f k8s/hybrid-cloud/azure-deployment.yaml
    ```
+
+3. **Configure Azure AD Workload Identity:**
+   ```bash
+   az identity create --name crozz-backend-identity --resource-group crozz-coin-rg
+   ```
+
+### IBM Cloud (IKS) - FREE TIER Available! ⭐
+
+**Perfect for long-term free testing with your IBM Cloud free tier account!**
+
+1. **Install IBM Cloud CLI:**
+   ```bash
+   curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+   ibmcloud login
+   ibmcloud plugin install kubernetes-service
+   ```
+
+2. **Create FREE cluster:**
+   ```bash
+   # Free tier cluster (no credit card required!)
+   ibmcloud ks cluster create classic \
+     --name crozz-coin-free \
+     --location dal13 \
+     --machine-type free \
+     --workers 1
+   
+   # Wait for cluster to be ready (15-20 minutes)
+   ibmcloud ks cluster get --cluster crozz-coin-free
+   
+   # Configure kubectl
+   ibmcloud ks cluster config --cluster crozz-coin-free
+   ```
+
+3. **Apply IBM Cloud-specific configs:**
+   ```bash
+   kubectl apply -f k8s/hybrid-cloud/ibm-deployment.yaml
+   ```
+
+4. **Deploy with free tier optimizations:**
+   ```bash
+   # Deploy base configuration
+   kubectl apply -f k8s/base/
+   
+   # Scale to 1 replica (free tier has 1 worker node)
+   kubectl scale deployment crozz-backend --replicas=1 -n crozz-coin
+   kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
+   ```
+
+5. **Access your application:**
+   ```bash
+   # Get worker node public IP
+   ibmcloud ks workers --cluster crozz-coin-free
+   
+   # Get service details
+   kubectl get svc -n crozz-coin
+   ```
+
+**IBM Cloud Free Tier Benefits:**
+- ✅ 1 worker node (2 vCPU, 4GB RAM) - Forever FREE
+- ✅ 20GB block storage included
+- ✅ Load balancer included
+- ✅ No expiration - perfect for development!
+- ✅ No credit card required
 
 3. **Configure Azure AD Workload Identity:**
    ```bash

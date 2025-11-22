@@ -42,6 +42,7 @@ All major cloud providers offer **free trial credits**:
 | **AWS** | $300 | 90 days | Full production testing |
 | **GCP** | $300 | 90 days | Complete implementation |
 | **Azure** | $200 | 30 days | Initial proof-of-concept |
+| **IBM Cloud** | Always Free Tier | Unlimited | Long-term free hosting ✅ |
 
 **With free credits, you can:**
 - ✅ Test the complete Kubernetes setup
@@ -49,11 +50,19 @@ All major cloud providers offer **free trial credits**:
 - ✅ Validate all features (auto-scaling, monitoring, security)
 - ✅ Load test and benchmark performance
 
+**IBM Cloud Free Tier (No Expiration):**
+- ✅ **1 worker node** (2 vCPU, 4GB RAM)
+- ✅ **20GB block storage**
+- ✅ **Network egress included**
+- ✅ **Load balancer included**
+- ✅ **No credit card required**
+- ✅ **Never expires** - perfect for long-term testing!
+
 **Steps to get started:**
 1. Sign up for cloud provider free trial
 2. Use the provided credits
 3. Deploy using our automation scripts
-4. Test for 30-90 days at no cost
+4. Test for 30-90 days at no cost (or unlimited with IBM Cloud!)
 
 ---
 
@@ -331,17 +340,189 @@ A: Yes! All Kubernetes configs work across AWS/GCP/Azure. Just apply the cloud-s
 
 ---
 
+## 🎁 IBM Cloud Free Tier (Your Best Option!)
+
+### Why IBM Cloud Free Tier is Perfect for Crozz Coin
+
+Since you have an **IBM Cloud free tier account**, this is an excellent option for running Crozz Coin:
+
+**IBM Cloud Free Tier Benefits:**
+- ✅ **Always Free** - Never expires (unlike AWS/GCP 90-day trials)
+- ✅ **No Credit Card Required** - True free tier
+- ✅ **1 Worker Node** - 2 vCPU, 4GB RAM (perfect for testing)
+- ✅ **20GB Block Storage** - Included
+- ✅ **Load Balancer** - Included
+- ✅ **Network Egress** - Included
+- ✅ **Perfect for Development** - Long-term hosting at zero cost
+
+### Deploy to IBM Cloud Free Tier
+
+#### Step 1: Install IBM Cloud CLI
+
+```bash
+# Install IBM Cloud CLI
+curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+
+# Login to IBM Cloud
+ibmcloud login
+
+# Install Kubernetes plugin
+ibmcloud plugin install kubernetes-service
+```
+
+#### Step 2: Create Free Kubernetes Cluster
+
+```bash
+# Create free tier cluster (takes 15-20 minutes)
+ibmcloud ks cluster create classic \
+  --name crozz-coin-free \
+  --location dal13 \
+  --machine-type free \
+  --workers 1
+
+# Wait for cluster to be ready
+ibmcloud ks cluster get --cluster crozz-coin-free
+
+# Configure kubectl
+ibmcloud ks cluster config --cluster crozz-coin-free
+```
+
+#### Step 3: Deploy Crozz Coin (Free Tier Optimized)
+
+```bash
+# Apply IBM Cloud-specific configuration
+kubectl apply -f k8s/hybrid-cloud/ibm-deployment.yaml
+
+# Deploy with single replica (for free tier)
+kubectl apply -f k8s/base/namespace.yaml
+kubectl apply -f k8s/base/configmap.yaml
+kubectl apply -f k8s/base/secret.yaml
+
+# Deploy with minimal resources
+kubectl apply -f k8s/base/backend-deployment.yaml
+kubectl apply -f k8s/base/frontend-deployment.yaml
+
+# Scale to 1 replica (free tier optimization)
+kubectl scale deployment crozz-backend --replicas=1 -n crozz-coin
+kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
+
+# Apply services
+kubectl apply -f k8s/base/services.yaml
+```
+
+#### Step 4: Access Your Application
+
+```bash
+# Get the public IP
+ibmcloud ks workers --cluster crozz-coin-free
+
+# Access backend
+kubectl get svc crozz-backend-service -n crozz-coin
+
+# Access frontend
+kubectl get svc crozz-frontend-service -n crozz-coin
+```
+
+### IBM Cloud Free Tier Limitations
+
+**What's Included (FREE Forever):**
+- 1 worker node (2 vCPU, 4GB RAM)
+- 20GB block storage
+- Network egress
+- Load balancer
+- No expiration!
+
+**Optimization Tips for Free Tier:**
+1. **Run 1 replica** of each service instead of 3
+2. **Reduce resource requests**:
+   - Backend: 50m CPU, 64Mi RAM
+   - Frontend: 25m CPU, 32Mi RAM
+3. **Disable auto-scaling** (HPA) on free tier
+4. **Use for development/testing** - perfect for long-term testing!
+
+### Resource Configuration for IBM Cloud Free Tier
+
+```yaml
+# Optimized for IBM Cloud Free Tier
+backend:
+  replicas: 1  # Instead of 3
+  resources:
+    requests:
+      cpu: 50m      # Instead of 100m
+      memory: 64Mi  # Instead of 128Mi
+    limits:
+      cpu: 200m     # Instead of 500m
+      memory: 256Mi # Instead of 512Mi
+
+frontend:
+  replicas: 1  # Instead of 3
+  resources:
+    requests:
+      cpu: 25m     # Instead of 50m
+      memory: 32Mi # Instead of 64Mi
+    limits:
+      cpu: 100m    # Instead of 200m
+      memory: 128Mi # Instead of 256Mi
+```
+
+### Cost Comparison: IBM Cloud Free Tier vs Others
+
+| Feature | IBM Cloud Free | AWS Free Trial | GCP Free Trial |
+|---------|----------------|----------------|----------------|
+| **Duration** | ✅ **Forever** | 90 days | 90 days |
+| **Credits** | N/A | $300 | $300 |
+| **Worker Nodes** | 1 (2vCPU/4GB) | Multiple | Multiple |
+| **Storage** | 20GB | Varies | Varies |
+| **Credit Card** | ❌ Not required | ✅ Required | ✅ Required |
+| **After Trial** | ✅ Still free | 💰 Pay-as-you-go | 💰 Pay-as-you-go |
+| **Best For** | Long-term dev/test | Production testing | Full-scale testing |
+
+### Why IBM Cloud Free Tier is Great for You
+
+**Perfect for:**
+- ✅ Long-term development and testing
+- ✅ Learning Kubernetes without costs
+- ✅ Running small production workloads
+- ✅ Proof-of-concept demonstrations
+- ✅ Educational projects
+
+**Important Notes:**
+- Single worker node limits you to **1 replica per deployment**
+- Perfect for testing the complete setup
+- Can upgrade to paid tier anytime for more resources
+- No surprise bills - truly free!
+
+---
+
 ## 🎉 Bottom Line
 
-**You get 90 days of FREE testing** with cloud free trials, plus unlimited local testing with Minikube!
+### If You Have IBM Cloud Free Tier
+
+**You're in luck!** You can run Crozz Coin **forever at zero cost**:
+
+```bash
+# Deploy to IBM Cloud Free Tier
+ibmcloud ks cluster create classic --name crozz-coin-free --machine-type free --workers 1
+kubectl apply -f k8s/hybrid-cloud/ibm-deployment.yaml
+kubectl scale deployment --all --replicas=1 -n crozz-coin
+```
+
+**No expiration, no credit card, no surprise bills!**
+
+### For Others
+
+**You get 90 days of FREE testing** with AWS/GCP/Azure trials, plus unlimited local testing with Minikube!
 
 **Start testing today:**
 ```bash
-# Option 1: Local (FREE, unlimited)
+# Option 1: IBM Cloud Free Tier (FREE, unlimited) ⭐
+ibmcloud ks cluster create classic --name crozz-coin-free --machine-type free
+
+# Option 2: Local (FREE, unlimited)
 minikube start
 ./k8s/scripts/deploy.sh production
 
-# Option 2: Cloud Trial (FREE, 90 days)
+# Option 3: Cloud Trial (FREE, 90 days)
 # Sign up → Deploy → Test for 90 days at no cost
 ```
 

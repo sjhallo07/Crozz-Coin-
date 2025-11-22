@@ -1,0 +1,100 @@
+# IBM Cloud-specific configurations for IKS deployment
+---
+# StorageClass for IBM Cloud Block Storage
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: crozz-ibm-block
+provisioner: ibm.io/ibmc-block
+parameters:
+  type: "Performance"
+  iopsPerGB: "10"
+  sizeRange: "[20-12000]Gi"
+  billingType: "hourly"
+  encrypted: "true"
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+# PersistentVolumeClaim for backend data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crozz-backend-data-ibm
+  namespace: crozz-coin
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: crozz-ibm-block
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Service with IBM Cloud Load Balancer annotations
+apiVersion: v1
+kind: Service
+metadata:
+  name: crozz-backend-lb-ibm
+  namespace: crozz-coin
+  annotations:
+    service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: "public"
+    service.kubernetes.io/ibm-load-balancer-cloud-provider-zone: "dal13"
+spec:
+  type: LoadBalancer
+  selector:
+    app: crozz-backend
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 4000
+    protocol: TCP
+---
+# ConfigMap with IBM Cloud-specific settings
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crozz-ibm-config
+  namespace: crozz-coin
+data:
+  IBM_CLOUD_REGION: "us-south"
+  IBM_RESOURCE_GROUP: "default"
+  IBM_COS_BUCKET: "crozz-coin-backups"
+  ENABLE_IBM_KEY_PROTECT: "true"
+---
+# Example using IBM Cloud Object Storage for backups
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ibm-cos-config
+  namespace: crozz-coin
+data:
+  cos-endpoint: "s3.us-south.cloud-object-storage.appdomain.cloud"
+  cos-bucket-name: "crozz-coin-backups"
+---
+# Notes for IBM Cloud deployment:
+# 
+# 1. IBM Cloud Free Tier includes:
+#    - 1 worker node cluster (2 vCPU, 4GB RAM)
+#    - 20GB block storage
+#    - Network egress
+#    - Load balancer
+#
+# 2. To create IKS cluster:
+#    ibmcloud ks cluster create classic \
+#      --name crozz-coin-cluster \
+#      --location dal13 \
+#      --machine-type b3c.4x16 \
+#      --workers 1 \
+#      --public-vlan <your-vlan-id> \
+#      --private-vlan <your-vlan-id>
+#
+# 3. For free tier, use single worker configuration:
+#    kubectl scale deployment crozz-backend --replicas=1 -n crozz-coin
+#    kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
+#
+# 4. IBM Cloud Object Storage (COS) for backups:
+#    ibmcloud cos bucket-create --bucket crozz-coin-backups \
+#      --ibm-service-instance-id <instance-id> \
+#      --region us-south
+#
+# 5. IBM Key Protect for secret management:
+#    ibmcloud kp create crozz-secrets --output json
