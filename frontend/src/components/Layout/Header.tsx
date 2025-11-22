@@ -1,4 +1,4 @@
-import { type SVGProps } from "react";
+import { type SVGProps, useEffect, useState } from "react";
 import { defaultNetwork } from "../../networkConfig";
 import { useThemeMode } from "../../providers/ThemeProvider";
 import Button from "../UI/Button";
@@ -6,13 +6,32 @@ import Button from "../UI/Button";
 const Header = () => {
   const { theme, toggleTheme } = useThemeMode();
   const isDark = theme === "dark";
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatUTCTime = (date: Date) => {
+    return date.toUTCString().replace("GMT", "UTC");
+  };
 
   return (
     <header className="relative overflow-hidden rounded-3xl border border-white/40 bg-white/80 p-8 shadow-card backdrop-blur dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-card-dark">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="inline-flex items-center gap-3 rounded-full border border-slate-200/70 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-300">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden />
-          Live on {defaultNetwork}
+        <div className="flex items-center gap-3">
+          <div className="inline-flex items-center gap-3 rounded-full border border-slate-200/70 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden />
+            Live on {defaultNetwork}
+          </div>
+          <div className="hidden items-center gap-2 rounded-full border border-slate-200/70 bg-white/70 px-4 py-1 text-xs font-mono text-slate-600 dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-300 md:inline-flex">
+            <ClockIcon className="h-3.5 w-3.5" />
+            {formatUTCTime(currentTime)}
+          </div>
         </div>
         <Button
           variant="ghost"
@@ -94,6 +113,21 @@ const MoonIcon = (props: SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path d="M21 14.5A8.5 8.5 0 0 1 9.5 3 8.5 8.5 0 1 0 21 14.5Z" />
+  </svg>
+);
+
+const ClockIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.5}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 6v6l4 2" />
   </svg>
 );
 
