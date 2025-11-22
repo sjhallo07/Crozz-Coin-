@@ -1,3 +1,4 @@
+import AdminActions from "./components/Dashboard/AdminActions";
 import AuthPanel from "./components/Dashboard/AuthPanel";
 import BackendTokenAddress from "./components/Dashboard/BackendTokenAddress";
 import EventsFeed from "./components/Dashboard/EventsFeed";
@@ -26,6 +27,8 @@ const App = () => (
             <TokenActions />
             <EventsFeed />
           </div>
+
+          <AdminActions />
 
           <JobQueue />
         </div>
