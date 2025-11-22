@@ -45,6 +45,6 @@ fi
 # Run the Node.js script from backend directory (where @mysten/sui is installed)
 echo -e "${GREEN}Running Sui Client Address Setup...${NC}\n"
 cd "$ROOT_DIR/backend"
-node "$SCRIPT_DIR/setup-sui-client.js" "$@"
+node "$ROOT_DIR/backend/scripts/setup-sui-client.js" "$@"
 
 exit $?

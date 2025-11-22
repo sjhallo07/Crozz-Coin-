@@ -25,8 +25,8 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-// Navigate up to root directory from scripts/
-const ROOT_DIR = resolve(__dirname, '..');
+// Navigate up to root directory from backend/scripts/
+const ROOT_DIR = resolve(__dirname, '..', '..');
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -124,45 +124,72 @@ console.log();
 
 // Update .env file if requested
 if (updateEnv) {
-  console.log('📝 Updating .env file...\n');
+  console.log('📝 Updating environment files...\n');
   
-  const envPath = join(ROOT_DIR, '.env');
-  let envContent = '';
+  // Update backend .env
+  const backendEnvPath = join(ROOT_DIR, 'backend', '.env');
+  let backendEnvContent = '';
   
-  if (existsSync(envPath)) {
-    envContent = readFileSync(envPath, 'utf-8');
-    console.log('   ℹ️  Existing .env file found, updating values...');
+  if (existsSync(backendEnvPath)) {
+    backendEnvContent = readFileSync(backendEnvPath, 'utf-8');
+    console.log('   ℹ️  Backend .env file found, updating values...');
   } else {
-    console.log('   ℹ️  Creating new .env file...');
-    // Start with .env.example if available
-    const envExamplePath = join(ROOT_DIR, '.env.example');
-    if (existsSync(envExamplePath)) {
-      envContent = readFileSync(envExamplePath, 'utf-8');
-    }
+    console.log('   ℹ️  Creating backend .env file...');
   }
 
-  // Update or add environment variables
-  const updates = {
+  // Update or add environment variables for backend
+  const backendUpdates = {
     'SUI_ADMIN_PRIVATE_KEY': `ed25519:${privateKeyBase64}`,
     'SUI_RPC_URL': NETWORK_URLS[network] || NETWORK_URLS.testnet,
     'SUI_DEFAULT_GAS_BUDGET': gasBudget,
     'VITE_SUI_NETWORK': network
   };
 
-  for (const [key, value] of Object.entries(updates)) {
+  for (const [key, value] of Object.entries(backendUpdates)) {
     const regex = new RegExp(`^${key}=.*$`, 'm');
-    if (regex.test(envContent)) {
-      envContent = envContent.replace(regex, `${key}=${value}`);
-      console.log(`   ✓ Updated ${key}`);
+    if (regex.test(backendEnvContent)) {
+      backendEnvContent = backendEnvContent.replace(regex, `${key}=${value}`);
+      console.log(`   ✓ Updated backend ${key}`);
     } else {
-      envContent += `\n${key}=${value}`;
-      console.log(`   ✓ Added ${key}`);
+      backendEnvContent += `\n${key}=${value}`;
+      console.log(`   ✓ Added backend ${key}`);
     }
   }
 
-  // Write back to .env
-  writeFileSync(envPath, envContent.trim() + '\n');
-  console.log('\n   ✅ .env file updated successfully!');
+  writeFileSync(backendEnvPath, backendEnvContent.trim() + '\n');
+  console.log('   ✅ Backend .env file updated!');
+  console.log();
+
+  // Update root .env
+  const rootEnvPath = join(ROOT_DIR, '.env');
+  let rootEnvContent = '';
+  
+  if (existsSync(rootEnvPath)) {
+    rootEnvContent = readFileSync(rootEnvPath, 'utf-8');
+    console.log('   ℹ️  Root .env file found, updating values...');
+  } else {
+    console.log('   ℹ️  Creating root .env file...');
+    // Start with .env.example if available
+    const envExamplePath = join(ROOT_DIR, '.env.example');
+    if (existsSync(envExamplePath)) {
+      rootEnvContent = readFileSync(envExamplePath, 'utf-8');
+    }
+  }
+
+  // Update root .env with same values
+  for (const [key, value] of Object.entries(backendUpdates)) {
+    const regex = new RegExp(`^${key}=.*$`, 'm');
+    if (regex.test(rootEnvContent)) {
+      rootEnvContent = rootEnvContent.replace(regex, `${key}=${value}`);
+      console.log(`   ✓ Updated root ${key}`);
+    } else {
+      rootEnvContent += `\n${key}=${value}`;
+      console.log(`   ✓ Added root ${key}`);
+    }
+  }
+
+  writeFileSync(rootEnvPath, rootEnvContent.trim() + '\n');
+  console.log('   ✅ Root .env file updated!');
   console.log();
 }
 
