@@ -29,3 +29,8 @@ backend/.env
 .idea/
 .DS_Store
 Thumbs.db
+
+# Deployment artifacts (keep documentation, ignore results/logs)
+deployment/deployment-log.txt
+deployment/deployment-results.md
+deployment/*.json

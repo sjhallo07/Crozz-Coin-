@@ -70,7 +70,7 @@ address crozz {
                 witness,
                 9,
                 b"CROZZ",
-                b"CROZZ Token",
+                b"Crozz Coin",
                 b"Official CROZZ Community Token",
                 icon_url,
                 ctx

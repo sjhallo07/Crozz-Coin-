@@ -1,5 +1,21 @@
 # Crozz-Coin
 
+> ⚠️ **IMPORTANT**: This repository contains PUBLIC testnet credentials for educational purposes.
+> See [`TESTNET_DEPLOYMENT_NOTICE.md`](TESTNET_DEPLOYMENT_NOTICE.md) for critical security information.
+> **NEVER use these patterns for production/mainnet deployments.**
+
+## 🚀 Quick Deployment
+
+For a complete, ready-to-execute deployment package, see the [`deployment/`](deployment/) directory which includes:
+- ✅ Pre-generated testnet wallets (4 wallets)
+- ✅ Complete deployment documentation
+- ✅ Automation scripts
+- ✅ Security best practices guide
+
+**Quick Start**: `cd deployment && ./execute-deployment.sh`
+
+---
+
 ## Quick Start: Generate Sui Client Address & Environment Setup
 
 Before diving into development, you'll need to generate a Sui address and configure your environment:
