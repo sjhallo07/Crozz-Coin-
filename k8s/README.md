@@ -9,6 +9,7 @@ Complete Kubernetes orchestration setup for Crozz Coin with security, monitoring
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
+- [💰 Pricing & Free Trial](#pricing--free-trial)
 - [Security Features](#security-features)
 - [Hybrid Cloud Deployment](#hybrid-cloud-deployment)
 - [Monitoring & Observability](#monitoring--observability)
@@ -168,6 +169,44 @@ This Kubernetes setup provides enterprise-grade orchestration for the Crozz Coin
      --namespace crozz-coin \
      --reuse-values
    ```
+
+## 💰 Pricing & Free Trial
+
+### Pay-As-You-Go Model
+
+All cloud infrastructure uses **hourly billing** with no commitments:
+
+| Provider | Hourly Rate | Monthly (24/7) | With Spot Instances |
+|----------|-------------|----------------|---------------------|
+| AWS | ~$0.53/hr | $392/month | ~$195/month (50% off) |
+| GCP | ~$0.58/hr | $425/month | ~$170/month (60% off) |
+| Azure | ~$0.43/hr | $312/month | ~$125/month (60% off) |
+
+**You only pay for what you use!** Stop the cluster when not needed.
+
+### FREE Testing: 90 Days
+
+**Cloud Free Trials:**
+- ✅ **AWS**: $300 credits for 90 days ([Sign up](https://aws.amazon.com/free/))
+- ✅ **GCP**: $300 credits for 90 days ([Sign up](https://cloud.google.com/free/))
+- ✅ **Azure**: $200 credits for 30 days ([Sign up](https://azure.microsoft.com/free/))
+
+**Local Testing (Unlimited):**
+```bash
+# Free forever using Minikube
+minikube start --cpus=4 --memory=8192
+kubectl apply -f k8s/base/
+```
+
+### Cost Optimization Tips
+
+1. **Use free trials**: Test for 90 days at zero cost
+2. **Spot instances**: Save 50-70% on compute
+3. **Auto-scaling**: Scale down to 3 pods during low traffic
+4. **Shut down when idle**: Pay only for hours used
+5. **Local development**: Use Minikube for free testing
+
+📚 **Complete pricing guide**: [PRICING_AND_TRIAL.md](./PRICING_AND_TRIAL.md)
 
 ## 🔒 Security Features
 

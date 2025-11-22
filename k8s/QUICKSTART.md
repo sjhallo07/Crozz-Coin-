@@ -169,14 +169,36 @@ kubectl apply -f k8s/hybrid-cloud/azure-deployment.yaml
 4. **Review documentation**: See links above
 5. **Open issue**: https://github.com/sjhallo07/Crozz-Coin-/issues
 
-## 💰 Costs
+## 💰 Costs & FREE Trial
 
-- **AWS**: ~$392/month (single cloud)
-- **GCP**: ~$425/month (single cloud)
-- **Azure**: ~$312/month (single cloud)
+### Pay-As-You-Go (Hourly Billing)
+
+- **AWS**: ~$0.53/hour = $392/month (if running 24/7)
+- **GCP**: ~$0.58/hour = $425/month (if running 24/7)
+- **Azure**: ~$0.43/hour = $312/month (if running 24/7)
 - **Hybrid**: ~$1,223/month (multi-cloud)
 
-See [HYBRID_CLOUD_PROPOSAL.md](./HYBRID_CLOUD_PROPOSAL.md) for detailed breakdown.
+**💡 Only pay for hours used** - stop when not needed!
+
+### FREE Testing Options
+
+**🎁 Cloud Free Trials (90 Days):**
+- ✅ **AWS**: $300 credits for 90 days - [Sign up](https://aws.amazon.com/free/)
+- ✅ **GCP**: $300 credits for 90 days - [Sign up](https://cloud.google.com/free/)
+- ✅ **Azure**: $200 credits for 30 days - [Sign up](https://azure.microsoft.com/free/)
+
+**💻 Local Testing (Unlimited):**
+```bash
+# FREE forever with Minikube
+minikube start --cpus=4 --memory=8192
+kubectl apply -f k8s/base/
+```
+
+**📚 Complete guide**: See [PRICING_AND_TRIAL.md](./PRICING_AND_TRIAL.md) for:
+- Detailed cost breakdown
+- How to maximize free trial
+- Cost optimization tips
+- Local testing setup
 
 ## ⚡ Performance
 
