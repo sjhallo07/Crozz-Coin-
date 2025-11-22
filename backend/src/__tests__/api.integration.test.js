@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
 import { initDatabase } from "../services/Database.js";
 import { transactionService } from "../services/TransactionService.js";
 import { authService } from "../services/AuthService.js";
@@ -12,8 +13,10 @@ import eventsRouter from "../routes/events.js";
 import suiRouter from "../routes/sui.js";
 import tokensRouter from "../routes/tokens.js";
 
-// Load .env from root directory
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+// Load .env from root directory using a more robust path resolution
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "../../../.env") });
 
 // Create test app
 const createTestApp = () => {
@@ -168,7 +171,10 @@ describe("API Integration Tests", () => {
     });
 
     it("should return jobs list with valid auth token", async () => {
-      const validToken = process.env.ADMIN_TOKEN || "change-me";
+      const validToken = process.env.ADMIN_TOKEN;
+      if (!validToken) {
+        throw new Error("ADMIN_TOKEN environment variable is required for testing");
+      }
       
       const response = await request(app)
         .get("/api/admin/jobs")
@@ -189,7 +195,10 @@ describe("API Integration Tests", () => {
     });
 
     it("should accept config with valid auth token", async () => {
-      const validToken = process.env.ADMIN_TOKEN || "change-me";
+      const validToken = process.env.ADMIN_TOKEN;
+      if (!validToken) {
+        throw new Error("ADMIN_TOKEN environment variable is required for testing");
+      }
       
       const response = await request(app)
         .post("/api/admin/config")
