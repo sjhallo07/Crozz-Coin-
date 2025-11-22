@@ -10,7 +10,6 @@
   "dependencies": {
     "@headlessui/react": "^2.1.5",
     "@mysten/dapp-kit": "^0.16.6",
-    "@mysten/sui.js": "^0.54.1",
     "@radix-ui/themes": "^3.2.1",
     "@tanstack/react-query": "^5.62.9",
     "axios": "^1.7.7",

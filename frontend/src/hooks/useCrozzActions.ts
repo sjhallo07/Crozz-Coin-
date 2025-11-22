@@ -3,7 +3,7 @@ import {
   useSignAndExecuteTransaction,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { Transaction } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { useCallback } from "react";
 import { useNetworkVariable } from "../networkConfig";
 
@@ -48,7 +48,6 @@ export const useCrozzActions = () => {
       build(tx);
       const response = await signAndExecute({
         transaction: tx,
-        options: { showEffects: true, showEvents: true },
       });
       await suiClient.waitForTransaction({ digest: response.digest });
       return response;

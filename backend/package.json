@@ -8,7 +8,7 @@
     "start": "node src/server.js"
   },
   "dependencies": {
-    "@mysten/sui.js": "^0.54.1",
+    "@mysten/sui": "^1.45.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.4.6",
     "cors": "^2.8.5",
