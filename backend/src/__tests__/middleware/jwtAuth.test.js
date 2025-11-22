@@ -146,7 +146,7 @@ describe("requireAuth middleware", () => {
       const middleware = requireAuth();
       middleware(req, res, () => next.call());
 
-      expect(next).toHaveBeenCalledTimes(1);
+      expect(next.callCount).toBe(1);
       expect(req.user).toBeDefined();
       expect(req.user.email).toBe("regularuser@example.com");
       expect(req.user.username).toBe("regularuser");
