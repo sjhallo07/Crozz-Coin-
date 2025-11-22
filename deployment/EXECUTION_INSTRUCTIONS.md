@@ -176,6 +176,8 @@ sui client objects --owned-by 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f
 #### Transfer 1: Alice → Bob (500 CROZZ)
 
 ```bash
+# ⚠️ WARNING: This private key is TESTNET ONLY. NEVER hardcode keys in production!
+# In production, use: sui keytool import ${PRIVATE_KEY_FROM_ENV} ed25519
 # Import Alice's wallet (paste the private key without ed25519: prefix)
 sui keytool import AAAAAAAAAAAAAAEAAAQAAAUAAAAFAAAAAAAIBAAAAAYAAAAAAAQAAAAACQkDAgAAAAAAAAAAAAAAAAAAAAICBQAABwAHAA== ed25519
 
@@ -200,6 +202,7 @@ sui client call \
 #### Transfer 2: Bob → Charlie (800 CROZZ)
 
 ```bash
+# ⚠️ WARNING: TESTNET KEY ONLY. Production: Use secure key management!
 # Import Bob's wallet
 sui keytool import AAAAAAAAAAAAAAEAAAAAAAQABwAAAAAIAAADAAkACQAEAAkAAAAAAAAAAAAEAAUAAAAAAAAFAAAAAAAAAAAABgAAAAkEAA== ed25519
 
@@ -224,6 +227,7 @@ sui client call \
 #### Transfer 3: Charlie → Alice (1,200 CROZZ)
 
 ```bash
+# ⚠️ WARNING: TESTNET KEY ONLY. Production: Never expose private keys!
 # Import Charlie's wallet
 sui keytool import AAAAAAAAAAAAAAEAAAAFAAAAAAYAAgAFAAcAAAAAAgUEAAAGAAADAAkABgAAAAAEAAAAAAAAAAkAAAAAAAAAAAMAAAAFBg== ed25519
 

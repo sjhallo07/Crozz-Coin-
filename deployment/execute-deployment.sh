@@ -41,6 +41,28 @@ echo -e "${BLUE}║     Crozz Coin - Deployment Execution Script              �
 echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
+# Function to validate Sui address format
+validate_address() {
+    local address=$1
+    if [[ ! $address =~ ^0x[a-fA-F0-9]{64}$ ]]; then
+        echo -e "${RED}❌ Invalid Sui address format: $address${NC}"
+        echo "Expected format: 0x followed by 64 hexadecimal characters"
+        return 1
+    fi
+    return 0
+}
+
+# Validate all wallet addresses
+echo -e "${BLUE}Validating wallet addresses...${NC}"
+for addr in "$ADMIN_ADDR" "$ALICE_ADDR" "$BOB_ADDR" "$CHARLIE_ADDR"; do
+    if ! validate_address "$addr"; then
+        echo -e "${RED}Address validation failed. Please check the wallet addresses.${NC}"
+        exit 1
+    fi
+done
+echo -e "${GREEN}✅ All addresses validated${NC}"
+echo ""
+
 # Function to request airdrop
 request_airdrop() {
     local name=$1
@@ -48,7 +70,8 @@ request_airdrop() {
     
     echo -e "${YELLOW}🌊 Requesting airdrop for $name...${NC}"
     
-    response=$(curl -s -X POST "$FAUCET_URL" \
+    # Add timeout and retry for robustness
+    response=$(curl -s --max-time 30 --retry 3 --retry-delay 2 -X POST "$FAUCET_URL" \
         -H "Content-Type: application/json" \
         -d "{\"FixedAmountRequest\":{\"recipient\":\"$address\"}}")
     
