@@ -1,9 +1,9 @@
 import {
   useCurrentAccount,
-  useSignAndExecuteTransactionBlock,
+  useSignAndExecuteTransaction,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { Transaction } from "@mysten/sui.js/transactions";
 import { useCallback } from "react";
 import { useNetworkVariable } from "../networkConfig";
 
@@ -32,8 +32,7 @@ export const useCrozzActions = () => {
   const suiClient = useSuiClient();
   const packageId = useNetworkVariable("crozzPackageId");
   const metadataId = useNetworkVariable("crozzMetadataId");
-  const { mutateAsync: signAndExecute } = useSignAndExecuteTransactionBlock();
-
+  const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction();
   const ensureWallet = () => {
     if (!account) {
       throw new Error("Connect a wallet first");
@@ -41,14 +40,14 @@ export const useCrozzActions = () => {
   };
 
   const runTx = useCallback(
-    async (build: (tx: TransactionBlock) => void) => {
+    async (build: (tx: Transaction) => void) => {
       ensureWallet();
       if (!packageId) throw new Error("Set VITE_CROZZ_PACKAGE_ID first");
-      const tx = new TransactionBlock();
+      const tx = new Transaction();
       tx.setGasBudget(gasBudget);
       build(tx);
       const response = await signAndExecute({
-        transactionBlock: tx,
+        transaction: tx,
         options: { showEffects: true, showEvents: true },
       });
       await suiClient.waitForTransaction({ digest: response.digest });

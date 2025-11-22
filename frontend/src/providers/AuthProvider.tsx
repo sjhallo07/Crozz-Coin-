@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -105,11 +106,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     },
     [persistSession]
   );
-
   const request = useCallback(
     async <T,>(path: string, init: RequestInit = {}, includeAuth = true) => {
       const headers = new Headers(init.headers ?? {});
-      headers.set("Content-Type", "application/json");
+      if (!headers.has("Content-Type") && !(init.body instanceof FormData)) {
+        headers.set("Content-Type", "application/json");
       }
       if (includeAuth && tokens?.accessToken) {
         headers.set("Authorization", `Bearer ${tokens.accessToken}`);
@@ -236,24 +237,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     },
     [authenticate]
   );
-
-  useEffect(() => {
-    const boot = async () => {
-      const stored = getStoredSession();
-      if (!stored) {
-        setLoading(false);
-        return;
-      }
-      applySession(stored);
-      try {
-        const data = await request<{ user: AuthUser }>("/api/auth/me");
-        applySession({ user: data.user, tokens: stored.tokens });
-      } catch (error) {
-        console.warn("Session validation failed", error);
-        await refresh();
-      } finally {
-        setLoading(false);
-  // Store stable refs for functions used in boot effect
   const applySessionRef = useRef(applySession);
   const refreshRef = useRef(refresh);
   const requestRef = useRef(request);
@@ -263,60 +246,79 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     refreshRef.current = refresh;
     requestRef.current = request;
   }, [applySession, refresh, request]);
-
   useEffect(() => {
+    let active = true;
+
     const boot = async () => {
       const stored = getStoredSession();
       if (!stored) {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
         return;
       }
+
       applySessionRef.current(stored);
       try {
         const data = await requestRef.current<{ user: AuthUser }>("/api/auth/me");
+        if (!active) {
+          return;
+        }
         applySessionRef.current({ user: data.user, tokens: stored.tokens });
       } catch (error) {
         console.warn("Session validation failed", error);
         await refreshRef.current();
       } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
-    void boot();
-    return clearRefreshTimer;
 
+    void boot();
+
+    return () => {
+      active = false;
+    };
   }, []); // Only run on mount
 
-  const value = useMemo(
+  const value = useMemo<AuthContextValue>(
     () => ({
-      authError,
-      forgotPassword,
-      forgotUsername,
-      loading,
-      login,
-      logout,
-      refresh,
-      register,
-      resetPassword,
-      tokens,
       user,
-    }),
-      authError,
-      forgotPassword,
-      forgotUsername,
+      accessToken: tokens?.accessToken ?? null,
+      refreshToken: tokens?.refreshToken ?? null,
+      authenticated: Boolean(tokens?.accessToken),
       loading,
+      authError,
+      register,
       login,
       logout,
       refresh,
-      register,
+      forgotPassword,
+      forgotUsername,
       resetPassword,
+    }),
+    [
+      user,
       tokens?.accessToken,
       tokens?.refreshToken,
-      user,
+      loading,
+      authError,
+      register,
+      login,
+      logout,
+      refresh,
+      forgotPassword,
+      forgotUsername,
+      resetPassword,
     ]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
