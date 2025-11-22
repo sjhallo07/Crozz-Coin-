@@ -8,7 +8,9 @@
  * @returns {string} Formatted number
  */
 export const formatNumber = (value) => {
-  const num = typeof value === "string" ? parseInt(value, 10) : value;
+  if (value === null || value === undefined || value === "") return "0";
+  const num = typeof value === "string" ? Number(value) : value;
+  if (isNaN(num)) return "0";
   return new Intl.NumberFormat("en-US").format(num);
 };
 
@@ -37,6 +39,8 @@ export const getStatusMessage = (status) => {
   return messages[status] || "Transaction status is being updated.";
 };
 
+const COIN_ID_DISPLAY_LENGTH = 8;
+
 /**
  * Get humanized message for transaction type
  * @param {string} type - Transaction type
@@ -50,7 +54,9 @@ export const getTransactionDescription = (type, payload = {}) => {
         payload.recipient ? "specified wallet" : "default account"
       }`;
     case "burn":
-      return `Burning tokens from coin ${payload.coinId ? payload.coinId.slice(0, 8) + "..." : ""}`;
+      return `Burning tokens from coin ${
+        payload.coinId ? payload.coinId.slice(0, COIN_ID_DISPLAY_LENGTH) + "..." : ""
+      }`;
     case "distribute":
       return `Distributing tokens to ${payload.distributions?.length || 0} recipient${
         payload.distributions?.length === 1 ? "" : "s"

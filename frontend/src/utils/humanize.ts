@@ -6,7 +6,8 @@
  * Format a number with thousands separators
  */
 export const formatNumber = (value: number | string): string => {
-  const num = typeof value === "string" ? parseInt(value, 10) : value;
+  if (value === null || value === undefined || value === "") return "0";
+  const num = typeof value === "string" ? Number(value) : value;
   if (isNaN(num)) return "0";
   return new Intl.NumberFormat("en-US").format(num);
 };
@@ -46,6 +47,8 @@ export const getStatusMessage = (status: string): string => {
   return messages[status] || "Transaction status is being updated.";
 };
 
+const COIN_ID_DISPLAY_LENGTH = 8;
+
 /**
  * Get humanized description for transaction type
  */
@@ -61,7 +64,11 @@ export const getTransactionDescription = (
         payload.recipient ? "to specified wallet" : "to default account"
       }`;
     case "burn":
-      return `Burn tokens from ${payload.coinId ? String(payload.coinId).slice(0, 8) + "..." : "coin"}`;
+      return `Burn tokens from ${
+        payload.coinId
+          ? String(payload.coinId).slice(0, COIN_ID_DISPLAY_LENGTH) + "..."
+          : "coin"
+      }`;
     case "distribute": {
       const distributions = payload.distributions as Array<unknown> | undefined;
       const count = distributions?.length || 0;
