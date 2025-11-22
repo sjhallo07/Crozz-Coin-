@@ -55,5 +55,7 @@
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
   "cSpell.words": ["Crozz"],
-  "chat.agent.maxRequests": 50
+  "chat.agent.maxRequests": 50,
+  "chatgpt.runCodexInWindowsSubsystemForLinux": true,
+  "chatgpt.openOnStartup": true
 }

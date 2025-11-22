@@ -2,6 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import adminRouter from "./routes/admin.js";
+import authRouter from "./routes/auth.js";
 import eventsRouter from "./routes/events.js";
 import suiRouter from "./routes/sui.js";
 import tokensRouter from "./routes/tokens.js";
@@ -16,6 +17,7 @@ app.use("/api/tokens", tokensRouter);
 app.use("/api/events", eventsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/sui", suiRouter);
+app.use("/api/auth", authRouter);
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {

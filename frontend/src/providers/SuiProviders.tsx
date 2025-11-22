@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { defaultNetwork, networkConfig } from "../networkConfig";
+import { AuthProvider } from "./AuthProvider";
 import { DashboardDataProvider } from "./DashboardDataProvider";
 import { ThemeProvider } from "./ThemeProvider";
 
@@ -14,18 +15,20 @@ interface Props {
 
 export const SuiProviders = ({ children }: Props) => (
   <ThemeProvider>
-    <DashboardDataProvider>
-      <QueryClientProvider client={queryClient}>
-        <SuiClientProvider
-          networks={networkConfig}
-          defaultNetwork={defaultNetwork}
-        >
-          <WalletProvider autoConnect>
-            {children}
-            <Toaster position="top-center" />
-          </WalletProvider>
-        </SuiClientProvider>
-      </QueryClientProvider>
-    </DashboardDataProvider>
+    <AuthProvider>
+      <DashboardDataProvider>
+        <QueryClientProvider client={queryClient}>
+          <SuiClientProvider
+            networks={networkConfig}
+            defaultNetwork={defaultNetwork}
+          >
+            <WalletProvider autoConnect>
+              {children}
+              <Toaster position="top-center" />
+            </WalletProvider>
+          </SuiClientProvider>
+        </QueryClientProvider>
+      </DashboardDataProvider>
+    </AuthProvider>
   </ThemeProvider>
 );

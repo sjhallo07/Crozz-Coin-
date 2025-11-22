@@ -1,9 +1,11 @@
+import AuthPanel from "./components/Dashboard/AuthPanel";
 import BackendTokenAddress from "./components/Dashboard/BackendTokenAddress";
 import EventsFeed from "./components/Dashboard/EventsFeed";
 import JobQueue from "./components/Dashboard/JobQueue";
 import TokenActions from "./components/Dashboard/TokenActions";
 import TokenAddress from "./components/Dashboard/TokenAddress";
 import TokenOverview from "./components/Dashboard/TokenOverview";
+import UserActions from "./components/Dashboard/UserActions";
 import WalletConsole from "./components/Dashboard/WalletConsole";
 import Header from "./components/Layout/Header";
 
@@ -17,16 +19,19 @@ const App = () => (
         <div className="flex flex-col gap-6">
           <div className="grid gap-6 md:grid-cols-2">
             <TokenOverview />
-            <TokenActions />
+            <UserActions />
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
+            <TokenActions />
             <EventsFeed />
-            <JobQueue />
           </div>
+
+          <JobQueue />
         </div>
 
         <div className="flex flex-col gap-6">
+          <AuthPanel />
           <TokenAddress />
           <BackendTokenAddress />
           <WalletConsole />
