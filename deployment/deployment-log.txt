@@ -1,0 +1,36 @@
+╔════════════════════════════════════════════════════════════╗
+║     Crozz Coin - Deployment and Testing Automation        ║
+╚════════════════════════════════════════════════════════════╝
+
+Started at: 2025-11-22T13:07:14.113Z
+Network: Sui Testnet
+RPC URL: https://fullnode.testnet.sui.io:443
+
+============================================================
+STEP 1: Requesting Airdrops for All Wallets
+============================================================
+
+🌊 Requesting airdrop for Admin (0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c)...
+❌ Error requesting airdrop for Admin: fetch failed
+
+🌊 Requesting airdrop for Alice (0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423)...
+❌ Error requesting airdrop for Alice: fetch failed
+
+🌊 Requesting airdrop for Bob (0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93)...
+❌ Error requesting airdrop for Bob: fetch failed
+
+🌊 Requesting airdrop for Charlie (0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01)...
+❌ Error requesting airdrop for Charlie: fetch failed
+
+⏳ Waiting 10 seconds for transactions to be processed...
+
+============================================================
+STEP 2: Checking Wallet Balances
+============================================================
+❌ Error checking balance for Admin: fetch failed
+❌ Error checking balance for Alice: fetch failed
+❌ Error checking balance for Bob: fetch failed
+❌ Error checking balance for Charlie: fetch failed
+
+❌ ERROR: Admin wallet has no balance. Cannot proceed with deployment.
+Please manually fund the admin wallet and try again.
