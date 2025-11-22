@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { PropsWithChildren, ReactNode } from "react";
 
 interface CardProps extends PropsWithChildren {
-  title?: string;
+  title?: ReactNode;
   description?: ReactNode;
   actions?: ReactNode;
   className?: string;
@@ -25,9 +25,15 @@ const Card = ({
       <header className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           {title && (
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white">
-              {title}
-            </h2>
+            typeof title === "string" ? (
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+                {title}
+              </h2>
+            ) : (
+              <div className="text-base font-semibold text-slate-900 dark:text-white">
+                {title}
+              </div>
+            )
           )}
           {description && (
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">

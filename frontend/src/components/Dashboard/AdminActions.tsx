@@ -394,6 +394,29 @@ const AdminActions = () => {
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Freeze Controls
           </p>
+          
+          {/* Prominent Freeze All Wallets Button */}
+          <div className="mb-4 rounded-2xl border-2 border-rose-200 bg-rose-50 p-4 dark:border-rose-900 dark:bg-rose-950/30">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-rose-900 dark:text-rose-200">
+                  🛑 Freeze All Wallets for Sell
+                </p>
+                <p className="mt-1 text-xs text-rose-700 dark:text-rose-300">
+                  Emergency halt - prevents all token operations globally
+                </p>
+              </div>
+              <Button
+                variant="secondary"
+                onClick={() => openAction("globalFreeze")}
+                disabled={loading}
+                className="!bg-rose-600 !text-white hover:!bg-rose-700 dark:!bg-rose-700 dark:hover:!bg-rose-800"
+              >
+                Freeze All
+              </Button>
+            </div>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-2">
             <Button
               variant="secondary"
@@ -408,13 +431,6 @@ const AdminActions = () => {
               disabled={loading}
             >
               Unfreeze Wallet
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => openAction("globalFreeze")}
-              disabled={loading}
-            >
-              Global Freeze
             </Button>
             <Button
               variant="primary"
