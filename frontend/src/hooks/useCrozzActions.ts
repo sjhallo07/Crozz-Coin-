@@ -11,6 +11,8 @@ const gasBudget = Number(import.meta.env.VITE_CROZZ_GAS_BUDGET ?? 10_000_000);
 const moduleName = import.meta.env.VITE_CROZZ_MODULE ?? "crozz_token";
 const registryId = import.meta.env.VITE_CROZZ_REGISTRY_ID ?? "";
 const clockObjectId = import.meta.env.VITE_SUI_CLOCK_OBJECT ?? "0x6";
+const treasuryCapId = import.meta.env.VITE_CROZZ_TREASURY_CAP_ID ?? "";
+const adminCapId = import.meta.env.VITE_CROZZ_ADMIN_CAP_ID ?? "";
 
 const toBytes = (value: string) => {
   if (!value) return new Uint8Array();
@@ -157,6 +159,230 @@ export const useCrozzActions = () => {
     [suiClient]
   );
 
+  // Admin actions
+  const mintTokens = useCallback(
+    async ({ amount, recipient }: { amount: string; recipient?: string }) => {
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      return runTx((tx) => {
+        const targetRecipient = recipient || account?.address;
+        if (!targetRecipient) {
+          throw new Error("No recipient specified");
+        }
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::mint`,
+          arguments: [
+            tx.object(treasuryCapId),
+            tx.pure.u64(amount),
+            tx.pure.address(targetRecipient),
+          ],
+        });
+      });
+    },
+    [packageId, runTx, account]
+  );
+
+  const mintToSelf = useCallback(
+    async ({ amount }: { amount: string }) => {
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::mint_to_self`,
+          arguments: [tx.object(treasuryCapId), tx.pure.u64(amount)],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const burnTokens = useCallback(
+    async ({ coinId }: { coinId: string }) => {
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::burn`,
+          arguments: [tx.object(treasuryCapId), tx.object(coinId)],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const setWalletFreeze = useCallback(
+    async ({
+      target,
+      freeze,
+    }: {
+      target: string;
+      freeze: boolean;
+    }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!registryId) {
+        throw new Error("Set VITE_CROZZ_REGISTRY_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::set_wallet_freeze`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(registryId),
+            tx.pure.address(target),
+            tx.pure.bool(freeze),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const setGlobalFreeze = useCallback(
+    async ({ freeze }: { freeze: boolean }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!registryId) {
+        throw new Error("Set VITE_CROZZ_REGISTRY_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::set_global_freeze`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(registryId),
+            tx.pure.bool(freeze),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const updateName = useCallback(
+    async ({ name }: { name: string }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      if (!metadataId) {
+        throw new Error("Set VITE_CROZZ_METADATA_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::update_name`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(treasuryCapId),
+            tx.object(metadataId),
+            tx.pure.string(name),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const updateSymbol = useCallback(
+    async ({ symbol }: { symbol: string }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      if (!metadataId) {
+        throw new Error("Set VITE_CROZZ_METADATA_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::update_symbol`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(treasuryCapId),
+            tx.object(metadataId),
+            tx.pure.string(symbol),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const updateDescription = useCallback(
+    async ({ description }: { description: string }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      if (!metadataId) {
+        throw new Error("Set VITE_CROZZ_METADATA_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::update_description`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(treasuryCapId),
+            tx.object(metadataId),
+            tx.pure.string(description),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const updateIconUrl = useCallback(
+    async ({ iconUrl }: { iconUrl: string }) => {
+      if (!adminCapId) {
+        throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+      }
+      if (!treasuryCapId) {
+        throw new Error("Set VITE_CROZZ_TREASURY_CAP_ID");
+      }
+      if (!metadataId) {
+        throw new Error("Set VITE_CROZZ_METADATA_ID");
+      }
+      return runTx((tx) => {
+        tx.moveCall({
+          target: `${packageId}::${moduleName}::update_icon_url`,
+          arguments: [
+            tx.object(adminCapId),
+            tx.object(treasuryCapId),
+            tx.object(metadataId),
+            tx.pure.string(iconUrl),
+          ],
+        });
+      });
+    },
+    [packageId, runTx]
+  );
+
+  const freezeMetadata = useCallback(async () => {
+    if (!adminCapId) {
+      throw new Error("Set VITE_CROZZ_ADMIN_CAP_ID");
+    }
+    if (!metadataId) {
+      throw new Error("Set VITE_CROZZ_METADATA_ID");
+    }
+    return runTx((tx) => {
+      tx.moveCall({
+        target: `${packageId}::${moduleName}::freeze_metadata`,
+        arguments: [tx.object(adminCapId), tx.object(metadataId)],
+      });
+    });
+  }, [packageId, runTx]);
+
   return {
     account,
     verifyHuman,
@@ -165,5 +391,16 @@ export const useCrozzActions = () => {
     transfer,
     readMetadata,
     getBalance,
+    // Admin actions
+    mintTokens,
+    mintToSelf,
+    burnTokens,
+    setWalletFreeze,
+    setGlobalFreeze,
+    updateName,
+    updateSymbol,
+    updateDescription,
+    updateIconUrl,
+    freezeMetadata,
   };
 };
