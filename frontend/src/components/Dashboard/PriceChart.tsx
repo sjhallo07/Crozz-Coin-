@@ -151,14 +151,14 @@ const PriceChart = ({ tokenSymbol, currentPrice = 0.01, priceChange24h = 0 }: Pr
 
           {/* Gradient fill under line */}
           <defs>
-            <linearGradient id={`gradient-${tokenSymbol}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient id={`gradient-${tokenSymbol}-${timeframe}`} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor={isPositive ? "#10b981" : "#ef4444"} stopOpacity="0.3" />
               <stop offset="100%" stopColor={isPositive ? "#10b981" : "#ef4444"} stopOpacity="0" />
             </linearGradient>
           </defs>
           <path
             d={`${pathData} L ${width - padding},${height - padding} L ${padding},${height - padding} Z`}
-            fill={`url(#gradient-${tokenSymbol})`}
+            fill={`url(#gradient-${tokenSymbol}-${timeframe})`}
           />
         </svg>
       </div>

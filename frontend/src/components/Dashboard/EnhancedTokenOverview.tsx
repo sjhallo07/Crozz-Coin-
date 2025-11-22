@@ -20,7 +20,7 @@ const EnhancedTokenOverview = () => {
   const tokenMetadata = {
     name: "Crozz Coin",
     symbol: "CROZZ",
-    logo: "https://via.placeholder.com/64/6366f1/ffffff?text=CROZZ",
+    logo: "/crozz-logo.png", // Use local logo instead of external service
     currentPrice: 0.0123,
     priceChange24h: 5.67,
   };

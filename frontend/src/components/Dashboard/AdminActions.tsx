@@ -410,7 +410,7 @@ const AdminActions = () => {
                 variant="secondary"
                 onClick={() => openAction("globalFreeze")}
                 disabled={loading}
-                className="!bg-rose-600 !text-white hover:!bg-rose-700 dark:!bg-rose-700 dark:hover:!bg-rose-800"
+                className="bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-700 dark:hover:bg-rose-800 border-rose-700"
               >
                 Freeze All
               </Button>

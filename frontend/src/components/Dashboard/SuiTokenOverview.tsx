@@ -17,7 +17,8 @@ const SuiTokenOverview = () => {
   const suiMetadata = {
     name: "Sui",
     symbol: "SUI",
-    logo: "https://via.placeholder.com/64/4da2ff/ffffff?text=SUI",
+    // Use data URI for SUI logo to avoid external dependencies
+    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234da2ff' width='100' height='100' rx='50'/%3E%3Ctext x='50' y='50' font-size='35' font-weight='bold' text-anchor='middle' dy='.35em' fill='white'%3ESUI%3C/text%3E%3C/svg%3E",
     currentPrice: 1.42,
     priceChange24h: -2.34,
     marketCap: 3680000000,
