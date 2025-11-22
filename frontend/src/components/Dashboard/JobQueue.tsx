@@ -2,6 +2,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useMemo, useState } from "react";
 import type { DashboardJob } from "../../providers/DashboardDataProvider";
 import { useDashboardData } from "../../providers/DashboardDataProvider";
+import {
+  getStatusBadgeText,
+  getStatusMessage,
+  getTransactionDescription,
+  timeAgo,
+  formatDate,
+} from "../../utils/humanize";
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 
@@ -40,9 +47,14 @@ const JobQueue = () => {
 
     if (jobs.length === 0) {
       return (
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Queue is empty. Submit a mint/burn/distribution to populate it.
-        </p>
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-900/30">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
+            📭 No jobs in the queue
+          </p>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+            Submit a mint, burn, or distribution request to see jobs appear here.
+          </p>
+        </div>
       );
     }
 
@@ -84,12 +96,13 @@ const JobQueue = () => {
                 className="flex w-full items-center justify-between gap-3 text-left"
                 onClick={() => setSelectedJob(job)}
               >
-                <div>
+                <div className="flex-1">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                    {job.type}
+                    {getTransactionDescription(job.type, job.payload as Record<string, unknown>)}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Attempts: {job.attempts}
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    {job.updatedAt ? timeAgo(job.updatedAt) : "Just created"}
+                    {job.attempts > 1 && ` • ${job.attempts} attempts`}
                   </p>
                 </div>
                 <span
@@ -98,7 +111,7 @@ const JobQueue = () => {
                     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
                   }`}
                 >
-                  {job.status}
+                  {getStatusBadgeText(job.status)}
                 </span>
               </button>
 
@@ -174,10 +187,16 @@ const JobQueue = () => {
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
                           <Dialog.Title className="text-xl font-semibold text-slate-900 dark:text-white">
-                            {selectedJob.type}
+                            {getTransactionDescription(
+                              selectedJob.type,
+                              selectedJob.payload as Record<string, unknown>
+                            )}
                           </Dialog.Title>
                           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                            Job ID {selectedJob.id}
+                            {getStatusMessage(selectedJob.status)}
+                          </p>
+                          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                            Job ID: {selectedJob.id}
                           </p>
                         </div>
                         <span
@@ -186,7 +205,7 @@ const JobQueue = () => {
                             "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
                           }`}
                         >
-                          {selectedJob.status}
+                          {getStatusBadgeText(selectedJob.status)}
                         </span>
                       </div>
 
@@ -204,9 +223,7 @@ const JobQueue = () => {
                             Updated
                           </p>
                           <p className="mt-1">
-                            {selectedJob.updatedAt
-                              ? new Date(selectedJob.updatedAt).toLocaleString()
-                              : "—"}
+                            {selectedJob.updatedAt ? formatDate(selectedJob.updatedAt) : "—"}
                           </p>
                         </div>
                         <div>
@@ -214,9 +231,7 @@ const JobQueue = () => {
                             Created
                           </p>
                           <p className="mt-1">
-                            {selectedJob.createdAt
-                              ? new Date(selectedJob.createdAt).toLocaleString()
-                              : "—"}
+                            {selectedJob.createdAt ? formatDate(selectedJob.createdAt) : "—"}
                           </p>
                         </div>
                         {selectedJob.error && (
