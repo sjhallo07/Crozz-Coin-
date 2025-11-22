@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ChangeEvent, FormEvent, Fragment, useState } from "react";
+import { humanizeError, getSuccessMessage } from "../../utils/humanize";
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 
@@ -105,11 +106,16 @@ const TokenActions = () => {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error ?? JSON.stringify(data));
-      setResult(JSON.stringify(data, null, 2));
+      if (!res.ok) {
+        throw new Error(data?.error || data?.message || "Request failed");
+      }
+
+      // Show user-friendly success message
+      const successMsg = data.message || getSuccessMessage(path);
+      setResult(successMsg);
       success = true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(humanizeError(err));
     } finally {
       setLoading(false);
     }
@@ -241,18 +247,25 @@ const TokenActions = () => {
       </div>
 
       {result && (
-        <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/80 p-4 text-xs font-mono text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
-          <p className="mb-2 font-semibold tracking-wide">Latest response</p>
-          <pre className="max-h-64 overflow-auto whitespace-pre-wrap">
-            <code>{result}</code>
-          </pre>
+        <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/80 p-4 dark:border-emerald-500/40 dark:bg-emerald-500/10">
+          <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+            ✅ Success!
+          </p>
+          <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">
+            {result}
+          </p>
         </div>
       )}
 
       {error && (
-        <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
-          {error}
-        </p>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-900 dark:bg-rose-950/30">
+          <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">
+            ❌ Error
+          </p>
+          <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
+            {error}
+          </p>
+        </div>
       )}
 
       <Transition appear show={Boolean(activeAction)} as={Fragment}>

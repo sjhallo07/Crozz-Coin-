@@ -67,10 +67,11 @@ describe("API Integration Tests", () => {
         .send({ amount: "1000", recipient: "0xtest" })
         .expect(202);
 
-      expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("status", "queued");
-      expect(response.body).toHaveProperty("type", "mint");
-      expect(response.body.payload).toEqual({ amount: "1000", recipient: "0xtest" });
+      expect(response.body).toHaveProperty("success", true);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.data).toHaveProperty("job");
+      expect(response.body.data.job).toHaveProperty("status", "queued");
+      expect(response.body.data.job).toHaveProperty("type", "mint");
     });
 
     it("should accept mint without recipient", async () => {
@@ -79,9 +80,9 @@ describe("API Integration Tests", () => {
         .send({ amount: "500" })
         .expect(202);
 
-      expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("status", "queued");
-      expect(response.body.payload).toHaveProperty("amount", "500");
+      expect(response.body).toHaveProperty("success", true);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.data.job).toHaveProperty("status", "queued");
     });
   });
 
@@ -92,10 +93,10 @@ describe("API Integration Tests", () => {
         .send({ coinId: "0xcoinstub" })
         .expect(202);
 
-      expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("status", "queued");
-      expect(response.body).toHaveProperty("type", "burn");
-      expect(response.body.payload).toHaveProperty("coinId", "0xcoinstub");
+      expect(response.body).toHaveProperty("success", true);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.data.job).toHaveProperty("status", "queued");
+      expect(response.body.data.job).toHaveProperty("type", "burn");
     });
 
     it("should return 400 when coinId is missing", async () => {
@@ -104,7 +105,9 @@ describe("API Integration Tests", () => {
         .send({})
         .expect(400);
 
-      expect(response.body).toHaveProperty("error", "coinId is required");
+      expect(response.body).toHaveProperty("success", false);
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("coin ID");
     });
   });
 
@@ -120,11 +123,11 @@ describe("API Integration Tests", () => {
         .send({ distributions })
         .expect(202);
 
-      expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("status", "queued");
-      expect(response.body).toHaveProperty("type", "distribute");
-      expect(response.body.payload).toHaveProperty("distributions");
-      expect(response.body.payload.distributions).toEqual(distributions);
+      expect(response.body).toHaveProperty("success", true);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.data.job).toHaveProperty("status", "queued");
+      expect(response.body.data.job).toHaveProperty("type", "distribute");
+      expect(response.body.data).toHaveProperty("recipientCount", 2);
     });
 
     it("should return 400 when distributions array is missing", async () => {
@@ -133,7 +136,9 @@ describe("API Integration Tests", () => {
         .send({})
         .expect(400);
 
-      expect(response.body).toHaveProperty("error", "distributions array is required");
+      expect(response.body).toHaveProperty("success", false);
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("recipient");
     });
 
     it("should return 400 when distributions is empty", async () => {
@@ -142,7 +147,9 @@ describe("API Integration Tests", () => {
         .send({ distributions: [] })
         .expect(400);
 
-      expect(response.body).toHaveProperty("error", "distributions array is required");
+      expect(response.body).toHaveProperty("success", false);
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("recipient");
     });
   });
 
@@ -206,8 +213,10 @@ describe("API Integration Tests", () => {
         .send({ key: "value" })
         .expect(200);
 
-      expect(response.body).toHaveProperty("status", "ok");
-      expect(response.body).toHaveProperty("config");
+      expect(response.body).toHaveProperty("success", true);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.data).toHaveProperty("status", "ok");
+      expect(response.body.data).toHaveProperty("config");
     });
   });
 
