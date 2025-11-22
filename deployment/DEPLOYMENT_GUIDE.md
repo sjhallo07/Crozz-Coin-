@@ -1,5 +1,14 @@
 # Crozz Coin - Complete Deployment Guide
 
+> ⚠️ **SECURITY WARNING**: This document contains TESTNET private keys for demonstration purposes only.
+> 
+> - **NEVER use these keys on mainnet**
+> - **NEVER share or reuse these keys in production**
+> - **ALWAYS generate new keys for production deployments**
+> - These keys are for TESTNET TESTING ONLY and have no real value
+> 
+> For production deployments, use secure key management practices and never expose private keys in documentation.
+
 ## Overview
 This guide provides step-by-step instructions to deploy and test Crozz Coin on Sui testnet, including wallet creation, token deployment, minting, and transfers.
 

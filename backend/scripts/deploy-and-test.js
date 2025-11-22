@@ -3,6 +3,13 @@
 /**
  * Crozz Coin - Complete Deployment and Testing Script
  * 
+ * ⚠️  SECURITY WARNING: TESTNET ONLY
+ * This script contains hardcoded wallet credentials for TESTNET demonstration.
+ * - NEVER use these credentials on mainnet
+ * - NEVER use in production environments
+ * - These are TEST credentials with NO REAL VALUE
+ * - For production, always use secure key management (environment variables, key vaults, etc.)
+ * 
  * This script automates:
  * 1. Requesting airdrops for all wallets
  * 2. Deploying the smart contract

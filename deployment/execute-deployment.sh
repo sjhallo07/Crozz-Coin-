@@ -3,6 +3,13 @@
 ################################################################################
 # Crozz Coin - Complete Deployment Execution Script
 # 
+# ⚠️  SECURITY WARNING: TESTNET ONLY
+# This script contains wallet addresses for TESTNET demonstration.
+# - NEVER use these addresses/keys on mainnet
+# - NEVER use in production environments
+# - These are TEST credentials with NO REAL VALUE
+# - Always generate fresh keys for production deployments
+#
 # This script automates the complete deployment workflow:
 # 1. Requests airdrops for all wallets
 # 2. Provides instructions for contract deployment

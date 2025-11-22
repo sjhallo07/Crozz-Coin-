@@ -2,13 +2,20 @@
 
 This directory contains all resources needed to deploy and test Crozz Coin on Sui testnet.
 
+> ⚠️ **IMPORTANT**: This package contains **TESTNET-ONLY** credentials. See [`SECURITY_NOTICE.md`](SECURITY_NOTICE.md) for critical security information.
+
 ## 📁 Contents
 
+- **SECURITY_NOTICE.md** - ⚠️ READ FIRST: Critical security information
 - **DEPLOYMENT_GUIDE.md** - Complete step-by-step deployment instructions
+- **EXECUTION_INSTRUCTIONS.md** - Copy-paste commands for quick execution
 - **QUICK_REFERENCE.md** - Quick reference card with commands and addresses
+- **DEPLOYMENT_WORKFLOW.md** - Visual workflow diagrams
+- **PROJECT_SUMMARY.md** - Complete project overview
 - **crozz-deployment.md** - Deployment tracking document
-- **wallet-*.txt** - Generated wallet information files
-- **deploy-and-test.js** - Automated deployment script (backend/scripts/)
+- **wallet-*.txt** - Generated wallet information files (TESTNET ONLY)
+- **execute-deployment.sh** - Automated deployment script
+- **backend/scripts/deploy-and-test.js** - Node.js automation script
 
 ## 🚀 Quick Start
 

@@ -2,6 +2,13 @@
 
 > **Quick Start**: This document provides simple, copy-paste instructions to complete the deployment.
 
+> ⚠️ **CRITICAL SECURITY WARNING**: 
+> This document contains TESTNET-ONLY private keys for demonstration.
+> - **NEVER use these keys on mainnet or in production**
+> - **NEVER share these keys outside of testnet testing**
+> - **ALWAYS generate fresh keys for production**
+> - These are TEST credentials with NO REAL VALUE
+
 ## 🎯 Current Status
 
 ✅ **COMPLETED:**
