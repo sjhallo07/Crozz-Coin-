@@ -1,5 +1,83 @@
 # Crozz-Coin
 
+## Quick Start: Generate Sui Client Address & Environment Setup
+
+Before diving into development, you'll need to generate a Sui address and configure your environment:
+
+### 1. Generate a New Sui Client Address
+
+```bash
+# Navigate to backend directory
+cd backend
+
+# Generate a new keypair and display credentials
+node scripts/setup-sui-client.js
+
+# Or generate and automatically update .env file
+node scripts/setup-sui-client.js --update-env --network testnet --gas-budget 10000000
+```
+
+This script will:
+- ✅ Generate a new Ed25519 keypair
+- ✅ Display your Sui address, public key, and private key
+- ✅ Optionally update your `.env` file with the credentials
+- ✅ Provide instructions for funding your address from the testnet faucet
+- ✅ Configure gas budget and network settings
+
+**Output includes:**
+- 📍 **Sui Address** - Use for receiving tokens and as CROZZ_DEFAULT_SIGNER
+- 🔐 **Public Key** - Your public identity on Sui blockchain
+- 🔒 **Private Key** - Keep this secret! Full control of the address
+- 🌐 **Network Configuration** - RPC URL, gas budget, faucet URL
+
+### 2. Fund Your Address
+
+For **testnet**, use the faucet:
+```bash
+curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{ "FixedAmountRequest": { "recipient": "<YOUR_ADDRESS>" } }'
+```
+
+Or visit: https://docs.sui.io/guides/developer/getting-started/get-coins
+
+### 3. Complete Environment Configuration
+
+Update your `.env` files with the generated address:
+
+**Root `.env`:**
+```env
+SUI_ADMIN_PRIVATE_KEY=ed25519:<generated_key>
+SUI_RPC_URL=https://fullnode.testnet.sui.io:443
+SUI_DEFAULT_GAS_BUDGET=10000000
+CROZZ_DEFAULT_SIGNER=<generated_address>
+```
+
+**Frontend `.env`:**
+```env
+VITE_CROZZ_API_BASE_URL=http://localhost:4000
+VITE_SUI_NETWORK=testnet
+VITE_CROZZ_GAS_BUDGET=10000000
+```
+
+### 4. Verify Your Setup
+
+```bash
+# Install dependencies
+cd backend && npm install
+cd ../frontend && npm install
+
+# Start the backend
+cd backend && npm run dev
+
+# In another terminal, start the frontend
+cd frontend && npm run dev
+```
+
+📚 **For more details on scripts and configuration, see [scripts/README.md](scripts/README.md)**
+
+---
+
 ## Developer-focused editor setup
 
 The repository now ships with a workspace-level VS Code configuration so you can unlock every
