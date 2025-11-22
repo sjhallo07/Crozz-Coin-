@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crozz-frontend
+  namespace: crozz-coin
+  labels:
+    app: crozz-frontend
+    tier: frontend
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: crozz-frontend
+  template:
+    metadata:
+      labels:
+        app: crozz-frontend
+        tier: frontend
+        version: v1
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - crozz-frontend
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: frontend
+        image: crozz-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: VITE_CROZZ_API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-frontend-config
+              key: VITE_CROZZ_API_BASE_URL
+        - name: VITE_CROZZ_MODULE
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-frontend-config
+              key: VITE_CROZZ_MODULE
+        - name: VITE_CROZZ_VIEW_FUNCTION
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-frontend-config
+              key: VITE_CROZZ_VIEW_FUNCTION
+        - name: VITE_CROZZ_GAS_BUDGET
+          valueFrom:
+            configMapKeyRef:
+              name: crozz-frontend-config
+              key: VITE_CROZZ_GAS_BUDGET
+        # Secrets
+        - name: VITE_CROZZ_ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: crozz-frontend-secrets
+              key: VITE_CROZZ_ADMIN_TOKEN
+        - name: VITE_CROZZ_PACKAGE_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-frontend-secrets
+              key: VITE_CROZZ_PACKAGE_ID
+        - name: VITE_CROZZ_METADATA_ID
+          valueFrom:
+            secretKeyRef:
+              name: crozz-frontend-secrets
+              key: VITE_CROZZ_METADATA_ID
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: cache
+          mountPath: /var/cache/nginx
+        - name: run
+          mountPath: /var/run
+      volumes:
+      - name: cache
+        emptyDir: {}
+      - name: run
+        emptyDir: {}

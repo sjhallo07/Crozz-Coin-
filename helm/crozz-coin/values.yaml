@@ -1,0 +1,187 @@
+# Default values for crozz-coin
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global settings
+global:
+  environment: production
+  cloudProvider: hybrid  # Options: aws, gcp, azure, hybrid, on-premise
+
+# Backend configuration
+backend:
+  replicaCount: 3
+  
+  image:
+    repository: crozz-backend
+    pullPolicy: Always
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 4000
+    annotations: {}
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  
+  env:
+    SUI_RPC_URL: "https://fullnode.testnet.sui.io"
+    SUI_DEFAULT_GAS_BUDGET: "10000000"
+    PORT: "4000"
+    CROZZ_MODULE: "crozz_token"
+    CROZZ_EXECUTOR_DRY_RUN: "false"
+    NODE_ENV: "production"
+    LOG_LEVEL: "info"
+  
+  secrets:
+    # These should be stored in external secret management systems
+    SUI_ADMIN_PRIVATE_KEY: ""
+    ADMIN_TOKEN: ""
+    JWT_SECRET: ""
+    CROZZ_PACKAGE_ID: ""
+    CROZZ_TREASURY_CAP_ID: ""
+    CROZZ_ADMIN_CAP_ID: ""
+    CROZZ_REGISTRY_ID: ""
+    CROZZ_METADATA_ID: ""
+    CROZZ_DEFAULT_SIGNER: ""
+
+# Frontend configuration
+frontend:
+  replicaCount: 3
+  
+  image:
+    repository: crozz-frontend
+    pullPolicy: Always
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 80
+    annotations: {}
+  
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  
+  env:
+    VITE_CROZZ_API_BASE_URL: "http://crozz-backend-service:4000"
+    VITE_CROZZ_MODULE: "crozz_token"
+    VITE_CROZZ_VIEW_FUNCTION: "get_icon_url"
+    VITE_CROZZ_GAS_BUDGET: "10000000"
+  
+  secrets:
+    VITE_CROZZ_ADMIN_TOKEN: ""
+    VITE_CROZZ_PACKAGE_ID: ""
+    VITE_CROZZ_METADATA_ID: ""
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+  hosts:
+    - host: crozz-coin.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+    - host: api.crozz-coin.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: backend
+  tls:
+    - secretName: crozz-tls-cert
+      hosts:
+        - crozz-coin.example.com
+        - api.crozz-coin.example.com
+
+# Security settings
+security:
+  networkPolicy:
+    enabled: true
+  podSecurityPolicy:
+    enabled: true
+  rbac:
+    create: true
+  podSecurityStandards:
+    enforce: restricted
+  sealedSecrets:
+    enabled: false
+
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+  grafana:
+    enabled: true
+    dashboards:
+      enabled: true
+
+# Storage
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  annotations: {}
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+# Resource Quotas
+resourceQuota:
+  enabled: true
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+
+# Service Account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}

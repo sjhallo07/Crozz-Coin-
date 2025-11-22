@@ -1,0 +1,71 @@
+# Azure-specific configurations for AKS deployment
+---
+# StorageClass for Azure Disk
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: crozz-azure-disk
+provisioner: disk.csi.azure.com
+parameters:
+  storageaccounttype: Premium_LRS
+  kind: Managed
+  encryption: "true"
+  diskEncryptionSetID: /subscriptions/SUB_ID/resourceGroups/RG/providers/Microsoft.Compute/diskEncryptionSets/DES_NAME
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+# PersistentVolumeClaim for backend data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crozz-backend-data-azure
+  namespace: crozz-coin
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: crozz-azure-disk
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Service with Azure Load Balancer annotations
+apiVersion: v1
+kind: Service
+metadata:
+  name: crozz-backend-lb-azure
+  namespace: crozz-coin
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "crozz-coin-rg"
+spec:
+  type: LoadBalancer
+  selector:
+    app: crozz-backend
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 4000
+    protocol: TCP
+---
+# Azure AD Workload Identity
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: crozz-backend-sa-azure
+  namespace: crozz-coin
+  annotations:
+    azure.workload.identity/client-id: "CLIENT_ID"
+    azure.workload.identity/tenant-id: "TENANT_ID"
+---
+# ConfigMap with Azure-specific settings
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crozz-azure-config
+  namespace: crozz-coin
+data:
+  AZURE_SUBSCRIPTION_ID: "your-subscription-id"
+  AZURE_RESOURCE_GROUP: "crozz-coin-rg"
+  AZURE_STORAGE_ACCOUNT: "crozzbackups"
+  ENABLE_KEY_VAULT: "true"
+  AZURE_KEY_VAULT_NAME: "crozz-keyvault"

@@ -1,0 +1,18 @@
+apiVersion: v2
+name: crozz-coin
+description: A Helm chart for Crozz Coin blockchain application with hybrid cloud support
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - blockchain
+  - sui
+  - cryptocurrency
+  - web3
+home: https://github.com/sjhallo07/Crozz-Coin-
+sources:
+  - https://github.com/sjhallo07/Crozz-Coin-
+maintainers:
+  - name: Crozz Coin Team
+    email: team@crozz-coin.example.com
+icon: https://raw.githubusercontent.com/sjhallo07/Crozz-Coin-/main/frontend/public/crozz-logo.png

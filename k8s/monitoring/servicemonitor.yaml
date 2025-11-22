@@ -1,0 +1,93 @@
+# ServiceMonitor for Prometheus Operator
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: crozz-backend-monitor
+  namespace: crozz-coin
+  labels:
+    app: crozz-backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: crozz-backend
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: crozz-frontend-monitor
+  namespace: crozz-coin
+  labels:
+    app: crozz-frontend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: crozz-frontend
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+# PrometheusRule for alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: crozz-alerts
+  namespace: crozz-coin
+  labels:
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+  - name: crozz-coin.rules
+    interval: 30s
+    rules:
+    - alert: CrozzBackendDown
+      expr: up{job="crozz-backend-service"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Crozz Backend is down"
+        description: "Crozz Backend has been down for more than 5 minutes."
+    
+    - alert: CrozzBackendHighCPU
+      expr: rate(container_cpu_usage_seconds_total{pod=~"crozz-backend-.*"}[5m]) > 0.8
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage on Crozz Backend"
+        description: "CPU usage is above 80% for more than 10 minutes."
+    
+    - alert: CrozzBackendHighMemory
+      expr: container_memory_usage_bytes{pod=~"crozz-backend-.*"} / container_spec_memory_limit_bytes{pod=~"crozz-backend-.*"} > 0.9
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High memory usage on Crozz Backend"
+        description: "Memory usage is above 90% for more than 5 minutes."
+    
+    - alert: CrozzFrontendDown
+      expr: up{job="crozz-frontend-service"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Crozz Frontend is down"
+        description: "Crozz Frontend has been down for more than 5 minutes."
+    
+    - alert: CrozzHighErrorRate
+      expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is above 5% for more than 5 minutes."

@@ -1,0 +1,72 @@
+# Pod Security Standards enforcement using labels (PSS)
+# Apply these labels to namespace for Pod Security Admission
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crozz-coin
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+# PodDisruptionBudget for backend
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: crozz-backend-pdb
+  namespace: crozz-coin
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: crozz-backend
+---
+# PodDisruptionBudget for frontend
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: crozz-frontend-pdb
+  namespace: crozz-coin
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: crozz-frontend
+---
+# Resource Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: crozz-resource-quota
+  namespace: crozz-coin
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    persistentvolumeclaims: "10"
+    services.loadbalancers: "2"
+    services.nodeports: "0"
+---
+# Limit Range
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: crozz-limit-range
+  namespace: crozz-coin
+spec:
+  limits:
+  - max:
+      cpu: "2"
+      memory: "4Gi"
+    min:
+      cpu: "50m"
+      memory: "64Mi"
+    default:
+      cpu: "500m"
+      memory: "512Mi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container

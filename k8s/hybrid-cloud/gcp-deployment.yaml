@@ -1,0 +1,68 @@
+# GCP-specific configurations for GKE deployment
+---
+# StorageClass for GCP Persistent Disk
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: crozz-gcp-pd
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: pd-balanced
+  replication-type: regional-pd
+  encryption-kms-key: projects/PROJECT_ID/locations/REGION/keyRings/RING/cryptoKeys/KEY
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+# PersistentVolumeClaim for backend data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crozz-backend-data-gcp
+  namespace: crozz-coin
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: crozz-gcp-pd
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Service with GCP Load Balancer annotations
+apiVersion: v1
+kind: Service
+metadata:
+  name: crozz-backend-lb-gcp
+  namespace: crozz-coin
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  type: LoadBalancer
+  selector:
+    app: crozz-backend
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 4000
+    protocol: TCP
+---
+# Workload Identity for GKE
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: crozz-backend-sa-gcp
+  namespace: crozz-coin
+  annotations:
+    iam.gke.io/gcp-service-account: crozz-backend@PROJECT_ID.iam.gserviceaccount.com
+---
+# ConfigMap with GCP-specific settings
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crozz-gcp-config
+  namespace: crozz-coin
+data:
+  GCP_PROJECT_ID: "your-project-id"
+  GCP_REGION: "us-central1"
+  GCS_BUCKET: "crozz-coin-backups"
+  ENABLE_SECRET_MANAGER: "true"
