@@ -1,6 +1,6 @@
-import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { fromB64 } from "@mysten/sui.js/utils";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Transaction } from "@mysten/sui/transactions";
+import { fromB64 } from "@mysten/sui/utils";
 import { suiClient } from "./SuiClient.js";
 import { transactionService } from "./TransactionService.js";
 
@@ -115,7 +115,7 @@ class TransactionExecutor {
   }
 
   createTx() {
-    const tx = new TransactionBlock();
+    const tx = new Transaction();
     tx.setGasBudget(this.gasBudget);
     return tx;
   }
@@ -218,10 +218,9 @@ class TransactionExecutor {
       throw new Error("SUI_ADMIN_PRIVATE_KEY is not configured");
     }
 
-    const response = await suiClient.signAndExecuteTransactionBlock({
-      signer: this.keypair,
-      transactionBlock: tx,
-      options: { showEffects: true, showEvents: true },
+    const response = await this.keypair.signAndExecuteTransaction({
+      transaction: tx,
+      client: suiClient,
     });
 
     return {
