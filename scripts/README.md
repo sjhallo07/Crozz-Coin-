@@ -2,6 +2,12 @@
 
 This directory contains utility scripts for managing and testing the Crozz-Coin ecosystem.
 
+## Quick Links
+
+- [Network Configuration Guide](../NETWORK_CONFIGURATION_GUIDE.md) - How to switch between testnet/mainnet/localnet
+- [Mainnet Readiness Guide](../MAINNET_READINESS_GUIDE.md) - Complete checklist before mainnet deployment
+- [Testnet Deployment Notice](../TESTNET_DEPLOYMENT_NOTICE.md) - Important security information
+
 ## Available Scripts
 
 ### 1. setup-sui-client.js
@@ -103,7 +109,47 @@ This script:
 - Ensures backend dependencies are installed
 - Runs the Node.js script with the provided options
 
-### 3. test_crozz.sh
+### 3. testnet-validation.sh
+
+**Purpose:** Comprehensive testnet validation and mainnet readiness assessment.
+
+**Location:** `scripts/testnet-validation.sh`
+
+**Usage:**
+```bash
+./scripts/testnet-validation.sh
+```
+
+**What it does:**
+1. **Environment Validation** - Checks all required environment variables
+2. **Sui CLI Check** - Verifies Sui CLI installation
+3. **Backend API Tests** - Tests health and token endpoints
+4. **Smart Contract Validation** - Verifies contract deployment
+5. **Security Checks** - Validates admin tokens and JWT secrets
+6. **Backend Test Suite** - Runs automated backend tests
+7. **Report Generation** - Creates `TESTNET_VALIDATION_REPORT.md`
+
+**Output:**
+- Console summary with pass/fail status
+- Detailed report in `TESTNET_VALIDATION_REPORT.md`
+- Mainnet readiness checklist with 50+ items
+- Security audit requirements
+- Deployment configuration checklist
+
+**When to run:**
+- Before considering mainnet deployment
+- After significant code changes
+- As part of CI/CD pipeline
+- Regular validation of testnet setup
+
+**Report includes:**
+- Test results (passed/failed)
+- Environment configuration status
+- Security assessment
+- Complete mainnet readiness checklist
+- Pre-deployment requirements
+
+### 4. test_crozz.sh
 
 **Purpose:** Smoke test script for Crozz token operations on Sui blockchain.
 
