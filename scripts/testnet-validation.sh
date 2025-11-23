@@ -21,6 +21,9 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Security constants
+INSECURE_TOKENS=("changeme" "change-me" "admin" "password")
+
 # Test results
 TESTS_PASSED=0
 TESTS_FAILED=0
@@ -225,9 +228,8 @@ test_backend_tests() {
     return 0
   fi
   
-  cd "$REPO_ROOT/backend"
-  
-  if npm test > /tmp/backend-test.log 2>&1; then
+  # Use subshell to avoid changing directory
+  if (cd "$REPO_ROOT/backend" && npm test > /tmp/backend-test.log 2>&1); then
     local test_summary=$(grep -E "Tests:.*passed" /tmp/backend-test.log || echo "Tests completed")
     log_success "Backend tests passed: $test_summary"
     append_report "- ✅ **Backend Tests**: Passed"
@@ -240,7 +242,6 @@ test_backend_tests() {
   fi
   
   append_report ""
-  cd "$REPO_ROOT"
 }
 
 test_security_configuration() {
@@ -249,8 +250,16 @@ test_security_configuration() {
   append_report ""
   
   # Check for secure tokens
-  if [ "${ADMIN_TOKEN:-}" = "changeme" ] || [ "${ADMIN_TOKEN:-}" = "change-me" ]; then
-    log_error "Default admin token detected - INSECURE"
+  local is_insecure=false
+  for token in "${INSECURE_TOKENS[@]}"; do
+    if [ "${ADMIN_TOKEN:-}" = "$token" ]; then
+      is_insecure=true
+      break
+    fi
+  done
+  
+  if [ "$is_insecure" = true ]; then
+    log_error "Default/weak admin token detected - INSECURE"
     append_report "- ❌ **Admin Token**: Using default/weak token (SECURITY RISK)"
   else
     log_success "Admin token is not using default value"

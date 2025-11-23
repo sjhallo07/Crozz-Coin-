@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { isInsecureToken } from "../constants/config";
 
 type UserRole = "admin" | "user";
 
@@ -26,8 +27,7 @@ interface UserRoleProviderProps {
 
 export const UserRoleProvider = ({ children }: UserRoleProviderProps) => {
   // Check if admin token is configured to determine default role
-  const hasAdminToken = !!import.meta.env.VITE_CROZZ_ADMIN_TOKEN && 
-                        import.meta.env.VITE_CROZZ_ADMIN_TOKEN !== "changeme";
+  const hasAdminToken = !isInsecureToken(import.meta.env.VITE_CROZZ_ADMIN_TOKEN);
   
   // Load role from localStorage or default to "user"
   const [role, setRoleState] = useState<UserRole>(() => {

@@ -1,3 +1,4 @@
+import { isInsecureToken } from "../../constants/config";
 import { useUserRole } from "../../providers/UserRoleProvider";
 import Button from "../UI/Button";
 
@@ -5,8 +6,7 @@ export default function RoleSwitcher() {
   const { role, isAdmin, toggleRole } = useUserRole();
   
   // Check if admin token is configured
-  const hasAdminToken = !!import.meta.env.VITE_CROZZ_ADMIN_TOKEN && 
-                        import.meta.env.VITE_CROZZ_ADMIN_TOKEN !== "changeme";
+  const hasAdminToken = !isInsecureToken(import.meta.env.VITE_CROZZ_ADMIN_TOKEN);
 
   // If no admin token, don't show the switcher
   if (!hasAdminToken) {
