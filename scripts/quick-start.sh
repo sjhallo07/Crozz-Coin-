@@ -34,7 +34,16 @@ command_exists() {
 
 # Function to check if a port is in use
 port_in_use() {
-    lsof -i ":$1" >/dev/null 2>&1 || netstat -an | grep -q ":$1.*LISTEN" 2>/dev/null
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -i ":$1" >/dev/null 2>&1
+    elif command -v netstat >/dev/null 2>&1; then
+        netstat -an | grep -q ":$1.*LISTEN" 2>/dev/null
+    elif command -v ss >/dev/null 2>&1; then
+        ss -ln | grep -q ":$1" 2>/dev/null
+    else
+        # If no tool available, assume port is free
+        return 1
+    fi
 }
 
 # Step 1: Check prerequisites
@@ -201,12 +210,15 @@ case $choice in
         echo -e "${GREEN}Starting Complete Ecosystem...${NC}"
         echo -e "${BLUE}═══════════════════════════════════════${NC}"
         echo ""
+        # Create secure temporary directory for logs
+        TEMP_DIR=$(mktemp -d -t crozz-logs.XXXXXX)
+        
         echo -e "${YELLOW}Starting Backend in background...${NC}"
         cd "$BACKEND_DIR"
-        npm run dev > /tmp/crozz-backend.log 2>&1 &
+        npm run dev > "${TEMP_DIR}/crozz-backend.log" 2>&1 &
         BACKEND_PID=$!
         echo -e "${GREEN}✓ Backend started (PID: $BACKEND_PID)${NC}"
-        echo -e "  Logs: tail -f /tmp/crozz-backend.log"
+        echo -e "  Logs: tail -f ${TEMP_DIR}/crozz-backend.log"
         
         # Wait for backend to start
         echo -e "${YELLOW}Waiting for backend to start...${NC}"
@@ -224,10 +236,10 @@ case $choice in
         cd "$FRONTEND_DIR"
         
         # Save PIDs for cleanup
-        echo "$BACKEND_PID" > /tmp/crozz-pids.txt
+        echo "$BACKEND_PID" > "${TEMP_DIR}/crozz-pids.txt"
         
         # Trap SIGINT to cleanup
-        trap 'echo ""; echo "Shutting down..."; kill $(cat /tmp/crozz-pids.txt 2>/dev/null) 2>/dev/null; exit' INT TERM
+        trap "echo ''; echo 'Shutting down...'; kill \$(cat '${TEMP_DIR}/crozz-pids.txt' 2>/dev/null) 2>/dev/null; rm -rf '${TEMP_DIR}'; exit" INT TERM
         
         npm run dev
         ;;

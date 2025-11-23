@@ -25,6 +25,10 @@ echo ""
 TESTS_PASSED=0
 TESTS_FAILED=0
 
+# Create secure temporary directory
+TEMP_DIR=$(mktemp -d -t crozz-test.XXXXXX)
+trap "rm -rf '${TEMP_DIR}'" EXIT
+
 # Function to run a test
 run_test() {
     local test_name="$1"
@@ -32,14 +36,14 @@ run_test() {
     
     echo -e "${YELLOW}Testing: ${test_name}${NC}"
     
-    if eval "$test_command" > /tmp/test-output.log 2>&1; then
+    if eval "$test_command" > "${TEMP_DIR}/test-output.log" 2>&1; then
         echo -e "${GREEN}✓ PASS: ${test_name}${NC}"
         TESTS_PASSED=$((TESTS_PASSED + 1))
         return 0
     else
         echo -e "${RED}✗ FAIL: ${test_name}${NC}"
         echo -e "${RED}  Error details:${NC}"
-        tail -5 /tmp/test-output.log | sed 's/^/  /'
+        tail -5 "${TEMP_DIR}/test-output.log" | sed 's/^/  /'
         TESTS_FAILED=$((TESTS_FAILED + 1))
         return 1
     fi
@@ -64,21 +68,30 @@ run_test "Frontend .env exists" "test -f $FRONTEND_DIR/.env"
 # Test 6: Start backend in background
 echo -e "${YELLOW}Starting backend server...${NC}"
 cd "$BACKEND_DIR"
-npm run start > /tmp/backend-test.log 2>&1 &
+npm run start > "${TEMP_DIR}/backend-test.log" 2>&1 &
 BACKEND_PID=$!
-echo "$BACKEND_PID" > /tmp/backend-test-pid.txt
 
-# Wait for backend to start
-sleep 8
-
-# Test 7: Backend is running
-if kill -0 $BACKEND_PID 2>/dev/null; then
-    echo -e "${GREEN}✓ PASS: Backend server started (PID: $BACKEND_PID)${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ FAIL: Backend server failed to start${NC}"
-    cat /tmp/backend-test.log
+# Validate PID
+if [ -z "$BACKEND_PID" ] || ! [[ "$BACKEND_PID" =~ ^[0-9]+$ ]]; then
+    echo -e "${RED}✗ FAIL: Invalid backend PID${NC}"
     TESTS_FAILED=$((TESTS_FAILED + 1))
+    BACKEND_PID=""
+else
+    echo "$BACKEND_PID" > "${TEMP_DIR}/backend-test-pid.txt"
+    
+    # Wait for backend to start
+    sleep 8
+    
+    # Test 7: Backend is running
+    if [ -n "$BACKEND_PID" ] && kill -0 "$BACKEND_PID" 2>/dev/null; then
+        echo -e "${GREEN}✓ PASS: Backend server started (PID: $BACKEND_PID)${NC}"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+    else
+        echo -e "${RED}✗ FAIL: Backend server failed to start${NC}"
+        cat "${TEMP_DIR}/backend-test.log"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        BACKEND_PID=""
+    fi
 fi
 
 # Test 8: Backend responds to health check
@@ -97,12 +110,12 @@ fi
 
 # Test 9: Frontend builds successfully
 echo -e "${YELLOW}Building frontend...${NC}"
-if cd "$FRONTEND_DIR" && npm run build > /tmp/frontend-build.log 2>&1; then
+if cd "$FRONTEND_DIR" && npm run build > "${TEMP_DIR}/frontend-build.log" 2>&1; then
     echo -e "${GREEN}✓ PASS: Frontend builds successfully${NC}"
     TESTS_PASSED=$((TESTS_PASSED + 1))
 else
     echo -e "${RED}✗ FAIL: Frontend build failed${NC}"
-    tail -10 /tmp/frontend-build.log
+    tail -10 "${TEMP_DIR}/frontend-build.log"
     TESTS_FAILED=$((TESTS_FAILED + 1))
 fi
 
@@ -119,10 +132,10 @@ run_test "Testing environments docs exist" "test -f $ROOT_DIR/docs/TESTING_ENVIR
 # Cleanup
 echo ""
 echo -e "${YELLOW}Cleaning up...${NC}"
-if [ -f /tmp/backend-test-pid.txt ]; then
-    BACKEND_PID=$(cat /tmp/backend-test-pid.txt)
-    if kill -0 $BACKEND_PID 2>/dev/null; then
-        kill $BACKEND_PID
+if [ -f "${TEMP_DIR}/backend-test-pid.txt" ]; then
+    BACKEND_PID=$(cat "${TEMP_DIR}/backend-test-pid.txt")
+    if [ -n "$BACKEND_PID" ] && [[ "$BACKEND_PID" =~ ^[0-9]+$ ]] && kill -0 "$BACKEND_PID" 2>/dev/null; then
+        kill "$BACKEND_PID"
         echo -e "${GREEN}✓ Backend server stopped${NC}"
     fi
 fi

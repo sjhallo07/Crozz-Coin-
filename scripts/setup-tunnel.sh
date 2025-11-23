@@ -68,22 +68,35 @@ setup_cloudflared() {
     echo ""
     
     # Create tunnel for backend
+    # Create secure temporary directory
+    TEMP_DIR=$(mktemp -d -t crozz-tunnel.XXXXXX)
+    
     echo -e "${GREEN}Creating tunnel for Backend (port ${BACKEND_PORT})...${NC}"
-    cloudflared tunnel --url http://localhost:${BACKEND_PORT} > /tmp/crozz-backend-tunnel.log 2>&1 &
+    cloudflared tunnel --url http://localhost:${BACKEND_PORT} > "${TEMP_DIR}/backend-tunnel.log" 2>&1 &
     BACKEND_PID=$!
     sleep 3
     
-    # Extract backend URL from log
-    BACKEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' /tmp/crozz-backend-tunnel.log | head -1)
+    # Extract backend URL from log with error checking
+    BACKEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' "${TEMP_DIR}/backend-tunnel.log" | head -1)
+    if [ -z "$BACKEND_URL" ]; then
+        echo -e "${RED}Failed to extract backend tunnel URL. Check log: ${TEMP_DIR}/backend-tunnel.log${NC}"
+        kill $BACKEND_PID 2>/dev/null
+        exit 1
+    fi
     
     # Create tunnel for frontend
     echo -e "${GREEN}Creating tunnel for Frontend (port ${FRONTEND_PORT})...${NC}"
-    cloudflared tunnel --url http://localhost:${FRONTEND_PORT} > /tmp/crozz-frontend-tunnel.log 2>&1 &
+    cloudflared tunnel --url http://localhost:${FRONTEND_PORT} > "${TEMP_DIR}/frontend-tunnel.log" 2>&1 &
     FRONTEND_PID=$!
     sleep 3
     
-    # Extract frontend URL from log
-    FRONTEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' /tmp/crozz-frontend-tunnel.log | head -1)
+    # Extract frontend URL from log with error checking
+    FRONTEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' "${TEMP_DIR}/frontend-tunnel.log" | head -1)
+    if [ -z "$FRONTEND_URL" ]; then
+        echo -e "${RED}Failed to extract frontend tunnel URL. Check log: ${TEMP_DIR}/frontend-tunnel.log${NC}"
+        kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+        exit 1
+    fi
     
     echo ""
     echo -e "${GREEN}✓ Tunnels created successfully!${NC}"
@@ -104,7 +117,7 @@ setup_cloudflared() {
     echo ""
     
     # Save tunnel info
-    cat > /tmp/crozz-tunnel-info.txt <<EOF
+    cat > "${TEMP_DIR}/tunnel-info.txt" <<EOF
 BACKEND_URL=${BACKEND_URL}
 FRONTEND_URL=${FRONTEND_URL}
 BACKEND_PID=${BACKEND_PID}
@@ -112,7 +125,7 @@ FRONTEND_PID=${FRONTEND_PID}
 CREATED=$(date)
 EOF
     
-    echo -e "${GREEN}Tunnel information saved to: /tmp/crozz-tunnel-info.txt${NC}"
+    echo -e "${GREEN}Tunnel information saved to: ${TEMP_DIR}/tunnel-info.txt${NC}"
     echo ""
     echo -e "${YELLOW}Note: Update your frontend .env with:${NC}"
     echo -e "  VITE_CROZZ_API_BASE_URL=${BACKEND_URL}"
@@ -132,21 +145,30 @@ setup_localhost_run() {
     echo -e "${BLUE}Starting SSH tunnels...${NC}"
     echo ""
     
+    # Create secure temporary directory
+    TEMP_DIR=$(mktemp -d -t crozz-tunnel.XXXXXX)
+    
     # Create tunnel for backend
     echo -e "${GREEN}Creating tunnel for Backend (port ${BACKEND_PORT})...${NC}"
-    ssh -R 80:localhost:${BACKEND_PORT} localhost.run > /tmp/crozz-backend-ssh-tunnel.log 2>&1 &
+    ssh -R 80:localhost:${BACKEND_PORT} localhost.run > "${TEMP_DIR}/backend-ssh-tunnel.log" 2>&1 &
     BACKEND_PID=$!
     sleep 5
     
     # Create tunnel for frontend
     echo -e "${GREEN}Creating tunnel for Frontend (port ${FRONTEND_PORT})...${NC}"
-    ssh -R 80:localhost:${FRONTEND_PORT} localhost.run > /tmp/crozz-frontend-ssh-tunnel.log 2>&1 &
+    ssh -R 80:localhost:${FRONTEND_PORT} localhost.run > "${TEMP_DIR}/frontend-ssh-tunnel.log" 2>&1 &
     FRONTEND_PID=$!
     sleep 5
     
-    # Extract URLs
-    BACKEND_URL=$(grep -o 'https://[^[:space:]]*localhost.run' /tmp/crozz-backend-ssh-tunnel.log | head -1)
-    FRONTEND_URL=$(grep -o 'https://[^[:space:]]*localhost.run' /tmp/crozz-frontend-ssh-tunnel.log | head -1)
+    # Extract URLs with error checking
+    BACKEND_URL=$(grep -o 'https://[^[:space:]]*localhost.run' "${TEMP_DIR}/backend-ssh-tunnel.log" | head -1)
+    FRONTEND_URL=$(grep -o 'https://[^[:space:]]*localhost.run' "${TEMP_DIR}/frontend-ssh-tunnel.log" | head -1)
+    
+    if [ -z "$BACKEND_URL" ] || [ -z "$FRONTEND_URL" ]; then
+        echo -e "${RED}Failed to extract tunnel URLs. Check logs in: ${TEMP_DIR}/${NC}"
+        kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+        exit 1
+    fi
     
     echo ""
     echo -e "${GREEN}✓ Tunnels created successfully!${NC}"
