@@ -239,7 +239,14 @@ case $choice in
         echo "$BACKEND_PID" > "${TEMP_DIR}/crozz-pids.txt"
         
         # Trap SIGINT to cleanup
-        trap "echo ''; echo 'Shutting down...'; kill \$(cat '${TEMP_DIR}/crozz-pids.txt' 2>/dev/null) 2>/dev/null; rm -rf '${TEMP_DIR}'; exit" INT TERM
+        trap "echo ''; echo 'Shutting down...'; \
+              if [ -f '${TEMP_DIR}/crozz-pids.txt' ]; then \
+                  PID=\$(cat '${TEMP_DIR}/crozz-pids.txt' 2>/dev/null); \
+                  if [ -n \"\$PID\" ] && [[ \"\$PID\" =~ ^[0-9]+$ ]] && ps -p \"\$PID\" >/dev/null 2>&1; then \
+                      kill \"\$PID\" 2>/dev/null; \
+                  fi; \
+              fi; \
+              rm -rf '${TEMP_DIR}'; exit" INT TERM
         
         npm run dev
         ;;
@@ -298,8 +305,12 @@ echo -e "  Backend API:  ${CYAN}http://localhost:4000${NC}"
 echo -e "  Frontend UI:  ${CYAN}http://localhost:5173${NC}"
 echo ""
 echo -e "${YELLOW}Useful commands:${NC}"
-echo -e "  View backend logs:  ${CYAN}tail -f /tmp/crozz-backend.log${NC}"
-echo -e "  Stop background:    ${CYAN}kill \$(cat /tmp/crozz-pids.txt)${NC}"
+if [ -n "${TEMP_DIR}" ] && [ -d "${TEMP_DIR}" ]; then
+    echo -e "  View backend logs:  ${CYAN}tail -f ${TEMP_DIR}/crozz-backend.log${NC}"
+    echo -e "  Stop background:    ${CYAN}kill \$(cat ${TEMP_DIR}/crozz-pids.txt)${NC}"
+else
+    echo -e "  View backend logs:  ${CYAN}Check console output${NC}"
+fi
 echo -e "  Setup tunnel:       ${CYAN}./scripts/setup-tunnel.sh${NC}"
 echo ""
 echo -e "${BLUE}For more information, see README.md and docs/REMOTE_TESTING.md${NC}"

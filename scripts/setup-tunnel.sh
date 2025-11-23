@@ -80,7 +80,10 @@ setup_cloudflared() {
     BACKEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' "${TEMP_DIR}/backend-tunnel.log" | head -1)
     if [ -z "$BACKEND_URL" ]; then
         echo -e "${RED}Failed to extract backend tunnel URL. Check log: ${TEMP_DIR}/backend-tunnel.log${NC}"
-        kill $BACKEND_PID 2>/dev/null
+        # Validate and kill PID
+        if [ -n "$BACKEND_PID" ] && [[ "$BACKEND_PID" =~ ^[0-9]+$ ]] && ps -p "$BACKEND_PID" >/dev/null 2>&1; then
+            kill "$BACKEND_PID" 2>/dev/null
+        fi
         exit 1
     fi
     
@@ -94,7 +97,12 @@ setup_cloudflared() {
     FRONTEND_URL=$(grep -o 'https://[^[:space:]]*\.trycloudflare.com' "${TEMP_DIR}/frontend-tunnel.log" | head -1)
     if [ -z "$FRONTEND_URL" ]; then
         echo -e "${RED}Failed to extract frontend tunnel URL. Check log: ${TEMP_DIR}/frontend-tunnel.log${NC}"
-        kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+        # Validate and kill PIDs
+        for PID in "$BACKEND_PID" "$FRONTEND_PID"; do
+            if [ -n "$PID" ] && [[ "$PID" =~ ^[0-9]+$ ]] && ps -p "$PID" >/dev/null 2>&1; then
+                kill "$PID" 2>/dev/null
+            fi
+        done
         exit 1
     fi
     
@@ -166,7 +174,12 @@ setup_localhost_run() {
     
     if [ -z "$BACKEND_URL" ] || [ -z "$FRONTEND_URL" ]; then
         echo -e "${RED}Failed to extract tunnel URLs. Check logs in: ${TEMP_DIR}/${NC}"
-        kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+        # Validate and kill PIDs
+        for PID in "$BACKEND_PID" "$FRONTEND_PID"; do
+            if [ -n "$PID" ] && [[ "$PID" =~ ^[0-9]+$ ]] && ps -p "$PID" >/dev/null 2>&1; then
+                kill "$PID" 2>/dev/null
+            fi
+        done
         exit 1
     fi
     
