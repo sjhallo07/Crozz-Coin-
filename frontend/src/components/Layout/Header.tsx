@@ -1,16 +1,31 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { type SVGProps } from "react";
 import { useThemeMode } from "../../providers/ThemeProvider";
+import { getCurrentNetwork, isMainnet } from "../../utils/sui";
 import Button from "../UI/Button";
 
 const Header = () => {
   const { theme, toggleTheme } = useThemeMode();
   const isDark = theme === "dark";
+  const network = getCurrentNetwork();
+  const isMain = isMainnet();
+
+  const networkColors = {
+    mainnet: "bg-green-500 text-white",
+    testnet: "bg-yellow-500 text-white",
+    localnet: "bg-gray-500 text-white",
+  };
 
   return (
     <header className="header">
       <div className="flex items-center gap-4">
         <h1 className="header-title">Admin Dashboard</h1>
+        <div className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${networkColors[network]}`}>
+          {network}
+        </div>
+        {isMain && (
+          <span className="text-red-600 text-xs font-semibold">⚠️ LIVE</span>
+        )}
       </div>
       <div className="flex items-center gap-3">
         <ConnectButton />

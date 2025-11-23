@@ -1,4 +1,5 @@
 import AdminActions from "./components/Dashboard/AdminActions";
+import NetworkIndicator from "./components/Dashboard/NetworkIndicator";
 import UserActions from "./components/Dashboard/UserActions";
 import Header from "./components/Layout/Header";
 import MainContent from "./components/Layout/MainContent";
@@ -10,6 +11,7 @@ const App = () => (
     <div className="dashboard-main">
       <Header />
       <MainContent>
+        <NetworkIndicator />
         <UserActions />
         <AdminActions />
       </MainContent>
