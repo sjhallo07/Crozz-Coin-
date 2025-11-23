@@ -430,7 +430,7 @@ sui client publish --gas-budget 100000000
 ## Next Steps
 
 1. **Start with local development** - Follow [SETUP_GUIDE.md](../SETUP_GUIDE.md)
-2. **Try remote testing** - Use [REMOTE_TESTING.md](REMOTE_TESTING.md) guide
+2. **Try remote testing** - Use [REMOTE_TESTING.md](./REMOTE_TESTING.md) guide
 3. **Set up staging** when ready for extended testing
 4. **Deploy to production** after thorough validation
 

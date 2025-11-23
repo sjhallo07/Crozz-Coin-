@@ -687,7 +687,6 @@ For Sui wallet testing on mobile:
 ### Crozz-Coin Documentation
 - [README.md](../README.md) - Main project documentation
 - [SETUP_GUIDE.md](../SETUP_GUIDE.md) - Detailed setup instructions
-- [backend/API_TESTING.md](../backend/API_TESTING.md) - API testing guide
 
 ### Community & Support
 - [GitHub Issues](https://github.com/sjhallo07/Crozz-Coin-/issues)

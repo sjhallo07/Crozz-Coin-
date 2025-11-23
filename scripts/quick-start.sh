@@ -227,7 +227,7 @@ case $choice in
         if kill -0 $BACKEND_PID 2>/dev/null; then
             echo -e "${GREEN}✓ Backend is running${NC}"
         else
-            echo -e "${RED}✗ Backend failed to start. Check logs: /tmp/crozz-backend.log${NC}"
+            echo -e "${RED}✗ Backend failed to start. Check logs: ${TEMP_DIR}/crozz-backend.log${NC}"
             exit 1
         fi
         
