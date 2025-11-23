@@ -16,6 +16,51 @@ For a complete, ready-to-execute deployment package, see the [`deployment/`](dep
 
 ---
 
+## ⚡ Quick Start: Run Complete Ecosystem
+
+Want to run the entire ecosystem (backend + frontend) for testing? Use our quick-start script:
+
+```bash
+# One command to rule them all
+./scripts/quick-start.sh
+```
+
+This interactive script will:
+- ✅ Check prerequisites (Node.js, npm)
+- ✅ Install dependencies (backend + frontend)
+- ✅ Set up environment files
+- ✅ Start backend API (port 4000)
+- ✅ Start frontend dashboard (port 5173)
+- ✅ Optionally set up remote access tunnel for client testing
+
+### Remote Testing / Client Demos
+
+Need to share your local development with clients or team members remotely?
+
+```bash
+# Start services
+./scripts/quick-start.sh
+# Choose option 3 (Start Both)
+
+# In another terminal, set up tunnel
+./scripts/setup-tunnel.sh
+# Choose option 1 (Cloudflare Tunnel - Recommended)
+
+# Share the URLs with your team/clients!
+```
+
+**What you get:**
+- 🌐 Public URLs for both backend and frontend
+- 🔒 HTTPS by default (secure)
+- 🚀 No complex network configuration
+- 💰 Free (no account required with Cloudflare)
+
+**See full documentation:**
+- 📖 [Remote Testing Guide](docs/REMOTE_TESTING.md) - Complete tunnel setup guide
+- 📖 [Testing Environments](docs/TESTING_ENVIRONMENTS.md) - Temporary vs. real use explained
+
+---
+
 ## Quick Start: Generate Sui Client Address & Environment Setup
 
 Before diving into development, you'll need to generate a Sui address and configure your environment:
