@@ -30,6 +30,14 @@ backend/.env
 .DS_Store
 Thumbs.db
 
+# Database files
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+
 # Deployment artifacts (keep documentation, ignore results/logs)
 deployment/deployment-log.txt
 deployment/deployment-results.md
