@@ -1,5 +1,5 @@
 import { getCurrentNetwork, isMainnet, isTestnet } from "../../utils/sui";
-import { Card } from "../UI/Card";
+import Card from "../UI/Card";
 
 export default function NetworkIndicator() {
   const network = getCurrentNetwork();

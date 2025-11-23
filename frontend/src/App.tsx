@@ -4,19 +4,23 @@ import UserActions from "./components/Dashboard/UserActions";
 import Header from "./components/Layout/Header";
 import MainContent from "./components/Layout/MainContent";
 import Sidebar from "./components/Layout/Sidebar";
+import { useUserRole } from "./providers/UserRoleProvider";
 
-const App = () => (
-  <div className="dashboard-root">
-    <Sidebar />
-    <div className="dashboard-main">
-      <Header />
-      <MainContent>
-        <NetworkIndicator />
-        <UserActions />
-        <AdminActions />
-      </MainContent>
+const App = () => {
+  const { isAdmin } = useUserRole();
+  
+  return (
+    <div className="dashboard-root">
+      <Sidebar />
+      <div className="dashboard-main">
+        <Header />
+        <MainContent>
+          <NetworkIndicator />
+          {isAdmin ? <AdminActions /> : <UserActions />}
+        </MainContent>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default App;

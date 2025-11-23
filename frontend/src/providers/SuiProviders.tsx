@@ -6,6 +6,7 @@ import { defaultNetwork, networkConfig } from "../networkConfig";
 import { AuthProvider } from "./AuthProvider";
 import { DashboardDataProvider } from "./DashboardDataProvider";
 import { ThemeProvider } from "./ThemeProvider";
+import { UserRoleProvider } from "./UserRoleProvider";
 
 const queryClient = new QueryClient();
 
@@ -15,20 +16,22 @@ interface Props {
 
 export const SuiProviders = ({ children }: Props) => (
   <ThemeProvider>
-    <AuthProvider>
-      <DashboardDataProvider>
-        <QueryClientProvider client={queryClient}>
-          <SuiClientProvider
-            networks={networkConfig}
-            defaultNetwork={defaultNetwork}
-          >
-            <WalletProvider autoConnect>
-              {children}
-              <Toaster position="top-center" />
-            </WalletProvider>
-          </SuiClientProvider>
-        </QueryClientProvider>
-      </DashboardDataProvider>
-    </AuthProvider>
+    <UserRoleProvider>
+      <AuthProvider>
+        <DashboardDataProvider>
+          <QueryClientProvider client={queryClient}>
+            <SuiClientProvider
+              networks={networkConfig}
+              defaultNetwork={defaultNetwork}
+            >
+              <WalletProvider autoConnect>
+                {children}
+                <Toaster position="top-center" />
+              </WalletProvider>
+            </SuiClientProvider>
+          </QueryClientProvider>
+        </DashboardDataProvider>
+      </AuthProvider>
+    </UserRoleProvider>
   </ThemeProvider>
 );

@@ -1,11 +1,14 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { type SVGProps } from "react";
+import RoleSwitcher from "../../components/Dashboard/RoleSwitcher";
 import { useThemeMode } from "../../providers/ThemeProvider";
+import { useUserRole } from "../../providers/UserRoleProvider";
 import { getCurrentNetwork, isMainnet } from "../../utils/sui";
 import Button from "../UI/Button";
 
 const Header = () => {
   const { theme, toggleTheme } = useThemeMode();
+  const { isAdmin } = useUserRole();
   const isDark = theme === "dark";
   const network = getCurrentNetwork();
   const isMain = isMainnet();
@@ -19,7 +22,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="flex items-center gap-4">
-        <h1 className="header-title">Admin Dashboard</h1>
+        <h1 className="header-title">
+          {isAdmin ? "Admin Dashboard" : "User Dashboard"}
+        </h1>
         <div className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${networkColors[network]}`}>
           {network}
         </div>
@@ -28,6 +33,7 @@ const Header = () => {
         )}
       </div>
       <div className="flex items-center gap-3">
+        <RoleSwitcher />
         <ConnectButton />
         <Button
           variant="ghost"
