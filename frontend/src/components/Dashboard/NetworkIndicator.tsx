@@ -1,39 +1,41 @@
-import { getCurrentNetwork, isMainnet, isTestnet } from "../../utils/sui";
-import Card from "../UI/Card";
+import { getCurrentNetwork, isMainnet, isTestnet } from '../../utils/sui';
+import Card from '../UI/Card';
 
 type NetworkConfig = {
   icon: string;
   badgeClass: string;
   description: string;
   banner?: {
-    type: "warning" | "info";
+    type: 'warning' | 'info';
     message: string;
   };
 };
 
 const NETWORK_CONFIG: Record<string, NetworkConfig> = {
   mainnet: {
-    icon: "🟢",
-    badgeClass: "bg-green-100 text-green-800 border-green-300",
-    description: "Production environment - real assets",
+    icon: '🟢',
+    badgeClass: 'bg-green-100 text-green-800 border-green-300',
+    description: 'Production environment - real assets',
     banner: {
-      type: "warning",
-      message: "⚠️ WARNING: You are connected to MAINNET. All transactions use real assets and are irreversible.",
+      type: 'warning',
+      message:
+        '⚠️ WARNING: You are connected to MAINNET. All transactions use real assets and are irreversible.',
     },
   },
   testnet: {
-    icon: "🟡",
-    badgeClass: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    description: "Test environment - test tokens only",
+    icon: '🟡',
+    badgeClass: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+    description: 'Test environment - test tokens only',
     banner: {
-      type: "info",
-      message: "ℹ️ INFO: You are connected to TESTNET. Tokens have no real value and are for testing purposes only.",
+      type: 'info',
+      message:
+        'ℹ️ INFO: You are connected to TESTNET. Tokens have no real value and are for testing purposes only.',
     },
   },
   localnet: {
-    icon: "⚪",
-    badgeClass: "bg-gray-100 text-gray-800 border-gray-300",
-    description: "Local development environment",
+    icon: '⚪',
+    badgeClass: 'bg-gray-100 text-gray-800 border-gray-300',
+    description: 'Local development environment',
   },
 };
 
@@ -47,12 +49,8 @@ export default function NetworkIndicator() {
         <div className="flex items-center gap-3">
           <span className="text-2xl">{config.icon}</span>
           <div>
-            <h3 className="text-lg font-semibold capitalize">
-              {network} Network
-            </h3>
-            <p className="text-sm text-gray-600">
-              {config.description}
-            </p>
+            <h3 className="text-lg font-semibold capitalize">{network} Network</h3>
+            <p className="text-sm text-gray-600">{config.description}</p>
           </div>
         </div>
         <div
@@ -61,18 +59,20 @@ export default function NetworkIndicator() {
           {network}
         </div>
       </div>
-      
+
       {config.banner && (
-        <div className={`mt-4 p-3 rounded ${
-          config.banner.type === "warning"
-            ? "bg-red-50 border-l-4 border-red-500"
-            : "bg-blue-50 border-l-4 border-blue-500"
-        }`}>
-          <p className={`text-sm ${
-            config.banner.type === "warning"
-              ? "text-red-800 font-medium"
-              : "text-blue-800"
-          }`}>
+        <div
+          className={`mt-4 p-3 rounded ${
+            config.banner.type === 'warning'
+              ? 'bg-red-50 border-l-4 border-red-500'
+              : 'bg-blue-50 border-l-4 border-blue-500'
+          }`}
+        >
+          <p
+            className={`text-sm ${
+              config.banner.type === 'warning' ? 'text-red-800 font-medium' : 'text-blue-800'
+            }`}
+          >
             {config.banner.message}
           </p>
         </div>

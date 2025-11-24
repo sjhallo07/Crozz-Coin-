@@ -1,4 +1,4 @@
-import { useDashboardData } from "../providers/DashboardDataProvider";
+import { useDashboardData } from '../providers/DashboardDataProvider';
 
 export const useTokenData = () => {
   const { tokenSummary, summaryLoading } = useDashboardData();

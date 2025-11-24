@@ -1,18 +1,20 @@
 # Crozz Coin - Complete Deployment Guide
 
 > ⚠️ **SECURITY WARNING**: This document contains TESTNET private keys for demonstration purposes only.
-> 
+>
 > - **NEVER use these keys on mainnet**
 > - **NEVER share or reuse these keys in production**
 > - **ALWAYS generate new keys for production deployments**
 > - These keys are for TESTNET TESTING ONLY and have no real value
-> 
+>
 > For production deployments, use secure key management practices and never expose private keys in documentation.
 
 ## Overview
+
 This guide provides step-by-step instructions to deploy and test Crozz Coin on Sui testnet, including wallet creation, token deployment, minting, and transfers.
 
 ## Token Specification
+
 - **Token Name**: Crozz Coin
 - **Symbol**: CROZZ
 - **Decimals**: 9
@@ -25,6 +27,7 @@ This guide provides step-by-step instructions to deploy and test Crozz Coin on S
 ## Generated Wallets
 
 ### 1. Admin Wallet (Treasury Management)
+
 ```
 Address:     0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c
 Private Key: ed25519:AAAAAAAAAAAAAAEAAAkAAAMAAAADBgAEAAMAAAAAAAAAAAYAAAAAAAcAAAACAwAABQIAAAAACQAAAAAAAAAAAAAABAADCQ==
@@ -35,6 +38,7 @@ Purpose:     Contract deployment, treasury operations, admin functions
 **Explorer Link**: https://testnet.suivision.xyz/account/0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c
 
 ### 2. Test Wallet - Alice
+
 ```
 Address:     0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
 Private Key: ed25519:AAAAAAAAAAAAAAEAAAQAAAUAAAAFAAAAAAAIBAAAAAYAAAAAAAQAAAAACQkDAgAAAAAAAAAAAAAAAAAAAAICBQAABwAHAA==
@@ -45,6 +49,7 @@ Purpose:     Token recipient, transfer testing
 **Explorer Link**: https://testnet.suivision.xyz/account/0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
 
 ### 3. Test Wallet - Bob
+
 ```
 Address:     0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93
 Private Key: ed25519:AAAAAAAAAAAAAAEAAAAAAAQABwAAAAAIAAADAAkACQAEAAkAAAAAAAAAAAAEAAUAAAAAAAAFAAAAAAAAAAAABgAAAAkEAA==
@@ -55,6 +60,7 @@ Purpose:     Token recipient, transfer testing
 **Explorer Link**: https://testnet.suivision.xyz/account/0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93
 
 ### 4. Test Wallet - Charlie
+
 ```
 Address:     0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01
 Private Key: ed25519:AAAAAAAAAAAAAAEAAAAFAAAAAAYAAgAFAAcAAAAAAgUEAAAGAAADAAkABgAAAAAEAAAAAAAAAAkAAAAAAAAAAAMAAAAFBg==
@@ -73,6 +79,7 @@ Purpose:     Token recipient, transfer testing
 Request SUI tokens from the testnet faucet for each wallet to pay for gas fees.
 
 #### For Admin Wallet:
+
 ```bash
 curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
   --header 'Content-Type: application/json' \
@@ -84,6 +91,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ```
 
 #### For Alice Wallet:
+
 ```bash
 curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
   --header 'Content-Type: application/json' \
@@ -95,6 +103,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ```
 
 #### For Bob Wallet:
+
 ```bash
 curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
   --header 'Content-Type: application/json' \
@@ -106,6 +115,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ```
 
 #### For Charlie Wallet:
+
 ```bash
 curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
   --header 'Content-Type: application/json' \
@@ -170,12 +180,14 @@ sui client publish --gas-budget 100000000
 ```
 
 **Expected Output:**
+
 - Package ID (save this as `CROZZ_PACKAGE_ID`)
 - TreasuryCap object ID (save this as `CROZZ_TREASURY_CAP_ID`)
 - CoinMetadata object ID (save this as `CROZZ_METADATA_ID`)
 - AdminCap object ID (save this as `CROZZ_ADMIN_CAP_ID`)
 
 **Example Output:**
+
 ```
 ----- Transaction Digest ----
 <TRANSACTION_DIGEST>
@@ -240,6 +252,7 @@ Mint tokens to each test wallet using the backend API or Sui CLI:
 #### Using Sui CLI:
 
 **Mint 1,000 CROZZ to Alice:**
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -250,6 +263,7 @@ sui client call \
 ```
 
 **Mint 2,000 CROZZ to Bob:**
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -260,6 +274,7 @@ sui client call \
 ```
 
 **Mint 3,000 CROZZ to Charlie:**
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -269,17 +284,19 @@ sui client call \
   --gas-budget 10000000
 ```
 
-*Note: Amounts are in the smallest unit (9 decimals). 1000000000000 = 1,000 CROZZ*
+_Note: Amounts are in the smallest unit (9 decimals). 1000000000000 = 1,000 CROZZ_
 
 #### Using Backend API:
 
 Start the backend server:
+
 ```bash
 cd backend
 npm run dev
 ```
 
 Then use the API to mint tokens:
+
 ```bash
 # Mint to Alice
 curl -X POST http://localhost:4000/api/tokens/mint \
@@ -306,17 +323,20 @@ Transfer tokens between the test wallets to demonstrate functionality.
 #### Transfer 1: Alice → Bob (500 CROZZ)
 
 First, import Alice's wallet and switch to it:
+
 ```bash
 sui keytool import <ALICE_PRIVATE_KEY> ed25519
 sui client switch --address 0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
 ```
 
 Get Alice's CROZZ coin objects:
+
 ```bash
 sui client objects --owned-by 0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
 ```
 
 Transfer 500 CROZZ from Alice to Bob:
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -329,17 +349,20 @@ sui client call \
 #### Transfer 2: Bob → Charlie (800 CROZZ)
 
 Switch to Bob's wallet:
+
 ```bash
 sui keytool import <BOB_PRIVATE_KEY> ed25519
 sui client switch --address 0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93
 ```
 
 Get Bob's CROZZ coin objects:
+
 ```bash
 sui client objects --owned-by 0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93
 ```
 
 Transfer 800 CROZZ from Bob to Charlie:
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -352,17 +375,20 @@ sui client call \
 #### Transfer 3: Charlie → Alice (1,200 CROZZ)
 
 Switch to Charlie's wallet:
+
 ```bash
 sui keytool import <CHARLIE_PRIVATE_KEY> ed25519
 sui client switch --address 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01
 ```
 
 Get Charlie's CROZZ coin objects:
+
 ```bash
 sui client objects --owned-by 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01
 ```
 
 Transfer 1,200 CROZZ from Charlie to Alice:
+
 ```bash
 sui client call \
   --package <PACKAGE_ID> \
@@ -383,7 +409,7 @@ sui client call \
 # Expected: 1000 - 500 + 1200 = 1700 CROZZ
 sui client objects --owned-by 0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
 
-# Check Bob's CROZZ balance  
+# Check Bob's CROZZ balance
 # Expected: 2000 + 500 - 800 = 1700 CROZZ
 sui client objects --owned-by 0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93
 
@@ -395,10 +421,12 @@ sui client objects --owned-by 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f
 #### View Transactions on Explorer:
 
 All transactions can be viewed on Sui testnet explorer:
+
 - **SuiVision**: https://testnet.suivision.xyz/
 - **SuiScan**: https://testnet.suiscan.xyz/
 
 Search by:
+
 - Wallet addresses
 - Transaction digests
 - Package ID
@@ -420,27 +448,27 @@ After completing all steps, document your results:
 
 ### Mint Transactions
 
-| Wallet | Amount | Transaction Digest | Explorer Link |
-|--------|--------|-------------------|---------------|
-| Alice  | 1,000 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
-| Bob    | 2,000 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
-| Charlie | 3,000 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| Wallet  | Amount      | Transaction Digest | Explorer Link                                     |
+| ------- | ----------- | ------------------ | ------------------------------------------------- |
+| Alice   | 1,000 CROZZ | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| Bob     | 2,000 CROZZ | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| Charlie | 3,000 CROZZ | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
 
 ### Transfer Transactions
 
-| From | To | Amount | Transaction Digest | Explorer Link |
-|------|-------|--------|-------------------|---------------|
-| Alice | Bob | 500 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
-| Bob | Charlie | 800 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
-| Charlie | Alice | 1,200 CROZZ | `<TX_DIGEST>` | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| From    | To      | Amount      | Transaction Digest | Explorer Link                                     |
+| ------- | ------- | ----------- | ------------------ | ------------------------------------------------- |
+| Alice   | Bob     | 500 CROZZ   | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| Bob     | Charlie | 800 CROZZ   | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
+| Charlie | Alice   | 1,200 CROZZ | `<TX_DIGEST>`      | https://testnet.suivision.xyz/txblock/<TX_DIGEST> |
 
 ### Final Balances
 
-| Wallet | Final Balance | Explorer Link |
-|--------|--------------|---------------|
-| Alice  | 1,700 CROZZ | https://testnet.suivision.xyz/account/0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423 |
-| Bob    | 1,700 CROZZ | https://testnet.suivision.xyz/account/0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93 |
-| Charlie | 2,600 CROZZ | https://testnet.suivision.xyz/account/0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01 |
+| Wallet  | Final Balance | Explorer Link                                                                                            |
+| ------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| Alice   | 1,700 CROZZ   | https://testnet.suivision.xyz/account/0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423 |
+| Bob     | 1,700 CROZZ   | https://testnet.suivision.xyz/account/0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93 |
+| Charlie | 2,600 CROZZ   | https://testnet.suivision.xyz/account/0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01 |
 
 ---
 
@@ -462,16 +490,21 @@ Capture the following screenshots for documentation:
 ## Troubleshooting
 
 ### Issue: Faucet request fails
+
 **Solution**: Wait a few minutes and try again. The testnet faucet has rate limits.
 
 ### Issue: Insufficient gas
+
 **Solution**: Request more SUI from the faucet or use a higher gas budget.
 
 ### Issue: Object not found
+
 **Solution**: Ensure you're using the correct object IDs from the deployment output.
 
 ### Issue: Transaction fails
+
 **Solution**: Check that:
+
 - The wallet has sufficient SUI for gas
 - The coin objects exist and are owned by the sender
 - You're using the correct package and module names

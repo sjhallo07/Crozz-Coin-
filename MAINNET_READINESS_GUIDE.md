@@ -11,6 +11,7 @@
 **DO NOT deploy to mainnet until ALL items in this guide are completed and verified.**
 
 Mainnet deployment involves real assets with real value. Mistakes can result in:
+
 - Permanent loss of funds
 - Security vulnerabilities exposing user assets
 - Irreversible smart contract bugs
@@ -43,6 +44,7 @@ cat TESTNET_VALIDATION_REPORT.md
 ```
 
 **Requirements:**
+
 - ✅ All automated tests must pass
 - ✅ Manual testing of all critical functions completed
 - ✅ Edge cases and error scenarios tested
@@ -52,6 +54,7 @@ cat TESTNET_VALIDATION_REPORT.md
 ### 2. Code Review
 
 **Requirements:**
+
 - ✅ Complete code review by senior developers
 - ✅ All code follows security best practices
 - ✅ No hardcoded secrets or credentials
@@ -63,6 +66,7 @@ cat TESTNET_VALIDATION_REPORT.md
 ### 3. Smart Contract Verification
 
 **Requirements:**
+
 - ✅ Move contract follows best practices
 - ✅ No overflow/underflow vulnerabilities
 - ✅ Proper access control on admin functions
@@ -79,6 +83,7 @@ cat TESTNET_VALIDATION_REPORT.md
 **MANDATORY:** Have the smart contract audited by a reputable security firm before mainnet deployment.
 
 **Recommended Audit Firms:**
+
 - Trail of Bits
 - ConsenSys Diligence
 - OpenZeppelin
@@ -86,6 +91,7 @@ cat TESTNET_VALIDATION_REPORT.md
 - Halborn
 
 **Audit Scope Must Include:**
+
 - ✅ Smart contract security review
 - ✅ Access control verification
 - ✅ Economic security analysis
@@ -166,6 +172,7 @@ VITE_SUI_CLOCK_OBJECT=0x6
 ### Critical Configuration Changes
 
 1. **Generate New Keys:**
+
    ```bash
    # DO NOT reuse testnet keys
    cd backend
@@ -314,12 +321,14 @@ curl https://api.crozz.io/api/tokens/summary
 ### Alerting Configuration
 
 **Critical Alerts (Page Immediately):**
+
 - Backend API down
 - Smart contract interaction failures
 - Security breach detected
 - Treasury operations anomalies
 
 **Warning Alerts (Notify Team):**
+
 - High error rates
 - Elevated response times
 - Unusual traffic patterns
@@ -328,18 +337,21 @@ curl https://api.crozz.io/api/tokens/summary
 ### Operations Procedures
 
 **Daily Tasks:**
+
 - Review monitoring dashboards
 - Check error logs
 - Verify backup completion
 - Review transaction activity
 
 **Weekly Tasks:**
+
 - Security audit of recent changes
 - Performance optimization review
 - Dependency updates (security patches)
 - Disaster recovery drill
 
 **Monthly Tasks:**
+
 - Comprehensive security review
 - Cost optimization analysis
 - Capacity planning review
@@ -352,12 +364,14 @@ curl https://api.crozz.io/api/tokens/summary
 ### Incident Response Team
 
 **Roles:**
+
 - Incident Commander
 - Technical Lead
 - Communications Lead
 - Security Lead
 
 **Contact Information:**
+
 - [Maintain current contact list]
 - [Include escalation procedures]
 
@@ -399,6 +413,7 @@ curl https://api.crozz.io/api/tokens/summary
 ### Circuit Breakers
 
 **When to Halt Operations:**
+
 - Security vulnerability discovered
 - Unexpected token supply changes
 - Multiple transaction failures
@@ -406,6 +421,7 @@ curl https://api.crozz.io/api/tokens/summary
 - DDoS attack in progress
 
 **Pause Procedure:**
+
 ```bash
 # Set executor to dry-run mode
 # This stops automatic transaction execution
@@ -462,28 +478,31 @@ export CROZZ_EXECUTOR_DRY_RUN=true
 
 ### Sign-Off Required
 
-- [ ] Technical Lead: _________________
-- [ ] Security Lead: _________________
-- [ ] Product Manager: _________________
-- [ ] Legal Counsel: _________________
-- [ ] Executive Sponsor: _________________
+- [ ] Technical Lead: ********\_********
+- [ ] Security Lead: ********\_********
+- [ ] Product Manager: ********\_********
+- [ ] Legal Counsel: ********\_********
+- [ ] Executive Sponsor: ********\_********
 
-**Date:** _________________
+**Date:** ********\_********
 
 ---
 
 ## Resources
 
 ### Documentation
+
 - [Sui Mainnet Documentation](https://docs.sui.io/)
 - [Move Security Best Practices](https://move-book.com/)
 - [Crozz Token Documentation](./README.md)
 
 ### Support
+
 - Sui Discord: https://discord.gg/sui
 - Sui Forum: https://forums.sui.io/
 
 ### Tools
+
 - Sui Explorer: https://suiexplorer.com/
 - Gas Optimization: [Best Practices]
 - Security Tools: [List security scanning tools]

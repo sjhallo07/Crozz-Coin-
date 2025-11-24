@@ -1,17 +1,15 @@
-import Database from "better-sqlite3";
-import fs from "node:fs";
-import path from "node:path";
+import Database from 'better-sqlite3';
+import fs from 'node:fs';
+import path from 'node:path';
 
-const DATA_DIR =
-  process.env.CROZZ_DATA_DIR ?? path.resolve(process.cwd(), "data");
-const DB_PATH =
-  process.env.CROZZ_DB_PATH ?? path.join(DATA_DIR, "crozz.sqlite");
+const DATA_DIR = process.env.CROZZ_DATA_DIR ?? path.resolve(process.cwd(), 'data');
+const DB_PATH = process.env.CROZZ_DB_PATH ?? path.join(DATA_DIR, 'crozz.sqlite');
 
 // Directory and database initialization is now deferred to initDatabase().
 
 /**
  * Initializes the database and creates required tables if they do not exist.
- * 
+ *
  * IMPORTANT: This function must be called once at application startup,
  * before any services are instantiated or any code attempts to access the database.
  * Failing to do so may result in runtime errors due to an uninitialized database.
@@ -22,14 +20,14 @@ function initDatabase() {
   try {
     fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
   } catch (err) {
-    console.error("Failed to create database directory:", err);
+    console.error('Failed to create database directory:', err);
     throw err;
   }
   try {
     database = new Database(DB_PATH);
-    database.pragma("journal_mode = WAL");
-    database.pragma("synchronous = NORMAL");
-    database.pragma("foreign_keys = ON");
+    database.pragma('journal_mode = WAL');
+    database.pragma('synchronous = NORMAL');
+    database.pragma('foreign_keys = ON');
 
     database.exec(`
       CREATE TABLE IF NOT EXISTS transactions (
@@ -85,7 +83,7 @@ function initDatabase() {
         ON password_resets (token);
     `);
   } catch (err) {
-    console.error("Failed to initialize database:", err);
+    console.error('Failed to initialize database:', err);
     throw err;
   }
 }

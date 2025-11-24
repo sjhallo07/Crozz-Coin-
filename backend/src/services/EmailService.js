@@ -7,8 +7,8 @@ class EmailService {
       html,
       sentAt: new Date().toISOString(),
     };
-    if (process.env.NODE_ENV !== "test") {
-      console.info("[email]", JSON.stringify(payload, null, 2));
+    if (process.env.NODE_ENV !== 'test') {
+      console.info('[email]', JSON.stringify(payload, null, 2));
     }
     return payload;
   }

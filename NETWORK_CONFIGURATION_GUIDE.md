@@ -8,11 +8,11 @@ This guide explains how to configure and switch between Testnet, Mainnet, and Lo
 
 The Crozz Token application supports three Sui networks:
 
-| Network | Purpose | RPC URL | Use Case |
-|---------|---------|---------|----------|
-| **Testnet** | Testing & Development | `https://fullnode.testnet.sui.io:443` | Safe testing with no real value |
-| **Mainnet** | Production | `https://fullnode.mainnet.sui.io:443` | Live deployment with real assets |
-| **Localnet** | Local Development | `http://127.0.0.1:9000` | Development with local Sui node |
+| Network      | Purpose               | RPC URL                               | Use Case                         |
+| ------------ | --------------------- | ------------------------------------- | -------------------------------- |
+| **Testnet**  | Testing & Development | `https://fullnode.testnet.sui.io:443` | Safe testing with no real value  |
+| **Mainnet**  | Production            | `https://fullnode.mainnet.sui.io:443` | Live deployment with real assets |
+| **Localnet** | Local Development     | `http://127.0.0.1:9000`               | Development with local Sui node  |
 
 ---
 
@@ -42,6 +42,7 @@ VITE_SUI_NETWORK=localnet
 ## Testnet Configuration (Current)
 
 ### Purpose
+
 - Safe testing environment
 - No real assets at risk
 - Free test tokens from faucet
@@ -52,6 +53,7 @@ VITE_SUI_NETWORK=localnet
 #### Environment Variables
 
 **Root `.env`:**
+
 ```env
 SUI_RPC_URL=https://fullnode.testnet.sui.io:443
 VITE_SUI_NETWORK=testnet
@@ -60,6 +62,7 @@ CROZZ_EXECUTOR_DRY_RUN=false
 ```
 
 **Frontend:**
+
 ```env
 VITE_SUI_NETWORK=testnet
 VITE_CROZZ_API_BASE_URL=http://localhost:4000
@@ -82,6 +85,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ### Testing Workflow
 
 1. **Deploy to Testnet**
+
    ```bash
    cd smart-contract
    sui client publish --gas-budget 100000000
@@ -92,6 +96,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
    - Update `.env` files with testnet IDs
 
 3. **Run Validation**
+
    ```bash
    ./scripts/testnet-validation.sh
    ```
@@ -119,12 +124,14 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ### Never Reuse Testnet Configuration
 
 ❌ **DO NOT:**
+
 - Reuse testnet package IDs on mainnet
 - Copy testnet private keys to mainnet
 - Use testnet admin tokens on mainnet
 - Deploy without security audit
 
 ✅ **ALWAYS:**
+
 - Generate fresh keys for mainnet
 - Deploy new package to mainnet
 - Use secure key storage (HSM/Vault)
@@ -135,6 +142,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 #### Environment Variables
 
 **Root `.env` (Mainnet):**
+
 ```env
 # Network
 NODE_ENV=production
@@ -158,6 +166,7 @@ CROZZ_EXECUTOR_DRY_RUN=false
 ```
 
 **Frontend `.env` (Mainnet):**
+
 ```env
 VITE_SUI_NETWORK=mainnet
 VITE_CROZZ_API_BASE_URL=https://api.crozz.io
@@ -177,6 +186,7 @@ See `MAINNET_READINESS_GUIDE.md` for complete deployment process.
 ## Localnet Configuration
 
 ### Purpose
+
 - Local development and testing
 - Fast iteration without network delays
 - Complete control over blockchain state
@@ -184,6 +194,7 @@ See `MAINNET_READINESS_GUIDE.md` for complete deployment process.
 ### Prerequisites
 
 1. **Install Sui Locally**
+
    ```bash
    cargo install --locked --git https://github.com/MystenLabs/sui.git --branch mainnet sui
    ```
@@ -196,6 +207,7 @@ See `MAINNET_READINESS_GUIDE.md` for complete deployment process.
 ### Configuration
 
 **Environment Variables:**
+
 ```env
 SUI_RPC_URL=http://127.0.0.1:9000
 VITE_SUI_NETWORK=localnet
@@ -205,11 +217,13 @@ SUI_DEFAULT_GAS_BUDGET=10000000
 ### Local Development Workflow
 
 1. **Start local Sui node**
+
    ```bash
    sui start
    ```
 
 2. **Deploy contract**
+
    ```bash
    cd smart-contract
    sui client publish --gas-budget 100000000
@@ -218,6 +232,7 @@ SUI_DEFAULT_GAS_BUDGET=10000000
 3. **Update configuration** with local IDs
 
 4. **Run backend and frontend**
+
    ```bash
    # Terminal 1: Backend
    cd backend && npm run dev
@@ -244,6 +259,7 @@ The dashboard displays the current network prominently:
 - **Testnet**: Blue info banner about test environment
 
 ### Location
+
 - Header: Network badge next to dashboard title
 - Main content: Detailed NetworkIndicator card at top
 
@@ -254,12 +270,14 @@ The dashboard displays the current network prominently:
 The dashboard supports two modes:
 
 ### User Mode (👤)
+
 - Basic token operations
 - Wallet interactions
 - Transfer and balance checking
 - No privileged operations
 
 ### Admin Mode (👨‍💼)
+
 - Token minting and burning
 - Metadata management
 - Freeze operations
@@ -269,6 +287,7 @@ The dashboard supports two modes:
 ### Switching Modes
 
 Click the role switcher button in the header:
+
 - Shows only if `VITE_CROZZ_ADMIN_TOKEN` is configured
 - Persists selection in browser localStorage
 - Header title changes: "User Dashboard" or "Admin Dashboard"
@@ -278,6 +297,7 @@ Click the role switcher button in the header:
 ## Network-Specific Features
 
 ### Testnet Features
+
 ✅ All features enabled
 ✅ Free test tokens from faucet
 ✅ Safe for experimentation
@@ -285,6 +305,7 @@ Click the role switcher button in the header:
 ✅ Unlimited testing
 
 ### Mainnet Features
+
 ⚠️ All features use real assets
 ⚠️ Transactions are irreversible
 ⚠️ Gas costs real SUI tokens
@@ -292,6 +313,7 @@ Click the role switcher button in the header:
 ⚠️ Should have monitoring
 
 ### Localnet Features
+
 ✅ Complete control
 ✅ Fast iteration
 ✅ No external dependencies
@@ -305,11 +327,13 @@ Click the role switcher button in the header:
 ### Wrong Network Connected
 
 **Symptoms:**
+
 - Transactions fail
 - Package not found errors
 - Wrong token balances
 
 **Solution:**
+
 1. Check `VITE_SUI_NETWORK` in `.env`
 2. Verify RPC URL matches network
 3. Ensure package IDs are for correct network
@@ -318,10 +342,12 @@ Click the role switcher button in the header:
 ### Network Mismatch
 
 **Symptoms:**
+
 - Dashboard shows wrong network
 - Environment says testnet but connecting to mainnet
 
 **Solution:**
+
 1. Clear browser cache and localStorage
 2. Verify ALL environment files have correct `VITE_SUI_NETWORK`
 3. Check wallet is connected to correct network
@@ -330,10 +356,12 @@ Click the role switcher button in the header:
 ### Cannot Switch Networks
 
 **Symptoms:**
+
 - Network stuck on testnet
 - Environment changes not taking effect
 
 **Solution:**
+
 1. Stop backend and frontend
 2. Update `.env` files
 3. Clear build cache: `rm -rf frontend/dist`
@@ -343,11 +371,13 @@ Click the role switcher button in the header:
 ### Mainnet Accidentally Configured
 
 **Symptoms:**
+
 - Dashboard shows mainnet
 - Red warning banners
 - Real assets at risk
 
 **Immediate Actions:**
+
 1. **STOP ALL OPERATIONS**
 2. Set `CROZZ_EXECUTOR_DRY_RUN=true`
 3. Change `VITE_SUI_NETWORK=testnet`
@@ -370,6 +400,7 @@ Consider separate environment files:
 ```
 
 **Usage:**
+
 ```bash
 # Switch to testnet
 cp .env.testnet .env
@@ -384,6 +415,7 @@ cp .env.localnet .env
 ### Security Best Practices
 
 1. **Never commit mainnet credentials**
+
    ```bash
    # .gitignore should include:
    .env
@@ -446,14 +478,14 @@ curl http://127.0.0.1:9000/health
 
 ## Summary
 
-| Action | Testnet | Mainnet | Localnet |
-|--------|---------|---------|----------|
-| **Default** | ✅ Yes | ❌ No | ❌ No |
-| **Safe Testing** | ✅ Yes | ❌ No | ✅ Yes |
-| **Real Assets** | ❌ No | ⚠️ Yes | ❌ No |
-| **Free Tokens** | ✅ Yes | ❌ No | ✅ Yes |
-| **Security Audit Required** | ❌ No | ✅ Yes | ❌ No |
-| **Recommended For** | Testing | Production | Development |
+| Action                      | Testnet | Mainnet    | Localnet    |
+| --------------------------- | ------- | ---------- | ----------- |
+| **Default**                 | ✅ Yes  | ❌ No      | ❌ No       |
+| **Safe Testing**            | ✅ Yes  | ❌ No      | ✅ Yes      |
+| **Real Assets**             | ❌ No   | ⚠️ Yes     | ❌ No       |
+| **Free Tokens**             | ✅ Yes  | ❌ No      | ✅ Yes      |
+| **Security Audit Required** | ❌ No   | ✅ Yes     | ❌ No       |
+| **Recommended For**         | Testing | Production | Development |
 
 ---
 

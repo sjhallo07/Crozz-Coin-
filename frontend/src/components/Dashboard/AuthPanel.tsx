@@ -1,7 +1,7 @@
-import { FormEvent, useState } from "react";
-import { useAuth } from "../../providers/AuthProvider";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import { FormEvent, useState } from 'react';
+import { useAuth } from '../../providers/AuthProvider';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
 const AuthPanel = () => {
   const {
@@ -19,14 +19,14 @@ const AuthPanel = () => {
   } = useAuth();
 
   const [registerForm, setRegisterForm] = useState({
-    email: "",
-    username: "",
-    password: "",
+    email: '',
+    username: '',
+    password: '',
   });
-  const [loginForm, setLoginForm] = useState({ identifier: "", password: "" });
-  const [forgotEmail, setForgotEmail] = useState("");
-  const [usernameEmail, setUsernameEmail] = useState("");
-  const [resetForm, setResetForm] = useState({ token: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ identifier: '', password: '' });
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [usernameEmail, setUsernameEmail] = useState('');
+  const [resetForm, setResetForm] = useState({ token: '', password: '' });
   const [message, setMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -42,7 +42,7 @@ const AuthPanel = () => {
       setMessage(successMessage);
       resetFields?.();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Request failed");
+      setMessage(error instanceof Error ? error.message : 'Request failed');
     } finally {
       setSubmitting(false);
     }
@@ -57,22 +57,22 @@ const AuthPanel = () => {
           username: registerForm.username,
           password: registerForm.password,
         }),
-      "Registration successful",
-      () => setRegisterForm({ email: "", username: "", password: "" })
+      'Registration successful',
+      () => setRegisterForm({ email: '', username: '', password: '' })
     );
   };
 
   const onLogin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    void handle(() => login(loginForm), "Signed in");
+    void handle(() => login(loginForm), 'Signed in');
   };
 
   const onForgotPassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     void handle(
       () => forgotPassword(forgotEmail.trim()),
-      "Email sent",
-      () => setForgotEmail("")
+      'Email sent',
+      () => setForgotEmail('')
     );
   };
 
@@ -80,8 +80,8 @@ const AuthPanel = () => {
     event.preventDefault();
     void handle(
       () => forgotUsername(usernameEmail.trim()),
-      "Username reminder sent",
-      () => setUsernameEmail("")
+      'Username reminder sent',
+      () => setUsernameEmail('')
     );
   };
 
@@ -89,8 +89,8 @@ const AuthPanel = () => {
     event.preventDefault();
     void handle(
       () => resetPassword(resetForm.token, resetForm.password),
-      "Password updated",
-      () => setResetForm({ token: "", password: "" })
+      'Password updated',
+      () => setResetForm({ token: '', password: '' })
     );
   };
 
@@ -113,11 +113,7 @@ const AuthPanel = () => {
             <Button variant="secondary" onClick={() => void refresh()}>
               Refresh tokens
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => void logout()}
-              disabled={submitting}
-            >
+            <Button variant="ghost" onClick={() => void logout()} disabled={submitting}>
               Sign out
             </Button>
           </div>
@@ -167,14 +163,12 @@ const AuthPanel = () => {
               }
             />
             <Button type="submit" disabled={submitting || loading}>
-              {submitting ? "Submitting…" : "Register"}
+              {submitting ? 'Submitting…' : 'Register'}
             </Button>
           </form>
 
           <form className="space-y-3" onSubmit={onLogin}>
-            <p className="text-sm font-semibold text-slate-800 dark:text-white">
-              Sign in
-            </p>
+            <p className="text-sm font-semibold text-slate-800 dark:text-white">Sign in</p>
             <input
               className="w-full rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-2 text-sm dark:border-slate-700 dark:bg-slate-900/60"
               placeholder="Email or username"
@@ -251,9 +245,7 @@ const AuthPanel = () => {
             placeholder="Reset token"
             required
             value={resetForm.token}
-            onChange={(event) =>
-              setResetForm((prev) => ({ ...prev, token: event.target.value }))
-            }
+            onChange={(event) => setResetForm((prev) => ({ ...prev, token: event.target.value }))}
           />
           <input
             className="w-full rounded-2xl border border-slate-200/70 bg-white/80 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900/60"

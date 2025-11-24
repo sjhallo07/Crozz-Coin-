@@ -1,26 +1,23 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useMemo, useState } from "react";
-import type { DashboardJob } from "../../providers/DashboardDataProvider";
-import { useDashboardData } from "../../providers/DashboardDataProvider";
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useMemo, useState } from 'react';
+import type { DashboardJob } from '../../providers/DashboardDataProvider';
+import { useDashboardData } from '../../providers/DashboardDataProvider';
 import {
   getStatusBadgeText,
   getStatusMessage,
   getTransactionDescription,
   timeAgo,
   formatDate,
-} from "../../utils/humanize";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+} from '../../utils/humanize';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
 const statusStyles: Record<string, string> = {
-  queued: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
-  pending:
-    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
-  processing:
-    "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
-  completed:
-    "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
-  failed: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300",
+  queued: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
+  pending: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
+  processing: 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
+  completed: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
+  failed: 'bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300',
 };
 
 const JobQueue = () => {
@@ -30,19 +27,11 @@ const JobQueue = () => {
 
   const emptyState = useMemo(() => {
     if (jobsLoading) {
-      return (
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Loading recent jobs…
-        </p>
-      );
+      return <p className="text-sm text-slate-500 dark:text-slate-400">Loading recent jobs…</p>;
     }
 
     if (jobsError) {
-      return (
-        <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
-          {jobsError}
-        </p>
-      );
+      return <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">{jobsError}</p>;
     }
 
     if (jobs.length === 0) {
@@ -78,7 +67,7 @@ const JobQueue = () => {
           onClick={handleManualRefresh}
           disabled={manualRefresh || jobsLoading}
         >
-          {manualRefresh ? "Refreshing…" : "Refresh"}
+          {manualRefresh ? 'Refreshing…' : 'Refresh'}
         </Button>
       }
     >
@@ -101,14 +90,14 @@ const JobQueue = () => {
                     {getTransactionDescription(job.type, job.payload as Record<string, unknown>)}
                   </p>
                   <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                    {job.updatedAt ? timeAgo(job.updatedAt) : "Just created"}
+                    {job.updatedAt ? timeAgo(job.updatedAt) : 'Just created'}
                     {job.attempts > 1 && ` • ${job.attempts} attempts`}
                   </p>
                 </div>
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${
                     statusStyles[job.status] ??
-                    "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                    'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
                   }`}
                 >
                   {getStatusBadgeText(job.status)}
@@ -117,29 +106,17 @@ const JobQueue = () => {
 
               <dl className="mt-4 grid gap-3 text-xs text-slate-500 dark:text-slate-400 md:grid-cols-2">
                 <div className="space-y-1 break-all">
-                  <dt className="font-semibold text-slate-400 dark:text-slate-500">
-                    Job ID
-                  </dt>
+                  <dt className="font-semibold text-slate-400 dark:text-slate-500">Job ID</dt>
                   <dd className="font-mono text-[11px]">{job.id}</dd>
                 </div>
                 <div className="space-y-1">
-                  <dt className="font-semibold text-slate-400 dark:text-slate-500">
-                    Updated
-                  </dt>
-                  <dd>
-                    {job.updatedAt
-                      ? new Date(job.updatedAt).toLocaleTimeString()
-                      : "—"}
-                  </dd>
+                  <dt className="font-semibold text-slate-400 dark:text-slate-500">Updated</dt>
+                  <dd>{job.updatedAt ? new Date(job.updatedAt).toLocaleTimeString() : '—'}</dd>
                 </div>
                 {job.error && (
                   <div className="space-y-1 md:col-span-2">
-                    <dt className="font-semibold text-slate-400 dark:text-slate-500">
-                      Error
-                    </dt>
-                    <dd className="text-rose-500 dark:text-rose-400">
-                      {job.error}
-                    </dd>
+                    <dt className="font-semibold text-slate-400 dark:text-slate-500">Error</dt>
+                    <dd className="text-rose-500 dark:text-rose-400">{job.error}</dd>
                   </div>
                 )}
               </dl>
@@ -153,11 +130,7 @@ const JobQueue = () => {
       )}
 
       <Transition appear show={Boolean(selectedJob)} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-50"
-          onClose={() => setSelectedJob(null)}
-        >
+        <Dialog as="div" className="relative z-50" onClose={() => setSelectedJob(null)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-200"
@@ -202,7 +175,7 @@ const JobQueue = () => {
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
                             statusStyles[selectedJob.status] ??
-                            "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                            'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
                           }`}
                         >
                           {getStatusBadgeText(selectedJob.status)}
@@ -223,7 +196,7 @@ const JobQueue = () => {
                             Updated
                           </p>
                           <p className="mt-1">
-                            {selectedJob.updatedAt ? formatDate(selectedJob.updatedAt) : "—"}
+                            {selectedJob.updatedAt ? formatDate(selectedJob.updatedAt) : '—'}
                           </p>
                         </div>
                         <div>
@@ -231,7 +204,7 @@ const JobQueue = () => {
                             Created
                           </p>
                           <p className="mt-1">
-                            {selectedJob.createdAt ? formatDate(selectedJob.createdAt) : "—"}
+                            {selectedJob.createdAt ? formatDate(selectedJob.createdAt) : '—'}
                           </p>
                         </div>
                         {selectedJob.error && (
@@ -253,7 +226,7 @@ const JobQueue = () => {
                         <pre className="max-h-64 overflow-auto rounded-2xl border border-slate-200/70 bg-slate-950/90 p-4 text-xs text-emerald-200 dark:border-slate-700">
                           {selectedJob.payload
                             ? JSON.stringify(selectedJob.payload, null, 2)
-                            : "No payload recorded"}
+                            : 'No payload recorded'}
                         </pre>
                       </section>
 
@@ -264,15 +237,12 @@ const JobQueue = () => {
                         <pre className="max-h-64 overflow-auto rounded-2xl border border-slate-200/70 bg-slate-950/90 p-4 text-xs text-sky-200 dark:border-slate-700">
                           {selectedJob.result
                             ? JSON.stringify(selectedJob.result, null, 2)
-                            : "No result yet"}
+                            : 'No result yet'}
                         </pre>
                       </section>
 
                       <div className="flex justify-end">
-                        <Button
-                          variant="ghost"
-                          onClick={() => setSelectedJob(null)}
-                        >
+                        <Button variant="ghost" onClick={() => setSelectedJob(null)}>
                           Close
                         </Button>
                       </div>

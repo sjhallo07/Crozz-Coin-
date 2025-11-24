@@ -6,7 +6,15 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "build": "tsc --noEmit",
+    "test": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint src --ext .js",
+    "lint:fix": "eslint src --ext .js --fix",
+    "format": "prettier --write \"src/**/*.js\"",
+    "security:audit": "npm audit --audit-level=moderate",
+    "security:check": "npm run security:audit && npm outdated"
   },
   "dependencies": {
     "@mysten/sui": "^1.45.0",
@@ -15,15 +23,21 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.17.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/node": "^22.10.0",
     "@types/supertest": "^6.0.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-security": "^3.0.1",
     "jest": "^30.2.0",
     "nodemon": "^3.1.0",
-    "supertest": "^7.1.4"
+    "prettier": "^3.3.3",
+    "supertest": "^7.1.4",
+    "typescript": "^5.4.5"
   }
 }

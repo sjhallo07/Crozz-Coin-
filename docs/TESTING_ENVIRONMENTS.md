@@ -4,12 +4,12 @@ This document clarifies the different testing environments and their appropriate
 
 ## Quick Reference
 
-| Environment | Purpose | Duration | Data | Network | Security |
-|------------|---------|----------|------|---------|----------|
-| **Local Development** | Feature development | Hours/Days | Fake/Test | Testnet | Low |
-| **Remote Testing (Tunnel)** | Client demos, testing | Minutes/Hours | Test | Testnet | Medium |
-| **Staging** | Pre-production validation | Weeks | Test/Realistic | Testnet | High |
-| **Production** | Real user operations | Permanent | Real | Mainnet | Critical |
+| Environment                 | Purpose                   | Duration      | Data           | Network | Security |
+| --------------------------- | ------------------------- | ------------- | -------------- | ------- | -------- |
+| **Local Development**       | Feature development       | Hours/Days    | Fake/Test      | Testnet | Low      |
+| **Remote Testing (Tunnel)** | Client demos, testing     | Minutes/Hours | Test           | Testnet | Medium   |
+| **Staging**                 | Pre-production validation | Weeks         | Test/Realistic | Testnet | High     |
+| **Production**              | Real user operations      | Permanent     | Real           | Mainnet | Critical |
 
 ## Environment Breakdown
 
@@ -18,6 +18,7 @@ This document clarifies the different testing environments and their appropriate
 **Purpose:** Day-to-day development and debugging
 
 **Setup:**
+
 ```bash
 # No tunnel needed
 cd Crozz-Coin-
@@ -26,23 +27,27 @@ cd Crozz-Coin-
 ```
 
 **Access:**
+
 - Backend: `http://localhost:4000`
 - Frontend: `http://localhost:5173`
 - Only accessible on your computer
 
 **When to Use:**
+
 - ✅ Writing new features
 - ✅ Fixing bugs
 - ✅ Testing code changes
 - ✅ Running automated tests
 
 **Characteristics:**
+
 - **Temporary:** Services restart frequently
 - **Isolated:** Only you can access
 - **Fast:** No network latency
 - **Flexible:** Easy to make changes
 
 **Data:**
+
 - Use fake Sui addresses
 - Test with small amounts
 - Can reset anytime
@@ -53,6 +58,7 @@ cd Crozz-Coin-
 **Purpose:** Share your local development with others remotely
 
 **Setup:**
+
 ```bash
 # Start services locally
 ./scripts/quick-start.sh  # Option 3
@@ -62,11 +68,13 @@ cd Crozz-Coin-
 ```
 
 **Access:**
+
 - Backend: `https://abc-123.trycloudflare.com` (changes each time)
 - Frontend: `https://def-456.trycloudflare.com` (changes each time)
 - Accessible to anyone with the URL
 
 **When to Use:**
+
 - ✅ Client demonstrations
 - ✅ Remote team testing
 - ✅ Mobile device testing
@@ -74,18 +82,21 @@ cd Crozz-Coin-
 - ✅ Stakeholder reviews
 
 **Characteristics:**
+
 - **Temporary:** URLs change when tunnel restarts
 - **Shared:** Anyone with URL can access
 - **Convenient:** No deployment needed
 - **Time-limited:** Use for hours, not days
 
 **Data:**
+
 - Still use test data
 - Testnet only
 - No real funds
 - Can expose test features
 
 **⚠️ Not for:**
+
 - ❌ Production use
 - ❌ Long-term testing
 - ❌ Storing important data
@@ -96,6 +107,7 @@ cd Crozz-Coin-
 **Purpose:** Pre-production testing with realistic data
 
 **Setup:**
+
 ```bash
 # Deploy to cloud service
 # Example: Railway, Render, Heroku
@@ -104,17 +116,19 @@ cd Crozz-Coin-
 railway up
 # Note: Permanent URL like https://crozz-backend.railway.app
 
-# Frontend  
+# Frontend
 vercel deploy
 # Note: Permanent URL like https://crozz-frontend.vercel.app
 ```
 
 **Access:**
+
 - Backend: Fixed URL (e.g., `https://staging-api.crozz.io`)
 - Frontend: Fixed URL (e.g., `https://staging.crozz.io`)
 - Accessible to team and testers
 
 **When to Use:**
+
 - ✅ Extended testing periods
 - ✅ User acceptance testing (UAT)
 - ✅ Performance testing
@@ -122,12 +136,14 @@ vercel deploy
 - ✅ Beta testing with select users
 
 **Characteristics:**
+
 - **Semi-Permanent:** Stays up for weeks/months
 - **Stable URLs:** Can be bookmarked
 - **Realistic:** Mirrors production setup
 - **Controlled:** Access can be restricted
 
 **Data:**
+
 - Use realistic test data
 - Still on Testnet (free test SUI)
 - Can simulate real scenarios
@@ -148,6 +164,7 @@ FRONTEND_URL=https://staging.crozz.io
 **Purpose:** Real users, real transactions, real value
 
 **Setup:**
+
 ```bash
 # Professional deployment
 # - AWS/GCP/Azure
@@ -158,17 +175,20 @@ FRONTEND_URL=https://staging.crozz.io
 ```
 
 **Access:**
+
 - Backend: Production API (e.g., `https://api.crozz.io`)
 - Frontend: Production site (e.g., `https://crozz.io`)
 - Public or authenticated users
 
 **When to Use:**
+
 - ✅ Real users
 - ✅ Real transactions
 - ✅ Real money/value
 - ✅ 24/7 availability required
 
 **Characteristics:**
+
 - **Permanent:** Always available
 - **Secure:** Multiple security layers
 - **Monitored:** 24/7 monitoring
@@ -176,12 +196,14 @@ FRONTEND_URL=https://staging.crozz.io
 - **Compliant:** Security audits, legal compliance
 
 **Data:**
+
 - **Real blockchain data** (Mainnet)
 - **Real funds at risk**
 - **Cannot reset**
 - **Must be secure**
 
 **⚠️ Critical Requirements:**
+
 - ✅ Security audit completed
 - ✅ Penetration testing done
 - ✅ Monitoring and alerts configured
@@ -220,6 +242,7 @@ Start here: What do you need to do?
 ### How many "temporary" testing sessions can I run?
 
 **Answer:** Unlimited! Each tunnel session is independent:
+
 - Create tunnel for 2-hour demo → Close tunnel
 - Create new tunnel tomorrow → Get new URL
 - No limits on number of tunnel sessions
@@ -228,6 +251,7 @@ Start here: What do you need to do?
 ### When does temporary become permanent?
 
 **Answer:** When you need:
+
 - URLs that don't change
 - 24/7 availability
 - Multiple team members accessing regularly
@@ -235,6 +259,7 @@ Start here: What do you need to do?
 - Production-grade security
 
 **Transition path:**
+
 ```
 Local → Tunnel (hours) → Staging (weeks) → Production (permanent)
 ```
@@ -242,6 +267,7 @@ Local → Tunnel (hours) → Staging (weeks) → Production (permanent)
 ### Can I use tunnels for real transactions?
 
 **Answer:** **NO!** Never use tunnels for real money:
+
 - ❌ Tunnels can disconnect anytime
 - ❌ URLs change on restart
 - ❌ Limited security controls
@@ -249,6 +275,7 @@ Local → Tunnel (hours) → Staging (weeks) → Production (permanent)
 - ❌ No SLA or guarantees
 
 **For real transactions:**
+
 - ✅ Deploy to proper cloud infrastructure
 - ✅ Use production-grade security
 - ✅ Implement monitoring and alerts
@@ -257,16 +284,19 @@ Local → Tunnel (hours) → Staging (weeks) → Production (permanent)
 ### How long can I keep a tunnel running?
 
 **Practical Limits:**
+
 - **Cloudflare Tunnel:** Can run for days, but URLs change on restart
 - **Ngrok Free:** Auto-reconnects, but URLs change
 - **localhost.run:** Until SSH disconnects (hours)
 
 **Recommended Duration:**
+
 - Demo/presentation: 1-3 hours
 - Testing session: 2-4 hours
 - Extended testing: Deploy to staging instead
 
 **Best Practice:**
+
 ```bash
 # Start tunnel before demo
 ./scripts/setup-tunnel.sh
@@ -283,12 +313,14 @@ pkill cloudflared
 ## Security Considerations by Environment
 
 ### Local Development
+
 - 🔒 Low security needed (only you can access)
 - ✅ Default credentials OK
 - ✅ Debug mode enabled
 - ✅ Detailed error messages
 
 ### Remote Testing (Tunnel)
+
 - 🔒 Medium security needed (shared access)
 - ⚠️ Change default credentials
 - ⚠️ Don't expose sensitive data
@@ -296,6 +328,7 @@ pkill cloudflared
 - ⚠️ Close when done
 
 ### Staging
+
 - 🔒 High security (like production)
 - ✅ Strong authentication
 - ✅ HTTPS only
@@ -304,6 +337,7 @@ pkill cloudflared
 - ✅ Monitoring
 
 ### Production
+
 - 🔒 Critical security
 - ✅ Everything from staging, plus:
 - ✅ Security audit
@@ -316,16 +350,19 @@ pkill cloudflared
 ## Cost Comparison
 
 ### Local Development
+
 - **Cost:** $0
 - **Infrastructure:** Your computer
 - **Network:** Home/office internet
 
 ### Remote Testing (Tunnel)
+
 - **Cost:** $0 (free tier) to $8/month (custom domains)
 - **Infrastructure:** Tunnel service + your computer
 - **Network:** Tunnel service network
 
 ### Staging
+
 - **Cost:** $5-50/month
 - **Infrastructure:**
   - Backend: Railway ($5/mo), Render ($7/mo)
@@ -334,6 +371,7 @@ pkill cloudflared
 - **Network:** Cloud provider network
 
 ### Production
+
 - **Cost:** $50-500+/month (depends on scale)
 - **Infrastructure:**
   - Servers: Multiple instances with auto-scaling
@@ -375,7 +413,7 @@ cd backend
 railway init
 railway up
 
-# 3. Deploy frontend  
+# 3. Deploy frontend
 cd ../frontend
 # Update VITE_CROZZ_API_BASE_URL to Railway URL
 vercel deploy
@@ -387,6 +425,7 @@ vercel deploy
 ### From Staging to Production
 
 **Prerequisites:**
+
 - ✅ All features tested and working
 - ✅ Security audit completed
 - ✅ Performance testing done
@@ -395,6 +434,7 @@ vercel deploy
 - ✅ Team trained on operations
 
 **Deployment:**
+
 ```bash
 # 1. Smart contract to mainnet
 sui client publish --gas-budget 100000000
@@ -415,14 +455,15 @@ sui client publish --gas-budget 100000000
 
 ## Summary
 
-| Need | Use This | Duration |
-|------|----------|----------|
-| Code a feature | Local Dev | Hours |
-| Show a client | Remote Tunnel | 1-4 hours |
-| Test with team for a week | Staging | Days/Weeks |
-| Launch to real users | Production | Permanent |
+| Need                      | Use This      | Duration   |
+| ------------------------- | ------------- | ---------- |
+| Code a feature            | Local Dev     | Hours      |
+| Show a client             | Remote Tunnel | 1-4 hours  |
+| Test with team for a week | Staging       | Days/Weeks |
+| Launch to real users      | Production    | Permanent  |
 
 **Key Takeaway:**
+
 - **Temporary = Local Development + Remote Tunnels** (for testing only)
 - **Real Use = Production** (with proper security and infrastructure)
 - **Staging = Bridge between testing and production**

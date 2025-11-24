@@ -1,18 +1,17 @@
-import { useState } from "react";
-import { useDashboardData } from "../../providers/DashboardDataProvider";
-import { formatNumber, formatSupplyMetric } from "../../utils/humanize";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import { useState } from 'react';
+import { useDashboardData } from '../../providers/DashboardDataProvider';
+import { formatNumber, formatSupplyMetric } from '../../utils/humanize';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
 const metricConfig = [
-  { key: "totalSupply", label: "Total supply", helper: "All minted CROZZ tokens" },
-  { key: "circulating", label: "Circulating", helper: "Tokens in active wallets" },
-  { key: "holderCount", label: "Holders", helper: "Unique wallet addresses" },
+  { key: 'totalSupply', label: 'Total supply', helper: 'All minted CROZZ tokens' },
+  { key: 'circulating', label: 'Circulating', helper: 'Tokens in active wallets' },
+  { key: 'holderCount', label: 'Holders', helper: 'Unique wallet addresses' },
 ] as const;
 
 const TokenOverview = () => {
-  const { tokenSummary, summaryLoading, summaryError, refreshSummary } =
-    useDashboardData();
+  const { tokenSummary, summaryLoading, summaryError, refreshSummary } = useDashboardData();
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -26,13 +25,8 @@ const TokenOverview = () => {
       title="Token overview"
       description="Snapshot sourced from the backend supply aggregator."
       actions={
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={handleRefresh}
-          disabled={refreshing}
-        >
-          {refreshing ? "Refreshing…" : "Refresh"}
+        <Button size="sm" variant="ghost" onClick={handleRefresh} disabled={refreshing}>
+          {refreshing ? 'Refreshing…' : 'Refresh'}
         </Button>
       }
     >
@@ -65,7 +59,7 @@ const TokenOverview = () => {
             {metricConfig.map((metric) => {
               const value = tokenSummary[metric.key as keyof typeof tokenSummary];
               const formattedValue =
-                metric.key === "holderCount"
+                metric.key === 'holderCount'
                   ? formatNumber(value as number)
                   : formatNumber(value as string);
 
@@ -77,17 +71,13 @@ const TokenOverview = () => {
                   <dt className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                     {metric.label}
                   </dt>
-                  <dd className="mt-2 text-2xl font-semibold">
-                    {formattedValue}
-                  </dd>
-                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                    {metric.helper}
-                  </p>
+                  <dd className="mt-2 text-2xl font-semibold">{formattedValue}</dd>
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{metric.helper}</p>
                 </div>
               );
             })}
           </dl>
-          {tokenSummary.totalSupply !== "0" && (
+          {tokenSummary.totalSupply !== '0' && (
             <div className="mt-4 rounded-2xl border border-brand-200 bg-brand-50 p-3 dark:border-brand-900 dark:bg-brand-950/30">
               <p className="text-sm text-brand-800 dark:text-brand-200">
                 📊 {formatSupplyMetric(tokenSummary.totalSupply, tokenSummary.circulating)}

@@ -1,20 +1,19 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { ChangeEvent, FormEvent, Fragment, useState } from "react";
-import { humanizeError, getSuccessMessage } from "../../utils/humanize";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import { Dialog, Transition } from '@headlessui/react';
+import { ChangeEvent, FormEvent, Fragment, useState } from 'react';
+import { humanizeError, getSuccessMessage } from '../../utils/humanize';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
-const API_BASE =
-  import.meta.env.VITE_CROZZ_API_BASE_URL ?? "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_CROZZ_API_BASE_URL ?? 'http://localhost:4000';
 
-type ActionType = "mint" | "burn" | "distribute";
+type ActionType = 'mint' | 'burn' | 'distribute';
 
 interface FieldConfig {
   name: string;
   label: string;
   placeholder?: string;
   helper?: string;
-  type?: "text" | "number" | "textarea";
+  type?: 'text' | 'number' | 'textarea';
   required?: boolean;
   defaultValue?: string;
 }
@@ -25,61 +24,60 @@ const ACTION_CONFIG: Record<
     label: string;
     description: string;
     cta: string;
-    variant: "primary" | "secondary" | "ghost";
+    variant: 'primary' | 'secondary' | 'ghost';
     fields: FieldConfig[];
   }
 > = {
   mint: {
-    label: "Mint tokens",
-    description: "Create CROZZ directly from the treasury cap.",
-    cta: "Mint tokens",
-    variant: "primary",
+    label: 'Mint tokens',
+    description: 'Create CROZZ directly from the treasury cap.',
+    cta: 'Mint tokens',
+    variant: 'primary',
     fields: [
       {
-        name: "amount",
-        label: "Amount",
-        placeholder: "1000",
-        helper: "Whole-number CROZZ amount to mint",
+        name: 'amount',
+        label: 'Amount',
+        placeholder: '1000',
+        helper: 'Whole-number CROZZ amount to mint',
         required: true,
       },
       {
-        name: "recipient",
-        label: "Recipient address",
-        placeholder: "0xabc… (optional)",
-        helper: "Defaults to the backend signer if left blank.",
+        name: 'recipient',
+        label: 'Recipient address',
+        placeholder: '0xabc… (optional)',
+        helper: 'Defaults to the backend signer if left blank.',
       },
     ],
   },
   burn: {
-    label: "Burn coins",
-    description: "Destroy CROZZ coins currently owned by the backend signer.",
-    cta: "Burn coin",
-    variant: "secondary",
+    label: 'Burn coins',
+    description: 'Destroy CROZZ coins currently owned by the backend signer.',
+    cta: 'Burn coin',
+    variant: 'secondary',
     fields: [
       {
-        name: "coinId",
-        label: "Coin object ID",
-        placeholder: "0xcoin",
-        helper: "Coin must belong to the backend signer",
+        name: 'coinId',
+        label: 'Coin object ID',
+        placeholder: '0xcoin',
+        helper: 'Coin must belong to the backend signer',
         required: true,
       },
     ],
   },
   distribute: {
-    label: "Distribute",
+    label: 'Distribute',
     description:
       "Upload bulk payouts as address:amount pairs. We'll call the multi-transfer helper for you.",
-    cta: "Queue distribution",
-    variant: "ghost",
+    cta: 'Queue distribution',
+    variant: 'ghost',
     fields: [
       {
-        name: "entries",
-        label: "Distribution list",
-        placeholder: "0xabc:100\n0xdef:250",
-        helper:
-          "One pair per line in the format address:amount. Commas also work.",
+        name: 'entries',
+        label: 'Distribution list',
+        placeholder: '0xabc:100\n0xdef:250',
+        helper: 'One pair per line in the format address:amount. Commas also work.',
         required: true,
-        type: "textarea",
+        type: 'textarea',
       },
     ],
   },
@@ -100,14 +98,14 @@ const TokenActions = () => {
 
     try {
       const res = await fetch(`${API_BASE}/api/tokens/${path}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.error || data?.message || "Request failed");
+        throw new Error(data?.error || data?.message || 'Request failed');
       }
 
       // Show user-friendly success message
@@ -124,10 +122,8 @@ const TokenActions = () => {
   };
 
   const openAction = (action: ActionType) => {
-    const defaults = ACTION_CONFIG[action].fields.reduce<
-      Record<string, string>
-    >((acc, field) => {
-      acc[field.name] = field.defaultValue ?? "";
+    const defaults = ACTION_CONFIG[action].fields.reduce<Record<string, string>>((acc, field) => {
+      acc[field.name] = field.defaultValue ?? '';
       return acc;
     }, {});
     setFormValues(defaults);
@@ -146,31 +142,31 @@ const TokenActions = () => {
 
     let success = false;
 
-    if (activeAction === "mint") {
+    if (activeAction === 'mint') {
       const amount = formValues.amount?.trim();
       if (!amount) {
-        setError("Amount is required");
+        setError('Amount is required');
         return;
       }
-      success = await post("mint", {
+      success = await post('mint', {
         amount,
         recipient: formValues.recipient?.trim() || undefined,
       });
     }
 
-    if (activeAction === "burn") {
+    if (activeAction === 'burn') {
       const coinId = formValues.coinId?.trim();
       if (!coinId) {
-        setError("Coin ID is required");
+        setError('Coin ID is required');
         return;
       }
-      success = await post("burn", { coinId });
+      success = await post('burn', { coinId });
     }
 
-    if (activeAction === "distribute") {
+    if (activeAction === 'distribute') {
       const rawEntries = formValues.entries?.trim();
       if (!rawEntries) {
-        setError("Provide at least one distribution entry");
+        setError('Provide at least one distribution entry');
         return;
       }
 
@@ -180,16 +176,16 @@ const TokenActions = () => {
           .map((entry) => entry.trim())
           .filter(Boolean)
           .map((entry) => {
-            const [to, amount] = entry.split(":").map((value) => value.trim());
+            const [to, amount] = entry.split(':').map((value) => value.trim());
             if (!to || !amount) {
-              throw new Error("Invalid entry");
+              throw new Error('Invalid entry');
             }
             return { to, amount };
           });
 
-        success = await post("distribute", { distributions });
+        success = await post('distribute', { distributions });
       } catch {
-        setError("Invalid distribution format. Use address:amount per line.");
+        setError('Invalid distribution format. Use address:amount per line.');
         return;
       }
     }
@@ -202,7 +198,7 @@ const TokenActions = () => {
   const renderField = (field: FieldConfig) => {
     const commonProps = {
       name: field.name,
-      value: formValues[field.name] ?? "",
+      value: formValues[field.name] ?? '',
       onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setFormValues((prev) => ({
           ...prev,
@@ -211,14 +207,14 @@ const TokenActions = () => {
       placeholder: field.placeholder,
       required: field.required,
       className:
-        "w-full rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-2.5 text-sm text-slate-900 shadow-inner focus:border-brand-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900/60 dark:text-white",
+        'w-full rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-2.5 text-sm text-slate-900 shadow-inner focus:border-brand-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900/60 dark:text-white',
     };
 
-    if (field.type === "textarea") {
+    if (field.type === 'textarea') {
       return <textarea rows={5} {...commonProps} />;
     }
 
-    return <input type={field.type ?? "text"} {...commonProps} />;
+    return <input type={field.type ?? 'text'} {...commonProps} />;
   };
 
   const selectedConfig = activeAction ? ACTION_CONFIG[activeAction] : null;
@@ -229,8 +225,8 @@ const TokenActions = () => {
       description="Run mint, burn, or distribution flows via the secured backend."
     >
       <p className="text-sm text-slate-600 dark:text-slate-400">
-        These actions call the authenticated Express API. Every request is
-        logged to the job queue and broadcast to the live feed.
+        These actions call the authenticated Express API. Every request is logged to the job queue
+        and broadcast to the live feed.
       </p>
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -251,20 +247,14 @@ const TokenActions = () => {
           <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
             ✅ Success!
           </p>
-          <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">
-            {result}
-          </p>
+          <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">{result}</p>
         </div>
       )}
 
       {error && (
         <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-900 dark:bg-rose-950/30">
-          <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">
-            ❌ Error
-          </p>
-          <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
-            {error}
-          </p>
+          <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">❌ Error</p>
+          <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">{error}</p>
         </div>
       )}
 
@@ -338,7 +328,7 @@ const TokenActions = () => {
                           className="sm:w-auto"
                           disabled={loading}
                         >
-                          {loading ? "Sending…" : selectedConfig.cta}
+                          {loading ? 'Sending…' : selectedConfig.cta}
                         </Button>
                       </div>
                     </form>

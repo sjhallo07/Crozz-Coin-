@@ -1,5 +1,5 @@
-import { randomUUID } from "node:crypto";
-import { database } from "./Database.js";
+import { randomUUID } from 'node:crypto';
+import { database } from './Database.js';
 
 class TransactionService {
   constructor() {
@@ -59,9 +59,7 @@ class TransactionService {
       WHERE id = @id
     `);
 
-    this.selectByIdStmt = database.prepare(
-      `SELECT * FROM transactions WHERE id = @id`
-    );
+    this.selectByIdStmt = database.prepare(`SELECT * FROM transactions WHERE id = @id`);
 
     this.selectListStmt = database.prepare(`
       SELECT *
@@ -70,9 +68,7 @@ class TransactionService {
       LIMIT @limit
     `);
 
-    this.countStmt = database.prepare(
-      `SELECT COUNT(*) as count FROM transactions`
-    );
+    this.countStmt = database.prepare(`SELECT COUNT(*) as count FROM transactions`);
 
     this.pruneStmt = database.prepare(`
       DELETE FROM transactions
@@ -111,7 +107,7 @@ class TransactionService {
       });
       return {
         ...this.#mapRow(row),
-        status: "processing",
+        status: 'processing',
         attempts,
         updatedAt,
       };
@@ -122,7 +118,7 @@ class TransactionService {
     const now = new Date().toISOString();
     const record = {
       id: randomUUID(),
-      status: "queued",
+      status: 'queued',
       attempts: 0,
       error: null,
       result: null,
@@ -134,7 +130,7 @@ class TransactionService {
     };
 
     if (!record.type) {
-      throw new Error("Transaction type is required");
+      throw new Error('Transaction type is required');
     }
 
     this.insertStmt.run(this.#toDbRow(record, true));
@@ -148,7 +144,7 @@ class TransactionService {
 
   markCompleted(id, result) {
     return this.#update(id, {
-      status: "completed",
+      status: 'completed',
       result,
       error: null,
     });
@@ -156,7 +152,7 @@ class TransactionService {
 
   markFailed(id, error) {
     return this.#update(id, {
-      status: "failed",
+      status: 'failed',
       error: error instanceof Error ? error.message : String(error),
     });
   }
@@ -164,7 +160,7 @@ class TransactionService {
   retryLater(id, error) {
     const message = error instanceof Error ? error.message : String(error);
     return this.#update(id, {
-      status: "queued",
+      status: 'queued',
       error: message,
       nextRunAt: Date.now() + this.retryDelayMs,
     });
@@ -229,8 +225,7 @@ class TransactionService {
     return {
       id: record.id,
       type: record.type,
-      payload:
-        record.payload === undefined ? null : JSON.stringify(record.payload),
+      payload: record.payload === undefined ? null : JSON.stringify(record.payload),
       status: record.status,
       attempts: record.attempts,
       error: record.error ?? null,

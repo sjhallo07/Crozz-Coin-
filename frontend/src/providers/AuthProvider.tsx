@@ -7,13 +7,10 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
-const API_BASE = (import.meta.env.VITE_CROZZ_API_BASE_URL ?? "").replace(
-  /\/$/,
-  ""
-);
-const STORAGE_KEY = "crozz.auth.session";
+const API_BASE = (import.meta.env.VITE_CROZZ_API_BASE_URL ?? '').replace(/\/$/, '');
+const STORAGE_KEY = 'crozz.auth.session';
 
 export interface AuthUser {
   id: string;
@@ -45,11 +42,7 @@ interface AuthContextValue {
   authenticated: boolean;
   loading: boolean;
   authError: string | null;
-  register: (input: {
-    email: string;
-    username: string;
-    password: string;
-  }) => Promise<void>;
+  register: (input: { email: string; username: string; password: string }) => Promise<void>;
   login: (input: { identifier: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -63,7 +56,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const buildUrl = (path: string) => `${API_BASE}${path}`;
 
 const getStoredSession = (): AuthSession | null => {
-  if (typeof window === "undefined") return null;
+  if (typeof window === 'undefined') return null;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
@@ -80,8 +73,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [authError, setAuthError] = useState<string | null>(null);
 
   const persistSession = useCallback((session: AuthSession | null) => {
-    if (typeof window === "undefined") {
-      console.warn("persistSession called during SSR; session will not be persisted.");
+    if (typeof window === 'undefined') {
+      console.warn('persistSession called during SSR; session will not be persisted.');
       return;
     }
     if (!session) {
@@ -109,11 +102,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const request = useCallback(
     async <T,>(path: string, init: RequestInit = {}, includeAuth = true) => {
       const headers = new Headers(init.headers ?? {});
-      if (!headers.has("Content-Type") && !(init.body instanceof FormData)) {
-        headers.set("Content-Type", "application/json");
+      if (!headers.has('Content-Type') && !(init.body instanceof FormData)) {
+        headers.set('Content-Type', 'application/json');
       }
       if (includeAuth && tokens?.accessToken) {
-        headers.set("Authorization", `Bearer ${tokens.accessToken}`);
+        headers.set('Authorization', `Bearer ${tokens.accessToken}`);
       }
       const response = await fetch(buildUrl(path), {
         ...init,
@@ -121,7 +114,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data?.error ?? "Request failed");
+        throw new Error(data?.error ?? 'Request failed');
       }
       return data as T;
     },
@@ -135,16 +128,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
     try {
       const session = await request<AuthSession>(
-        "/api/auth/refresh",
+        '/api/auth/refresh',
         {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ refreshToken: tokens.refreshToken }),
         },
         false
       );
       applySession(session);
     } catch (error) {
-      console.error("Failed to refresh token", error);
+      console.error('Failed to refresh token', error);
       applySession(null);
     }
   }, [applySession, request, tokens?.refreshToken]);
@@ -154,14 +147,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       try {
         const session = await request<AuthSession>(
           path,
-          { method: "POST", body: JSON.stringify(body) },
+          { method: 'POST', body: JSON.stringify(body) },
           false
         );
         applySession(session);
         setAuthError(null);
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Authentication failed";
+        const message = error instanceof Error ? error.message : 'Authentication failed';
         setAuthError(message);
         throw error;
       }
@@ -172,7 +164,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const register = useCallback(
     async (input: { email: string; username: string; password: string }) => {
       setAuthError(null);
-      await authenticate("/api/auth/register", input);
+      await authenticate('/api/auth/register', input);
     },
     [authenticate]
   );
@@ -180,7 +172,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const login = useCallback(
     async (input: { identifier: string; password: string }) => {
       setAuthError(null);
-      await authenticate("/api/auth/login", input);
+      await authenticate('/api/auth/login', input);
     },
     [authenticate]
   );
@@ -189,15 +181,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     if (tokens?.refreshToken) {
       try {
         await request(
-          "/api/auth/logout",
+          '/api/auth/logout',
           {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify({ refreshToken: tokens.refreshToken }),
           },
           false
         );
       } catch (error) {
-        console.warn("Logout request failed", error);
+        console.warn('Logout request failed', error);
       }
     }
     applySession(null);
@@ -206,9 +198,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const forgotPassword = useCallback(
     async (email: string) => {
       await request(
-        "/api/auth/forgot-password",
+        '/api/auth/forgot-password',
         {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ email }),
         },
         false
@@ -220,9 +212,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const forgotUsername = useCallback(
     async (email: string) => {
       await request(
-        "/api/auth/forgot-username",
+        '/api/auth/forgot-username',
         {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ email }),
         },
         false
@@ -233,7 +225,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const resetPassword = useCallback(
     async (token: string, password: string) => {
-      await authenticate("/api/auth/reset-password", { token, password });
+      await authenticate('/api/auth/reset-password', { token, password });
     },
     [authenticate]
   );
@@ -260,13 +252,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       applySessionRef.current(stored);
       try {
-        const data = await requestRef.current<{ user: AuthUser }>("/api/auth/me");
+        const data = await requestRef.current<{ user: AuthUser }>('/api/auth/me');
         if (!active) {
           return;
         }
         applySessionRef.current({ user: data.user, tokens: stored.tokens });
       } catch (error) {
-        console.warn("Session validation failed", error);
+        console.warn('Session validation failed', error);
         await refreshRef.current();
       } finally {
         if (active) {
@@ -314,17 +306,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     ]
   );
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 };

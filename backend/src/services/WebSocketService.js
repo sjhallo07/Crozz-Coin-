@@ -1,5 +1,5 @@
-import { WebSocketServer } from "ws";
-import { eventMonitor } from "./EventMonitor.js";
+import { WebSocketServer } from 'ws';
+import { eventMonitor } from './EventMonitor.js';
 
 class WebSocketService {
   constructor() {
@@ -7,13 +7,13 @@ class WebSocketService {
   }
 
   attach(server) {
-    this.wss = new WebSocketServer({ server, path: "/events" });
+    this.wss = new WebSocketServer({ server, path: '/events' });
 
-    this.wss.on("connection", (socket) => {
+    this.wss.on('connection', (socket) => {
       const listener = (payload) => socket.send(JSON.stringify(payload));
-      eventMonitor.on("event", listener);
+      eventMonitor.on('event', listener);
 
-      socket.on("close", () => eventMonitor.off("event", listener));
+      socket.on('close', () => eventMonitor.off('event', listener));
     });
 
     eventMonitor.start();

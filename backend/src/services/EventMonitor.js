@@ -1,5 +1,5 @@
-import EventEmitter from "events";
-import { randomUUID } from "node:crypto";
+import EventEmitter from 'events';
+import { randomUUID } from 'node:crypto';
 
 class EventMonitor extends EventEmitter {
   constructor() {
@@ -12,10 +12,10 @@ class EventMonitor extends EventEmitter {
     this.interval = setInterval(() => {
       const payload = {
         id: randomUUID(),
-        type: "heartbeat",
+        type: 'heartbeat',
         message: `Event generated @ ${new Date().toISOString()}`,
       };
-      this.emit("event", payload);
+      this.emit('event', payload);
     }, 5000);
   }
 

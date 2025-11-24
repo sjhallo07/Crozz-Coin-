@@ -37,6 +37,7 @@ For ANY production or mainnet deployment:
 This is an **educational and demonstration project** for learning Sui blockchain development:
 
 ### Legitimate Reasons for Public Testnet Credentials
+
 - ✅ **Educational**: Shows complete, working examples
 - ✅ **Testnet Only**: No real value at risk
 - ✅ **Reproducible**: Others can follow along exactly
@@ -44,6 +45,7 @@ This is an **educational and demonstration project** for learning Sui blockchain
 - ✅ **Accessible**: No barriers to learning
 
 ### What Makes This Safe
+
 - ✅ **Sui Testnet**: Test network with no real assets
 - ✅ **No Value**: Test tokens have no monetary value
 - ✅ **Clear Warnings**: Extensive security documentation
@@ -97,16 +99,19 @@ This repository intentionally violates several security best practices **in a co
 Before deploying to mainnet, study these resources:
 
 ### Official Documentation
+
 - **Sui Security Best Practices**: https://docs.sui.io/
 - **Move Language Security**: https://move-book.com/
 
 ### Key Management
+
 - **Environment Variables**: Secure credential storage
 - **AWS Secrets Manager**: Cloud-based secret management
 - **Azure Key Vault**: Enterprise key management
 - **HashiCorp Vault**: Open-source secret management
 
 ### Industry Standards
+
 - **OWASP**: Web application security standards
 - **CIS Benchmarks**: Security configuration guides
 - **NIST Cybersecurity Framework**: Security best practices
@@ -136,11 +141,13 @@ Before ANY mainnet deployment, verify:
 ## 📞 Questions About Security?
 
 ### For This Project (Testnet)
+
 - Read: `deployment/SECURITY_NOTICE.md`
 - Understand: Testnet vs mainnet differences
 - Learn: Proper production practices
 
 ### For Production Deployments
+
 - Consult: Professional security auditors
 - Use: Established security frameworks
 - Follow: Industry best practices
@@ -151,14 +158,14 @@ Before ANY mainnet deployment, verify:
 
 ## 🎯 Summary
 
-| Aspect | This Repository (Testnet) | Production (Mainnet) |
-|--------|--------------------------|---------------------|
-| **Credentials** | Public in repo | Never in repo |
-| **Purpose** | Education/Testing | Real operations |
-| **Security** | Testnet-appropriate | Maximum security |
-| **Key Storage** | Files/scripts | Vaults/env vars |
-| **Value** | Zero (test tokens) | Real assets |
-| **Pattern** | Anti-pattern demo | Best practices |
+| Aspect          | This Repository (Testnet) | Production (Mainnet) |
+| --------------- | ------------------------- | -------------------- |
+| **Credentials** | Public in repo            | Never in repo        |
+| **Purpose**     | Education/Testing         | Real operations      |
+| **Security**    | Testnet-appropriate       | Maximum security     |
+| **Key Storage** | Files/scripts             | Vaults/env vars      |
+| **Value**       | Zero (test tokens)        | Real assets          |
+| **Pattern**     | Anti-pattern demo         | Best practices       |
 
 ---
 
@@ -167,12 +174,14 @@ Before ANY mainnet deployment, verify:
 **DO NOT** copy the credential management patterns from this repository to production code.
 
 **DO** learn from this repository's:
+
 - Blockchain interaction patterns
 - Smart contract development
 - Testing methodologies
 - Documentation practices
 
 **DO NOT** replicate:
+
 - Credential storage in files
 - Hardcoded private keys
 - Public credential documentation

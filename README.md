@@ -7,6 +7,7 @@
 ## 🚀 Quick Deployment
 
 For a complete, ready-to-execute deployment package, see the [`deployment/`](deployment/) directory which includes:
+
 - ✅ Pre-generated testnet wallets (4 wallets)
 - ✅ Complete deployment documentation
 - ✅ Automation scripts
@@ -26,6 +27,7 @@ Want to run the entire ecosystem (backend + frontend) for testing? Use our quick
 ```
 
 This interactive script will:
+
 - ✅ Check prerequisites (Node.js, npm)
 - ✅ Install dependencies (backend + frontend)
 - ✅ Set up environment files
@@ -50,12 +52,14 @@ Need to share your local development with clients or team members remotely?
 ```
 
 **What you get:**
+
 - 🌐 Public URLs for both backend and frontend
 - 🔒 HTTPS by default (secure)
 - 🚀 No complex network configuration
 - 💰 Free (no account required with Cloudflare)
 
 **See full documentation:**
+
 - 📖 [Remote Testing Guide](docs/REMOTE_TESTING.md) - Complete tunnel setup guide
 - 📖 [Testing Environments](docs/TESTING_ENVIRONMENTS.md) - Temporary vs. real use explained
 
@@ -79,6 +83,7 @@ node scripts/setup-sui-client.js --update-env --network testnet --gas-budget 100
 ```
 
 This script will:
+
 - ✅ Generate a new Ed25519 keypair
 - ✅ Display your Sui address, public key, and private key
 - ✅ Optionally update your `.env` file with the credentials
@@ -86,6 +91,7 @@ This script will:
 - ✅ Configure gas budget and network settings
 
 **Output includes:**
+
 - 📍 **Sui Address** - Use for receiving tokens and as CROZZ_DEFAULT_SIGNER
 - 🔐 **Public Key** - Your public identity on Sui blockchain
 - 🔒 **Private Key** - Keep this secret! Full control of the address
@@ -94,6 +100,7 @@ This script will:
 ### 2. Fund Your Address
 
 For **testnet**, use the faucet:
+
 ```bash
 curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
   --header 'Content-Type: application/json' \
@@ -107,6 +114,7 @@ Or visit: https://docs.sui.io/guides/developer/getting-started/get-coins
 Update your `.env` files with the generated address:
 
 **Root `.env`:**
+
 ```env
 SUI_ADMIN_PRIVATE_KEY=ed25519:<generated_key>
 SUI_RPC_URL=https://fullnode.testnet.sui.io:443
@@ -115,6 +123,7 @@ CROZZ_DEFAULT_SIGNER=<generated_address>
 ```
 
 **Frontend `.env`:**
+
 ```env
 VITE_CROZZ_API_BASE_URL=http://localhost:4000
 VITE_SUI_NETWORK=testnet
@@ -153,7 +162,7 @@ The curated list includes:
 - **GitHub Copilot + Copilot Chat** for GPT-5.1-Codex powered completions, chat, and code actions.
 - **Mysten Move** and **Move Analyzer** for syntax highlighting, diagnostics, and language server support.
 - **GitLens, Prettier, ESLint, Markdown All in One, TOML formatter, PowerShell, Docker, Code Spell Checker**
-	to cover Git insights, formatting, container workflows, shell integration, and documentation polish.
+  to cover Git insights, formatting, container workflows, shell integration, and documentation polish.
 
 > 💡 You’ll need an active Copilot subscription to access the premium models and advanced chat features.
 
@@ -274,32 +283,32 @@ chain access.
 
 1. Install backend dependencies if you haven’t already:
 
-	```
-	cd backend
-	npm install
-	```
+   ```
+   cd backend
+   npm install
+   ```
 
 2. Ensure `.env` includes:
 
-	```
-	SUI_RPC_URL=https://fullnode.testnet.sui.io:443
-	SUI_DEFAULT_GAS_BUDGET=10000000
-	```
+   ```
+   SUI_RPC_URL=https://fullnode.testnet.sui.io:443
+   SUI_DEFAULT_GAS_BUDGET=10000000
+   ```
 
 3. Start the server (`npm run dev` for hot reload or `npm run start` for production). The route accepts JSON payloads of
    the form:
 
-	```
-	POST http://localhost:4000/api/sui/token-address
-	{
-	  "packageId": "0xPACKAGE",
-	  "module": "crozz_token",
-	  "functionName": "create_token_address",
-	  "creator": "0xCREATOR",
-	  "collection": "Crozz",
-	  "name": "Genesis"
-	}
-	```
+   ```
+   POST http://localhost:4000/api/sui/token-address
+   {
+     "packageId": "0xPACKAGE",
+     "module": "crozz_token",
+     "functionName": "create_token_address",
+     "creator": "0xCREATOR",
+     "collection": "Crozz",
+     "name": "Genesis"
+   }
+   ```
 
    Internally the backend calls `suiClient.call({...})` with the supplied args and returns the raw SDK response under
    `tokenAddress`.
@@ -321,14 +330,14 @@ CROZZ_REGISTRY_INITIAL_SHARED_VERSION=1
 ```
 
 - `GET /api/tokens/summary` → Reads coin metadata, supply, and counts the verification registry entries to feed the
-	dashboard overview card.
+  dashboard overview card.
 - `POST /api/tokens/mint { amount, recipient }` → Calls `mint` with the configured `TreasuryCap` and returns the
-	transaction digest.
+  transaction digest.
 - `POST /api/tokens/burn { coinId }` → Burns any CROZZ coin object that the backend signer currently owns.
 - `POST /api/tokens/transfer { coinId, recipient }` → Uses the plain `transfer` entry point to distribute CROZZ owned by
-	the signer to another address.
+  the signer to another address.
 - `GET /api/admin/jobs` → (Requires `Authorization: Bearer ADMIN_TOKEN`) Returns up to 100 recent jobs so you can monitor
-	queued/completed/failed states in the dashboard.
+  queued/completed/failed states in the dashboard.
 
 Each endpoint records a short audit log via `TransactionService` so the WebSocket/event feed can stay in sync with admin
 operations.
@@ -336,26 +345,26 @@ operations.
 #### Background transaction executor
 
 - A new worker (`backend/src/services/TransactionExecutor.js`) wakes up every few seconds, dequeues pending jobs from
-	`TransactionService`, builds the appropriate `TransactionBlock`, signs with the admin key, and submits to Sui.
+  `TransactionService`, builds the appropriate `TransactionBlock`, signs with the admin key, and submits to Sui.
 - Enable it by copying `.env.example` → `.env` (backend root) and supplying:
 
-	```
-	SUI_RPC_URL=https://fullnode.testnet.sui.io
-	SUI_DEFAULT_GAS_BUDGET=10000000
-	SUI_ADMIN_PRIVATE_KEY=ed25519:BASE64_KEY
-	CROZZ_PACKAGE_ID=0xPACKAGE
-	CROZZ_TREASURY_CAP_ID=0xTREASURY_CAP
-	CROZZ_MODULE=crozz_token
-	CROZZ_DEFAULT_SIGNER=0xADMIN (optional fallback recipient)
-	CROZZ_EXECUTOR_DRY_RUN=false
-	```
+  ```
+  SUI_RPC_URL=https://fullnode.testnet.sui.io
+  SUI_DEFAULT_GAS_BUDGET=10000000
+  SUI_ADMIN_PRIVATE_KEY=ed25519:BASE64_KEY
+  CROZZ_PACKAGE_ID=0xPACKAGE
+  CROZZ_TREASURY_CAP_ID=0xTREASURY_CAP
+  CROZZ_MODULE=crozz_token
+  CROZZ_DEFAULT_SIGNER=0xADMIN (optional fallback recipient)
+  CROZZ_EXECUTOR_DRY_RUN=false
+  ```
 
 - Set `CROZZ_EXECUTOR_DRY_RUN=true` to simulate execution without hitting the chain (handy for CI/local smoke tests). In
-	dry-run mode, jobs are marked `completed` with a `mock: true` payload after validating inputs.
+  dry-run mode, jobs are marked `completed` with a `mock: true` payload after validating inputs.
 - When `SUI_ADMIN_PRIVATE_KEY` or object IDs are missing, the worker does **not** start and the server logs a warning so
-	your queue stays untouched until the configuration is present.
+  your queue stays untouched until the configuration is present.
 - Job metadata now includes `status`, `attempts`, `error`, and `result` fields; failed jobs are automatically retried up
-	to three times with exponential back-off before being marked `failed` for manual intervention.
+  to three times with exponential back-off before being marked `failed` for manual intervention.
 
 #### Enable real transaction execution (beyond dry run)
 
@@ -525,9 +534,9 @@ The legacy docs link for the TypeScript SDK currently returns a 404, so start fr
 **Backend-assisted reads**
 
 - Use the `BackendTokenAddress` card inside the Vite app as a reference: it uses `axios` to POST to
-	`http://localhost:4000/api/sui/token-address` and then renders the JSON response.
+  `http://localhost:4000/api/sui/token-address` and then renders the JSON response.
 - This pattern is handy when you want the server to hold the signer or to gate access with middleware before calling
-	Sui.
+  Sui.
 
 ### Step-by-step React frontend integration (Sui dApp Kit)
 
@@ -535,101 +544,99 @@ If you prefer to scaffold a wallet-connected dApp (instead of the simple demo ca
 official flow from the Sui docs ("Connect a frontend to a Move package"):
 
 1. **Prereqs**
-
-	- Move package already deployed (see the smart-contract folder or your own package).
-	- Node.js + `pnpm` (or `npm`) installed.
-	- A supported wallet (Slush, Sui Wallet, Ethos, etc.).
+   - Move package already deployed (see the smart-contract folder or your own package).
+   - Node.js + `pnpm` (or `npm`) installed.
+   - A supported wallet (Slush, Sui Wallet, Ethos, etc.).
 
 2. **Project layout** (example)
 
-	```
-	sui-stack-app/
-	  move/
-	    hello-world/
-	  ui/
-	    src/
-	      App.tsx
-	      CreateGreeting.tsx
-	      Greeting.tsx
-	      constants.ts
-	      networkConfig.ts
-	      main.tsx
-	    package.json
-	    vite.config.mts
-	```
+   ```
+   sui-stack-app/
+     move/
+       hello-world/
+     ui/
+       src/
+         App.tsx
+         CreateGreeting.tsx
+         Greeting.tsx
+         constants.ts
+         networkConfig.ts
+         main.tsx
+       package.json
+       vite.config.mts
+   ```
 
 3. **Wire your package + network**
 
-	```ts
-	// src/constants.ts
-	export const TESTNET_HELLO_WORLD_PACKAGE_ID = "0xYOUR_PACKAGE_ID";
+   ```ts
+   // src/constants.ts
+   export const TESTNET_HELLO_WORLD_PACKAGE_ID = '0xYOUR_PACKAGE_ID';
 
-	// src/networkConfig.ts
-	import { TESTNET_HELLO_WORLD_PACKAGE_ID } from "./constants";
+   // src/networkConfig.ts
+   import { TESTNET_HELLO_WORLD_PACKAGE_ID } from './constants';
 
-	export const networkConfig = {
-	  testnet: {
-	    url: "https://fullnode.testnet.sui.io:443",
-	    packageId: TESTNET_HELLO_WORLD_PACKAGE_ID,
-	  },
-	};
-	```
+   export const networkConfig = {
+     testnet: {
+       url: 'https://fullnode.testnet.sui.io:443',
+       packageId: TESTNET_HELLO_WORLD_PACKAGE_ID,
+     },
+   };
+   ```
 
 4. **Install dependencies**
 
-	```
-	cd ui
-	pnpm install
-	```
+   ```
+   cd ui
+   pnpm install
+   ```
 
 5. **Run the app**
 
-	```
-	pnpm dev
-	```
+   ```
+   pnpm dev
+   ```
 
 6. **Connect wallet + interact**
-
-	- Click "Connect Wallet" (the Sui dApp Kit ships Slush/Sui wallet connectors).
-	- Fire entry functions (e.g., `create`, `update`) from the UI and approve in the wallet popup.
+   - Click "Connect Wallet" (the Sui dApp Kit ships Slush/Sui wallet connectors).
+   - Fire entry functions (e.g., `create`, `update`) from the UI and approve in the wallet popup.
 
 7. **Bootstrap entry point**
 
-	```tsx
-	// src/main.tsx
-	import "@mysten/dapp-kit/dist/index.css";
-	import "@radix-ui/themes/styles.css";
-	import { SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
-	import { Theme } from "@radix-ui/themes";
-	import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-	import { Toaster } from "react-hot-toast";
-	import App from "./App";
-	import { networkConfig } from "./networkConfig";
+   ```tsx
+   // src/main.tsx
+   import '@mysten/dapp-kit/dist/index.css';
+   import '@radix-ui/themes/styles.css';
+   import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
+   import { Theme } from '@radix-ui/themes';
+   import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+   import { Toaster } from 'react-hot-toast';
+   import App from './App';
+   import { networkConfig } from './networkConfig';
 
-	const queryClient = new QueryClient();
+   const queryClient = new QueryClient();
 
-	ReactDOM.createRoot(document.getElementById("root")!).render(
-	  <React.StrictMode>
-	    <Theme appearance="light">
-	      <QueryClientProvider client={queryClient}>
-	        <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-	          <WalletProvider autoConnect>
-	            <>
-	              <Toaster position="top-center" />
-	              <App />
-	            </>
-	          </WalletProvider>
-	        </SuiClientProvider>
-	      </QueryClientProvider>
-	    </Theme>
-	  </React.StrictMode>
-	);
-	```
+   ReactDOM.createRoot(document.getElementById('root')!).render(
+     <React.StrictMode>
+       <Theme appearance="light">
+         <QueryClientProvider client={queryClient}>
+           <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+             <WalletProvider autoConnect>
+               <>
+                 <Toaster position="top-center" />
+                 <App />
+               </>
+             </WalletProvider>
+           </SuiClientProvider>
+         </QueryClientProvider>
+       </Theme>
+     </React.StrictMode>
+   );
+   ```
 
 8. **Call Move functions**
 
-	Inside components such as `CreateGreeting.tsx`, use the dApp Kit hooks (e.g., `useSignAndExecuteTransactionBlock`) to
-	build a transaction targeting your module and submit it through the connected wallet.
+   Inside components such as `CreateGreeting.tsx`, use the dApp Kit hooks (e.g., `useSignAndExecuteTransactionBlock`) to
+   build a transaction targeting your module and submit it through the connected wallet.
 
 > References: [Sui Docs – App Frontends](https://docs.sui.io/guides/developer/app-frontends), Sui dApp Kit, Slush
 > wallet.

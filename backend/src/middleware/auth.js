@@ -1,7 +1,7 @@
 export const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.replace("Bearer ", "");
+  const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token || token !== process.env.ADMIN_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
   return next();
 };

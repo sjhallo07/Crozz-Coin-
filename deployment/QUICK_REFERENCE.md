@@ -38,11 +38,11 @@ sui client call \
 
 ## 📋 Wallet Addresses
 
-| Wallet | Address |
-|--------|---------|
-| **Admin** | `0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c` |
-| **Alice** | `0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423` |
-| **Bob** | `0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93` |
+| Wallet      | Address                                                              |
+| ----------- | -------------------------------------------------------------------- |
+| **Admin**   | `0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c` |
+| **Alice**   | `0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423` |
+| **Bob**     | `0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93` |
 | **Charlie** | `0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01` |
 
 ## 🔗 Explorer Links
@@ -63,26 +63,29 @@ sui client call \
 ## 🔢 Amount Conversion
 
 | Human Readable | Raw Amount (9 decimals) |
-|---------------|------------------------|
-| 1 CROZZ | 1000000000 |
-| 10 CROZZ | 10000000000 |
-| 100 CROZZ | 100000000000 |
-| 1,000 CROZZ | 1000000000000 |
-| 10,000 CROZZ | 10000000000000 |
+| -------------- | ----------------------- |
+| 1 CROZZ        | 1000000000              |
+| 10 CROZZ       | 10000000000             |
+| 100 CROZZ      | 100000000000            |
+| 1,000 CROZZ    | 1000000000000           |
+| 10,000 CROZZ   | 10000000000000          |
 
 ## 🎬 Test Scenario
 
 ### Mint Distribution
+
 - Alice: 1,000 CROZZ
-- Bob: 2,000 CROZZ  
+- Bob: 2,000 CROZZ
 - Charlie: 3,000 CROZZ
 
 ### Transfers
+
 1. Alice → Bob: 500 CROZZ
 2. Bob → Charlie: 800 CROZZ
 3. Charlie → Alice: 1,200 CROZZ
 
 ### Expected Final Balances
+
 - Alice: 1,700 CROZZ (1000 - 500 + 1200)
 - Bob: 1,700 CROZZ (2000 + 500 - 800)
 - Charlie: 2,600 CROZZ (3000 + 800 - 1200)

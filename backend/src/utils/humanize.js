@@ -8,10 +8,10 @@
  * @returns {string} Formatted number
  */
 export const formatNumber = (value) => {
-  if (value === null || value === undefined || value === "") return "0";
-  const num = typeof value === "string" ? Number(value) : value;
-  if (isNaN(num)) return "0";
-  return new Intl.NumberFormat("en-US").format(num);
+  if (value === null || value === undefined || value === '') return '0';
+  const num = typeof value === 'string' ? Number(value) : value;
+  if (isNaN(num)) return '0';
+  return new Intl.NumberFormat('en-US').format(num);
 };
 
 /**
@@ -30,13 +30,13 @@ export const formatTokenAmount = (amount) => {
  */
 export const getStatusMessage = (status) => {
   const messages = {
-    queued: "Your transaction is waiting in line and will be processed shortly.",
-    pending: "Your transaction is being prepared for submission.",
-    processing: "Your transaction is currently being processed on the blockchain.",
-    completed: "Success! Your transaction has been completed.",
-    failed: "We encountered an issue processing your transaction. Please try again.",
+    queued: 'Your transaction is waiting in line and will be processed shortly.',
+    pending: 'Your transaction is being prepared for submission.',
+    processing: 'Your transaction is currently being processed on the blockchain.',
+    completed: 'Success! Your transaction has been completed.',
+    failed: 'We encountered an issue processing your transaction. Please try again.',
   };
-  return messages[status] || "Transaction status is being updated.";
+  return messages[status] || 'Transaction status is being updated.';
 };
 
 const COIN_ID_DISPLAY_LENGTH = 8;
@@ -49,17 +49,17 @@ const COIN_ID_DISPLAY_LENGTH = 8;
  */
 export const getTransactionDescription = (type, payload = {}) => {
   switch (type) {
-    case "mint":
+    case 'mint':
       return `Minting ${formatTokenAmount(payload.amount || 0)} to ${
-        payload.recipient ? "specified wallet" : "default account"
+        payload.recipient ? 'specified wallet' : 'default account'
       }`;
-    case "burn":
+    case 'burn':
       return `Burning tokens from coin ${
-        payload.coinId ? payload.coinId.slice(0, COIN_ID_DISPLAY_LENGTH) + "..." : ""
+        payload.coinId ? payload.coinId.slice(0, COIN_ID_DISPLAY_LENGTH) + '...' : ''
       }`;
-    case "distribute":
+    case 'distribute':
       return `Distributing tokens to ${payload.distributions?.length || 0} recipient${
-        payload.distributions?.length === 1 ? "" : "s"
+        payload.distributions?.length === 1 ? '' : 's'
       }`;
     default:
       return `Processing ${type} transaction`;
@@ -107,12 +107,12 @@ export const humanizeJob = (job) => {
     statusMessage: getStatusMessage(job.status),
     description: getTransactionDescription(job.type, job.payload),
     formattedUpdatedAt: job.updatedAt
-      ? new Date(job.updatedAt).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "2-digit",
+      ? new Date(job.updatedAt).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
           hour12: true,
         })
       : null,
@@ -125,8 +125,8 @@ export const humanizeJob = (job) => {
  * @returns {object} Summary with humanized fields
  */
 export const humanizeTokenSummary = (summary) => {
-  const totalSupply = parseInt(summary.totalSupply || "0", 10);
-  const circulating = parseInt(summary.circulating || "0", 10);
+  const totalSupply = parseInt(summary.totalSupply || '0', 10);
+  const circulating = parseInt(summary.circulating || '0', 10);
   const holderCount = summary.holderCount || 0;
 
   return {
@@ -135,7 +135,7 @@ export const humanizeTokenSummary = (summary) => {
     circulatingFormatted: formatTokenAmount(circulating),
     holderCountFormatted: formatNumber(holderCount),
     summaryText: `${formatNumber(holderCount)} holder${
-      holderCount === 1 ? "" : "s"
+      holderCount === 1 ? '' : 's'
     } currently hold ${formatTokenAmount(
       circulating
     )} in circulation out of ${formatTokenAmount(totalSupply)} total supply.`,
@@ -151,25 +151,25 @@ export const humanizeError = (error) => {
   const errorString = error instanceof Error ? error.message : String(error);
 
   // Common error patterns
-  if (errorString.includes("ECONNREFUSED")) {
-    return "Unable to connect to the blockchain network. Please check your connection and try again.";
+  if (errorString.includes('ECONNREFUSED')) {
+    return 'Unable to connect to the blockchain network. Please check your connection and try again.';
   }
-  if (errorString.includes("insufficient funds")) {
-    return "Insufficient funds to complete this transaction. Please ensure you have enough tokens.";
+  if (errorString.includes('insufficient funds')) {
+    return 'Insufficient funds to complete this transaction. Please ensure you have enough tokens.';
   }
-  if (errorString.includes("unauthorized") || errorString.includes("401")) {
+  if (errorString.includes('unauthorized') || errorString.includes('401')) {
     return "You don't have permission to perform this action. Please sign in again.";
   }
-  if (errorString.includes("not found") || errorString.includes("404")) {
-    return "The requested resource could not be found. Please verify and try again.";
+  if (errorString.includes('not found') || errorString.includes('404')) {
+    return 'The requested resource could not be found. Please verify and try again.';
   }
-  if (errorString.includes("timeout")) {
-    return "The request took too long to complete. Please try again.";
+  if (errorString.includes('timeout')) {
+    return 'The request took too long to complete. Please try again.';
   }
-  if (errorString.includes("validation") || errorString.includes("invalid")) {
-    return "The information provided is invalid. Please check your input and try again.";
+  if (errorString.includes('validation') || errorString.includes('invalid')) {
+    return 'The information provided is invalid. Please check your input and try again.';
   }
 
   // Default fallback
-  return "An unexpected error occurred. Please try again or contact support if the issue persists.";
+  return 'An unexpected error occurred. Please try again or contact support if the issue persists.';
 };

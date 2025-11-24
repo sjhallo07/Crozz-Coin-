@@ -37,12 +37,7 @@
       "label": "Sui: Move build",
       "type": "shell",
       "command": "sui",
-      "args": [
-        "move",
-        "build",
-        "--path",
-        "${input:packagePath}"
-      ],
+      "args": ["move", "build", "--path", "${input:packagePath}"],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -53,12 +48,7 @@
       "label": "Sui: Move test",
       "type": "shell",
       "command": "sui",
-      "args": [
-        "move",
-        "test",
-        "--path",
-        "${input:packagePath}"
-      ],
+      "args": ["move", "test", "--path", "${input:packagePath}"],
       "options": {
         "cwd": "${workspaceFolder}"
       },

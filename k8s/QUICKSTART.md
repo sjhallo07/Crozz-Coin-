@@ -55,6 +55,7 @@ kubectl get ingress -n crozz-coin
 ## 🎉 You're Done!
 
 Access your application:
+
 - **Backend API**: `http://api.crozz-coin.example.com`
 - **Frontend**: `http://crozz-coin.example.com`
 - **Grafana**: `kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80`
@@ -62,6 +63,7 @@ Access your application:
 ## 📚 What You Get
 
 ### Infrastructure
+
 - ✅ 3 backend pods (auto-scales 3-10)
 - ✅ 3 frontend pods (auto-scales 3-10)
 - ✅ Load balancer with session affinity
@@ -69,6 +71,7 @@ Access your application:
 - ✅ Health checks and readiness probes
 
 ### Security
+
 - ✅ Network policies (pod-to-pod isolation)
 - ✅ RBAC (role-based access control)
 - ✅ Pod Security Standards (restricted)
@@ -76,12 +79,14 @@ Access your application:
 - ✅ TLS/SSL for all traffic
 
 ### Monitoring
+
 - ✅ Prometheus metrics
 - ✅ Grafana dashboards
 - ✅ Custom alerts
 - ✅ Real-time monitoring
 
 ### CI/CD
+
 - ✅ Automated builds
 - ✅ Security scanning
 - ✅ Automated deployments
@@ -90,6 +95,7 @@ Access your application:
 ## 🔧 Common Commands
 
 ### Check Status
+
 ```bash
 kubectl get all -n crozz-coin
 kubectl get hpa -n crozz-coin
@@ -97,24 +103,28 @@ kubectl top pods -n crozz-coin
 ```
 
 ### View Logs
+
 ```bash
 kubectl logs -f deployment/crozz-backend -n crozz-coin
 kubectl logs -f deployment/crozz-frontend -n crozz-coin
 ```
 
 ### Scale Manually
+
 ```bash
 kubectl scale deployment crozz-backend --replicas=5 -n crozz-coin
 kubectl scale deployment crozz-frontend --replicas=5 -n crozz-coin
 ```
 
 ### Update Application
+
 ```bash
 kubectl set image deployment/crozz-backend crozz-backend=crozz-backend:v1.0.1 -n crozz-coin
 kubectl rollout status deployment/crozz-backend -n crozz-coin
 ```
 
 ### Rollback
+
 ```bash
 kubectl rollout undo deployment/crozz-backend -n crozz-coin
 ```
@@ -122,6 +132,7 @@ kubectl rollout undo deployment/crozz-backend -n crozz-coin
 ## 🌐 Cloud Deployment
 
 ### AWS EKS
+
 ```bash
 # Create cluster
 eksctl create cluster --name crozz-coin --region us-east-1 --nodes 3
@@ -131,6 +142,7 @@ kubectl apply -f k8s/hybrid-cloud/aws-deployment.yaml
 ```
 
 ### GCP GKE
+
 ```bash
 # Create cluster
 gcloud container clusters create crozz-coin \
@@ -143,6 +155,7 @@ kubectl apply -f k8s/hybrid-cloud/gcp-deployment.yaml
 ```
 
 ### Azure AKS
+
 ```bash
 # Create cluster
 az aks create \
@@ -155,6 +168,7 @@ kubectl apply -f k8s/hybrid-cloud/azure-deployment.yaml
 ```
 
 ### IBM Cloud IKS (FREE TIER) ⭐
+
 ```bash
 # Install IBM Cloud CLI
 curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
@@ -177,6 +191,7 @@ kubectl scale deployment --all --replicas=1 -n crozz-coin
 ```
 
 **Why IBM Cloud Free Tier?**
+
 - ✅ Forever FREE (no expiration)
 - ✅ No credit card required
 - ✅ Perfect for your existing free tier account!
@@ -210,11 +225,13 @@ kubectl scale deployment --all --replicas=1 -n crozz-coin
 ### FREE Testing Options
 
 **🎁 Cloud Free Trials (90 Days):**
+
 - ✅ **AWS**: $300 credits for 90 days - [Sign up](https://aws.amazon.com/free/)
 - ✅ **GCP**: $300 credits for 90 days - [Sign up](https://cloud.google.com/free/)
 - ✅ **Azure**: $200 credits for 30 days - [Sign up](https://azure.microsoft.com/free/)
 
 **💻 Local Testing (Unlimited):**
+
 ```bash
 # FREE forever with Minikube
 minikube start --cpus=4 --memory=8192
@@ -222,6 +239,7 @@ kubectl apply -f k8s/base/
 ```
 
 **📚 Complete guide**: See [PRICING_AND_TRIAL.md](./PRICING_AND_TRIAL.md) for:
+
 - Detailed cost breakdown
 - How to maximize free trial
 - Cost optimization tips

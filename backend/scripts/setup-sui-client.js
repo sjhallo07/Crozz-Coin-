@@ -2,14 +2,14 @@
 
 /**
  * Sui Client Address Setup Script
- * 
+ *
  * This script generates a new Ed25519 keypair for use with Sui blockchain
  * and optionally updates the .env file with the credentials.
- * 
+ *
  * Usage:
  *   node scripts/setup-sui-client.js [options]
  *   or run from project root: cd backend && node ../scripts/setup-sui-client.js [options]
- * 
+ *
  * Options:
  *   --update-env     Update .env file with generated credentials
  *   --network        Network to use (testnet, mainnet, localnet) [default: testnet]
@@ -35,20 +35,21 @@ const showHelp = args.includes('--help');
 const networkIndex = args.indexOf('--network');
 const network = networkIndex !== -1 && args[networkIndex + 1] ? args[networkIndex + 1] : 'testnet';
 const gasBudgetIndex = args.indexOf('--gas-budget');
-const gasBudget = gasBudgetIndex !== -1 && args[gasBudgetIndex + 1] ? args[gasBudgetIndex + 1] : '10000000';
+const gasBudget =
+  gasBudgetIndex !== -1 && args[gasBudgetIndex + 1] ? args[gasBudgetIndex + 1] : '10000000';
 
 // Network RPC URLs
 const NETWORK_URLS = {
   testnet: 'https://fullnode.testnet.sui.io:443',
   mainnet: 'https://fullnode.mainnet.sui.io:443',
-  localnet: 'http://127.0.0.1:9000'
+  localnet: 'http://127.0.0.1:9000',
 };
 
 // Faucet URLs
 const FAUCET_URLS = {
   testnet: 'https://faucet.testnet.sui.io/gas',
   mainnet: 'N/A - Use a real wallet',
-  localnet: 'http://127.0.0.1:9123/gas'
+  localnet: 'http://127.0.0.1:9123/gas',
 };
 
 if (showHelp) {
@@ -125,11 +126,11 @@ console.log();
 // Update .env file if requested
 if (updateEnv) {
   console.log('📝 Updating environment files...\n');
-  
+
   // Update backend .env
   const backendEnvPath = join(ROOT_DIR, 'backend', '.env');
   let backendEnvContent = '';
-  
+
   if (existsSync(backendEnvPath)) {
     backendEnvContent = readFileSync(backendEnvPath, 'utf-8');
     console.log('   ℹ️  Backend .env file found, updating values...');
@@ -139,10 +140,10 @@ if (updateEnv) {
 
   // Update or add environment variables for backend
   const backendUpdates = {
-    'SUI_ADMIN_PRIVATE_KEY': `ed25519:${privateKeyBase64}`,
-    'SUI_RPC_URL': NETWORK_URLS[network] || NETWORK_URLS.testnet,
-    'SUI_DEFAULT_GAS_BUDGET': gasBudget,
-    'VITE_SUI_NETWORK': network
+    SUI_ADMIN_PRIVATE_KEY: `ed25519:${privateKeyBase64}`,
+    SUI_RPC_URL: NETWORK_URLS[network] || NETWORK_URLS.testnet,
+    SUI_DEFAULT_GAS_BUDGET: gasBudget,
+    VITE_SUI_NETWORK: network,
   };
 
   for (const [key, value] of Object.entries(backendUpdates)) {
@@ -163,7 +164,7 @@ if (updateEnv) {
   // Update root .env
   const rootEnvPath = join(ROOT_DIR, '.env');
   let rootEnvContent = '';
-  
+
   if (existsSync(rootEnvPath)) {
     rootEnvContent = readFileSync(rootEnvPath, 'utf-8');
     console.log('   ℹ️  Root .env file found, updating values...');
@@ -198,7 +199,7 @@ console.log('📋 Next Steps:');
 console.log();
 console.log('1. Fund your address with testnet SUI tokens:');
 if (network === 'testnet') {
-  console.log('   curl --location --request POST \'https://faucet.testnet.sui.io/gas\' \\');
+  console.log("   curl --location --request POST 'https://faucet.testnet.sui.io/gas' \\");
   console.log(`     --header 'Content-Type: application/json' \\`);
   console.log(`     --data-raw '{ "FixedAmountRequest": { "recipient": "${address}" } }'`);
   console.log();
@@ -233,7 +234,7 @@ const output = {
   network,
   rpcUrl: NETWORK_URLS[network] || NETWORK_URLS.testnet,
   gasBudget,
-  faucetUrl: FAUCET_URLS[network] || FAUCET_URLS.testnet
+  faucetUrl: FAUCET_URLS[network] || FAUCET_URLS.testnet,
 };
 
 console.log('═══════════════════════════════════════════════════════════');

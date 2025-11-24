@@ -5,6 +5,7 @@ This document describes the comprehensive dashboard features for the CROZZ token
 ## Overview
 
 The CROZZ dashboard provides two types of interfaces:
+
 1. **User Actions** - Available to any connected wallet
 2. **Admin Actions** - Require AdminCap or TreasuryCap ownership
 
@@ -13,14 +14,18 @@ The CROZZ dashboard provides two types of interfaces:
 The User Actions panel provides the following functionality:
 
 ### View Balance
+
 Check the balance of a specific CROZZ coin object.
+
 - **Input**: Coin object ID
 - **Output**: Balance in base units
 - **Smart Contract Function**: `get_balance`
 
 ### Verify as Human
+
 Submit verification from an off-chain oracle to register as a verified user.
-- **Inputs**: 
+
+- **Inputs**:
   - Signature (hex or base64)
   - Public key
   - Message
@@ -28,21 +33,27 @@ Submit verification from an off-chain oracle to register as a verified user.
 - **Requirements**: Valid signature from authorized oracle
 
 ### Interact
+
 Primary gating call for arbitrary interactions. Must be called within the verification window.
+
 - **Smart Contract Function**: `interact`
 - **Requirements**: Recent verification (within 5 minutes)
 
 ### Transfer Tokens
 
 #### Standard Transfer
+
 Transfer CROZZ tokens without anti-bot checks.
+
 - **Inputs**:
   - Coin object ID
   - Recipient address
 - **Smart Contract Function**: `transfer`
 
 #### Guarded Transfer
+
 Transfer CROZZ tokens with anti-bot protection.
+
 - **Inputs**:
   - Coin object ID
   - Recipient address
@@ -56,7 +67,9 @@ Admin Actions are wallet-based operations that require holding the AdminCap or T
 ### Minting & Burning
 
 #### Mint Tokens
+
 Create new CROZZ tokens to a specific address.
+
 - **Inputs**:
   - Amount (in base units)
   - Recipient address (optional, defaults to your wallet)
@@ -64,13 +77,17 @@ Create new CROZZ tokens to a specific address.
 - **Requirements**: TreasuryCap ownership
 
 #### Mint to Self
+
 Create new CROZZ tokens directly to your connected wallet.
+
 - **Input**: Amount (in base units)
 - **Smart Contract Function**: `mint_to_self`
 - **Requirements**: TreasuryCap ownership
 
 #### Burn Tokens
+
 Permanently destroy CROZZ tokens.
+
 - **Input**: Coin object ID
 - **Smart Contract Function**: `burn`
 - **Requirements**: TreasuryCap ownership
@@ -78,56 +95,74 @@ Permanently destroy CROZZ tokens.
 ### Freeze Controls
 
 #### Freeze Wallet
+
 Prevent a specific wallet from interacting with the registry.
+
 - **Input**: Target address
 - **Smart Contract Function**: `set_wallet_freeze` (with freeze=true)
 - **Requirements**: AdminCap ownership
 
 #### Unfreeze Wallet
+
 Restore a previously frozen wallet's ability to interact.
+
 - **Input**: Target address
 - **Smart Contract Function**: `set_wallet_freeze` (with freeze=false)
 - **Requirements**: AdminCap ownership
 
 #### Global Freeze
+
 Emergency halt of all token operations system-wide.
+
 - **Smart Contract Function**: `set_global_freeze` (with freeze=true)
 - **Requirements**: AdminCap ownership
 - **Note**: Use with caution - affects all users
 
 #### Global Unfreeze
+
 Resume all token operations after a global freeze.
+
 - **Smart Contract Function**: `set_global_freeze` (with freeze=false)
 - **Requirements**: AdminCap ownership
 
 ### Metadata Updates
 
 #### Update Name
+
 Change the token name in metadata.
+
 - **Input**: New name
 - **Smart Contract Function**: `update_name`
 - **Requirements**: AdminCap and TreasuryCap ownership
 
 #### Update Symbol
+
 Change the token symbol in metadata.
+
 - **Input**: New symbol (ASCII string only)
 - **Smart Contract Function**: `update_symbol`
 - **Requirements**: AdminCap and TreasuryCap ownership
 
 #### Update Description
+
 Change the token description in metadata.
+
 - **Input**: New description
 - **Smart Contract Function**: `update_description`
 - **Requirements**: AdminCap and TreasuryCap ownership
 
 #### Update Icon URL
+
 Change the token icon URL in metadata.
+
 - **Input**: New icon URL
 - **Smart Contract Function**: `update_icon_url`
 - **Requirements**: AdminCap and TreasuryCap ownership
 
 #### Freeze Metadata
+
 Permanently freeze metadata (irreversible operation).
+
 - **Smart Contract Function**: `freeze_metadata`
 - **Requirements**: AdminCap ownership
 - **Warning**: This action is permanent and cannot be undone!
@@ -157,7 +192,9 @@ VITE_SUI_CLOCK_OBJECT=0x6
 ## Architecture
 
 ### Hook System
+
 All smart contract interactions are managed through the `useCrozzActions` hook located at `frontend/src/hooks/useCrozzActions.ts`. This hook provides:
+
 - Wallet connection management
 - Transaction building and signing
 - Gas budget configuration
@@ -165,10 +202,10 @@ All smart contract interactions are managed through the `useCrozzActions` hook l
 - Type-safe function signatures
 
 ### Component Structure
+
 - **UserActions**: `frontend/src/components/Dashboard/UserActions.tsx`
   - Handles user-level operations
   - Always visible to connected wallets
-  
 - **AdminActions**: `frontend/src/components/Dashboard/AdminActions.tsx`
   - Handles admin-level operations
   - Requires wallet connection
@@ -176,6 +213,7 @@ All smart contract interactions are managed through the `useCrozzActions` hook l
   - Organized into logical sections with modal dialogs
 
 ### Transaction Flow
+
 1. User initiates action from UI
 2. Form validation in component
 3. Hook constructs transaction via Sui TypeScript SDK
@@ -204,18 +242,21 @@ These operations use the backend Express API and require the `ADMIN_TOKEN` for a
 
 ## Troubleshooting
 
-### "Set VITE_CROZZ_*_ID" Error
+### "Set VITE*CROZZ*\*\_ID" Error
+
 - Ensure all required environment variables are configured
 - Check that IDs are valid on-chain objects
 - Verify you're using the correct network (testnet/mainnet)
 
 ### Transaction Failures
+
 - Confirm wallet has sufficient SUI for gas
 - Verify you own the required cap objects (AdminCap/TreasuryCap)
 - Check that global freeze is not active
 - Ensure the registry is properly initialized
 
 ### Wallet Connection Issues
+
 - Install and configure a compatible Sui wallet (Sui Wallet, Suiet, etc.)
 - Ensure wallet is connected to the correct network
 - Try refreshing the page and reconnecting
@@ -223,6 +264,7 @@ These operations use the backend Express API and require the `ADMIN_TOKEN` for a
 ## Development
 
 To test admin features locally:
+
 1. Deploy the smart contract to testnet
 2. Note the package ID and all object IDs from deployment
 3. Configure `.env` with all required IDs
@@ -232,6 +274,7 @@ To test admin features locally:
 ## Support
 
 For issues or questions:
+
 - Check the main README for setup instructions
 - Review smart contract source at `smart-contract/sources/crozz_token.move`
 - See integration examples in `EXAMPLE_USAGE.md`

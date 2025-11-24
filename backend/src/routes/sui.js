@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { suiClient } from "../services/SuiClient.js";
+import { Router } from 'express';
+import { suiClient } from '../services/SuiClient.js';
 
 const router = Router();
 
 const DEFAULT_GAS_BUDGET = Number(process.env.SUI_DEFAULT_GAS_BUDGET ?? 10_000_000);
 
-router.post("/token-address", async (req, res) => {
+router.post('/token-address', async (req, res) => {
   const {
     packageId,
     module: moduleName,
@@ -19,10 +19,15 @@ router.post("/token-address", async (req, res) => {
   } = req.body;
 
   if (!packageId || !moduleName || !functionName) {
-    return res.status(400).json({ error: "packageId, module, and functionName are required." });
+    return res.status(400).json({ error: 'packageId, module, and functionName are required.' });
   }
 
-  const callArgs = Array.isArray(manualArgs) && manualArgs.length > 0 ? manualArgs : [creator, collection, name].filter((value) => typeof value === "string" && value.length > 0);
+  const callArgs =
+    Array.isArray(manualArgs) && manualArgs.length > 0
+      ? manualArgs
+      : [creator, collection, name].filter(
+          (value) => typeof value === 'string' && value.length > 0
+        );
 
   try {
     const result = await suiClient.call({
@@ -36,7 +41,7 @@ router.post("/token-address", async (req, res) => {
 
     res.json({ tokenAddress: result });
   } catch (error) {
-    console.error("/api/sui/token-address failed", error);
+    console.error('/api/sui/token-address failed', error);
     res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
   }
 });

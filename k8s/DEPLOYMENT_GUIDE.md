@@ -40,6 +40,7 @@ docker push ghcr.io/yourusername/crozz-backend:v1.0.0
 Choose your cloud provider:
 
 **AWS EKS:**
+
 ```bash
 eksctl create cluster \
   --name crozz-coin-cluster \
@@ -53,6 +54,7 @@ eksctl create cluster \
 ```
 
 **GCP GKE:**
+
 ```bash
 gcloud container clusters create crozz-coin-cluster \
   --num-nodes=3 \
@@ -64,6 +66,7 @@ gcloud container clusters create crozz-coin-cluster \
 ```
 
 **Azure AKS:**
+
 ```bash
 az aks create \
   --resource-group crozz-coin-rg \
@@ -80,6 +83,7 @@ az aks create \
 #### 2.1 Install Essential Components
 
 **Install cert-manager (for TLS):**
+
 ```bash
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.0/cert-manager.yaml
 
@@ -88,6 +92,7 @@ kubectl wait --for=condition=ready pod -l app=cert-manager -n cert-manager --tim
 ```
 
 **Install Nginx Ingress Controller:**
+
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.0/deploy/static/provider/cloud/deploy.yaml
 
@@ -96,11 +101,13 @@ kubectl wait --for=condition=ready pod -l app.kubernetes.io/component=controller
 ```
 
 **Install Sealed Secrets:**
+
 ```bash
 kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.24.0/controller.yaml
 ```
 
 **Install Metrics Server (for HPA):**
+
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
@@ -122,6 +129,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
 #### 3.1 Create and Configure Secrets
 
 **Create secrets file:**
+
 ```bash
 cat <<EOF > crozz-secrets.yaml
 apiVersion: v1
@@ -144,6 +152,7 @@ EOF
 ```
 
 **Seal the secrets:**
+
 ```bash
 kubeseal --format=yaml < crozz-secrets.yaml > crozz-secrets-sealed.yaml
 
@@ -157,6 +166,7 @@ kubectl apply -f crozz-secrets-sealed.yaml
 #### 3.2 Deploy Using Helm
 
 **Create values file for your environment:**
+
 ```bash
 cat <<EOF > values-production.yaml
 global:
@@ -195,6 +205,7 @@ EOF
 ```
 
 **Deploy:**
+
 ```bash
 helm install crozz-coin ./helm/crozz-coin \
   --namespace crozz-coin \
@@ -244,6 +255,7 @@ kubectl apply -f k8s/security/pod-security-policy.yaml
 #### 4.2 Configure TLS
 
 **Create ClusterIssuer:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1
@@ -394,6 +406,7 @@ EOF
 #### 7.1 Create Runbooks
 
 Document common operations:
+
 - Scaling procedures
 - Rollback procedures
 - Incident response
