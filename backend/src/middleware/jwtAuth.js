@@ -3,7 +3,7 @@ import { authService } from '../services/AuthService.js';
 export const requireAuth = ({ requireAdmin = false } = {}) => {
   return (req, res, next) => {
     const header = req.headers.authorization ?? '';
-    const token = header.startsWith('Bearer ') ? header.replace('Bearer ', '').trim() : null;
+    const token = header.startsWith('Bearer ') ? header.slice(7).trim() : null;
 
     if (!token) {
       return res.status(401).json({ error: 'Missing access token' });
