@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import eventsRouter from './routes/events.js';
 import suiRouter from './routes/sui.js';
 import tokensRouter from './routes/tokens.js';
+import walletsRouter from './routes/wallets.js';
 import { initDatabase } from './services/Database.js';
 import { authService } from './services/AuthService.js';
 import { transactionService } from './services/TransactionService.js';
@@ -35,6 +36,7 @@ app.get('/ready', (req, res) => {
 app.use('/api/tokens', tokensRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/admin/wallets', walletsRouter);
 app.use('/api/sui', suiRouter);
 app.use('/api/auth', authRouter);
 
