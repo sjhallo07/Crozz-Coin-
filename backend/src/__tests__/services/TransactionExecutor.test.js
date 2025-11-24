@@ -356,7 +356,7 @@ describe('TransactionExecutor', () => {
     });
 
     it('should handle job failures and retries', async () => {
-      const job = transactionService.enqueue({
+      transactionService.enqueue({
         type: 'mint',
         payload: { amount: 'invalid', recipient: '0xtest' },
       });

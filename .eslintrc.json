@@ -44,7 +44,8 @@
       ],
       "plugins": ["@typescript-eslint", "react", "react-hooks", "security", "no-secrets"],
       "parserOptions": {
-        "project": "./frontend/tsconfig.json",
+        "project": ["./frontend/tsconfig.json"],
+        "tsconfigRootDir": ".",
         "ecmaVersion": 2022,
         "sourceType": "module",
         "ecmaFeatures": {
