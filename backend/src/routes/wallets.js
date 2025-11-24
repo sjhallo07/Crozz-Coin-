@@ -3,7 +3,7 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { toB64 } from '@mysten/sui/utils';
 import { transactionService } from '../services/TransactionService.js';
 import { successResponse, errorResponse } from '../utils/humanize.js';
-import authMiddleware from '../middleware/auth.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -18,6 +18,7 @@ const router = Router();
 const wallets = new Map();
 
 // Configuration constants
+// eslint-disable-next-line no-unused-vars
 const MAX_WALLETS_PER_REQUEST = 10;
 
 /**
@@ -58,7 +59,8 @@ router.post('/create', authMiddleware, (req, res) => {
       wallets.set(walletId, wallet);
       
       // Return wallet without private key in response
-      const { privateKey: _, ...walletInfo } = wallet;
+      // eslint-disable-next-line no-unused-vars
+      const { privateKey: _pk, ...walletInfo } = wallet;
       createdWallets.push(walletInfo);
     }
     
@@ -82,6 +84,7 @@ router.post('/create', authMiddleware, (req, res) => {
 router.get('/', authMiddleware, (req, res) => {
   try {
     const walletList = Array.from(wallets.values()).map(wallet => {
+      // eslint-disable-next-line no-unused-vars
       const { privateKey, ...walletInfo } = wallet;
       return walletInfo;
     });
@@ -114,6 +117,7 @@ router.get('/:id', authMiddleware, (req, res) => {
       );
     }
     
+    // eslint-disable-next-line no-unused-vars
     const { privateKey, ...walletInfo } = wallet;
     
     res.json(

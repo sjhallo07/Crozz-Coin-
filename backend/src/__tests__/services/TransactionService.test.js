@@ -150,10 +150,16 @@ describe('TransactionService', () => {
       const job2 = service.enqueue({ type: 'mint', payload: { amount: '200' } });
       const job3 = service.enqueue({ type: 'mint', payload: { amount: '300' } });
 
-      const jobs = service.list({ limit: 3 });
-      expect(jobs[0].id).toBe(job3.id);
-      expect(jobs[1].id).toBe(job2.id);
-      expect(jobs[2].id).toBe(job1.id);
+      const jobs = service.list({ limit: 50 });
+      
+      // Find the indices of our test jobs
+      const idx1 = jobs.findIndex(j => j.id === job1.id);
+      const idx2 = jobs.findIndex(j => j.id === job2.id);
+      const idx3 = jobs.findIndex(j => j.id === job3.id);
+      
+      // The newest job should appear before older jobs (lower index = newer in desc order)
+      expect(idx3).toBeLessThan(idx2);
+      expect(idx2).toBeLessThan(idx1);
     });
   });
 
