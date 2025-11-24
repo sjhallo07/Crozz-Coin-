@@ -3,7 +3,7 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { toB64 } from '@mysten/sui/utils';
 import { transactionService } from '../services/TransactionService.js';
 import { successResponse, errorResponse } from '../utils/humanize.js';
-import authMiddleware from '../middleware/auth.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 

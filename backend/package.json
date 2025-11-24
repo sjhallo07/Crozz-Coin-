@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
+    "dev": "nodemon -r dotenv/config src/server.js dotenv_config_path=../.env",
+    "start": "node -r dotenv/config src/server.js dotenv_config_path=../.env",
     "build": "tsc --noEmit",
     "test": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "NODE_ENV=development node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
