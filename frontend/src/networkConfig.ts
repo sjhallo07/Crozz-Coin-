@@ -1,5 +1,5 @@
 import { createNetworkConfig } from '@mysten/dapp-kit';
-import { getNetworkRpc, SUI_NETWORKS } from './utils/sui';
+import { SUI_NETWORKS } from './utils/sui';
 
 const crozzPackageId = import.meta.env.VITE_CROZZ_PACKAGE_ID ?? '';
 const crozzModule = import.meta.env.VITE_CROZZ_MODULE ?? 'crozz_token';

@@ -224,7 +224,7 @@ describe('TransactionService', () => {
   describe('Job Queue Processing', () => {
     it('should take next queued job', () => {
       const job1 = service.enqueue({ type: 'mint', payload: { amount: '100' } });
-      const job2 = service.enqueue({ type: 'mint', payload: { amount: '200' } });
+      service.enqueue({ type: 'mint', payload: { amount: '200' } });
 
       const nextJob = service.takeNext();
       expect(nextJob).toBeDefined();
