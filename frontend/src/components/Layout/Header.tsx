@@ -1,36 +1,34 @@
-import { ConnectButton } from "@mysten/dapp-kit";
-import { type SVGProps } from "react";
-import RoleSwitcher from "../../components/Dashboard/RoleSwitcher";
-import { useThemeMode } from "../../providers/ThemeProvider";
-import { useUserRole } from "../../providers/UserRoleProvider";
-import { getCurrentNetwork, isMainnet } from "../../utils/sui";
-import Button from "../UI/Button";
+import { ConnectButton } from '@mysten/dapp-kit';
+import { type SVGProps } from 'react';
+import RoleSwitcher from '../../components/Dashboard/RoleSwitcher';
+import { useThemeMode } from '../../providers/ThemeProvider';
+import { useUserRole } from '../../providers/UserRoleProvider';
+import { getCurrentNetwork, isMainnet } from '../../utils/sui';
+import Button from '../UI/Button';
 
 const Header = () => {
   const { theme, toggleTheme } = useThemeMode();
   const { isAdmin } = useUserRole();
-  const isDark = theme === "dark";
+  const isDark = theme === 'dark';
   const network = getCurrentNetwork();
   const isMain = isMainnet();
 
   const networkColors = {
-    mainnet: "bg-green-500 text-white",
-    testnet: "bg-yellow-500 text-white",
-    localnet: "bg-gray-500 text-white",
+    mainnet: 'bg-green-500 text-white',
+    testnet: 'bg-yellow-500 text-white',
+    localnet: 'bg-gray-500 text-white',
   };
 
   return (
     <header className="header">
       <div className="flex items-center gap-4">
-        <h1 className="header-title">
-          {isAdmin ? "Admin Dashboard" : "User Dashboard"}
-        </h1>
-        <div className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${networkColors[network]}`}>
+        <h1 className="header-title">{isAdmin ? 'Admin Dashboard' : 'User Dashboard'}</h1>
+        <div
+          className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${networkColors[network]}`}
+        >
           {network}
         </div>
-        {isMain && (
-          <span className="text-red-600 text-xs font-semibold">⚠️ LIVE</span>
-        )}
+        {isMain && <span className="text-red-600 text-xs font-semibold">⚠️ LIVE</span>}
       </div>
       <div className="flex items-center gap-3">
         <RoleSwitcher />
@@ -39,17 +37,11 @@ const Header = () => {
           variant="ghost"
           size="sm"
           onClick={toggleTheme}
-          aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+          aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
           className="border border-slate-200/60 text-slate-600 dark:border-slate-800 dark:text-slate-100"
         >
-          {isDark ? (
-            <SunIcon className="h-4 w-4" />
-          ) : (
-            <MoonIcon className="h-4 w-4" />
-          )}
-          <span className="hidden sm:inline">
-            {isDark ? "Light" : "Dark"} mode
-          </span>
+          {isDark ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+          <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'} mode</span>
         </Button>
       </div>
     </header>

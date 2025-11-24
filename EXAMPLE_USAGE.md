@@ -271,36 +271,36 @@ name: Deploy to Testnet
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      
+
       - name: Install dependencies
         run: |
           cd backend && npm ci
           cd ../frontend && npm ci
-      
+
       - name: Generate Sui wallet
         run: |
           cd backend
           node scripts/setup-sui-client.js > wallet.json
           echo "WALLET_ADDRESS=$(jq -r '.address' wallet.json)" >> $GITHUB_ENV
-      
+
       - name: Fund wallet
         run: |
           curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
             --header 'Content-Type: application/json' \
             --data-raw "{\"FixedAmountRequest\":{\"recipient\":\"$WALLET_ADDRESS\"}}"
-      
+
       - name: Deploy
         run: |
           # Your deployment commands here
@@ -356,6 +356,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ## Next Steps
 
 After generating your address:
+
 1. ✅ Fund it from the faucet
 2. ✅ Verify the backend starts correctly
 3. ✅ Test the API endpoints

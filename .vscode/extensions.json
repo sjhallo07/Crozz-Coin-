@@ -13,7 +13,5 @@
     "streetsidesoftware.code-spell-checker",
     "tamasfe.even-better-toml"
   ],
-  "unwantedRecommendations": [
-    "ms-vscode.vscode-typescript-next"
-  ]
+  "unwantedRecommendations": ["ms-vscode.vscode-typescript-next"]
 }

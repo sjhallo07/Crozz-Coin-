@@ -1,8 +1,8 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { createHash, randomBytes, randomUUID } from "node:crypto";
-import { database } from "./Database.js";
-import { emailService } from "./EmailService.js";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { database } from './Database.js';
+import { emailService } from './EmailService.js';
 
 const nowIso = () => new Date().toISOString();
 const minutes = (value) => value * 60 * 1000;
@@ -14,19 +14,19 @@ class AuthService {
       this.jwtSecret = process.env.JWT_SECRET;
     } else {
       // For development, generate a strong random secret if not provided, but warn the user.
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV === 'development') {
         console.warn(
-          "[AuthService] Warning: JWT_SECRET is not set. Generating a random secret for this session. " +
-          "All tokens will be invalid after server restart. Set JWT_SECRET in your .env for persistent sessions."
+          '[AuthService] Warning: JWT_SECRET is not set. Generating a random secret for this session. ' +
+            'All tokens will be invalid after server restart. Set JWT_SECRET in your .env for persistent sessions.'
         );
-        this.jwtSecret = randomBytes(64).toString("hex");
+        this.jwtSecret = randomBytes(64).toString('hex');
       } else {
         throw new Error(
-          "JWT_SECRET environment variable is required in production and test environments"
+          'JWT_SECRET environment variable is required in production and test environments'
         );
       }
     }
-    this.jwtIssuer = process.env.JWT_ISSUER ?? "crozz-auth";
+    this.jwtIssuer = process.env.JWT_ISSUER ?? 'crozz-auth';
     this.accessTtlMs = Number(process.env.JWT_ACCESS_TTL_MS ?? minutes(15));
     this.refreshTtlMs = Number(process.env.JWT_REFRESH_TTL_MS ?? days(30));
     this.resetTtlMs = Number(process.env.PASSWORD_RESET_TTL_MS ?? minutes(15));
@@ -67,9 +67,7 @@ class AuthService {
       `SELECT * FROM users WHERE LOWER(username) = LOWER(@username)`
     );
 
-    this.findUserByIdStmt = database.prepare(
-      `SELECT * FROM users WHERE id = @id`
-    );
+    this.findUserByIdStmt = database.prepare(`SELECT * FROM users WHERE id = @id`);
 
     this.updateUserPasswordStmt = database.prepare(`
       UPDATE users
@@ -121,16 +119,16 @@ class AuthService {
   async register({ email, username, password, isAdmin = false }) {
     const normalizedEmail = email?.trim().toLowerCase();
     const normalizedUsername = username?.trim();
-    this.#assertPresent(normalizedEmail, "Email is required");
-    this.#assertPresent(normalizedUsername, "Username is required");
-    this.#assertPresent(password, "Password is required");
+    this.#assertPresent(normalizedEmail, 'Email is required');
+    this.#assertPresent(normalizedUsername, 'Username is required');
+    this.#assertPresent(password, 'Password is required');
 
     if (this.#getUserRowByEmail(normalizedEmail)) {
-      throw new Error("Email already registered");
+      throw new Error('Email already registered');
     }
 
     if (this.#getUserRowByUsername(normalizedUsername)) {
-      throw new Error("Username already taken");
+      throw new Error('Username already taken');
     }
 
     const passwordHash = await bcrypt.hash(password, this.bcryptRounds);
@@ -152,20 +150,18 @@ class AuthService {
   }
 
   async login({ identifier, password }) {
-    this.#assertPresent(identifier, "Email or username is required");
-    this.#assertPresent(password, "Password is required");
+    this.#assertPresent(identifier, 'Email or username is required');
+    this.#assertPresent(password, 'Password is required');
 
-    const row =
-      this.#getUserRowByEmail(identifier) ??
-      this.#getUserRowByUsername(identifier);
+    const row = this.#getUserRowByEmail(identifier) ?? this.#getUserRowByUsername(identifier);
 
     if (!row) {
-      throw new Error("Invalid credentials");
+      throw new Error('Invalid credentials');
     }
 
     const valid = await bcrypt.compare(password, row.password_hash);
     if (!valid) {
-      throw new Error("Invalid credentials");
+      throw new Error('Invalid credentials');
     }
 
     this.updateLastLoginStmt.run({ id: row.id, last_login_at: nowIso() });
@@ -173,11 +169,11 @@ class AuthService {
   }
 
   async refresh(refreshToken) {
-    this.#assertPresent(refreshToken, "Refresh token is required");
+    this.#assertPresent(refreshToken, 'Refresh token is required');
     const hashed = this.#hashToken(refreshToken);
     const record = this.findRefreshTokenStmt.get({ token: hashed });
     if (!record || record.revoked_at) {
-      throw new Error("Refresh token invalid");
+      throw new Error('Refresh token invalid');
     }
 
     if (record.expires_at < Date.now()) {
@@ -185,12 +181,12 @@ class AuthService {
         id: record.id,
         revoked_at: Date.now(),
       });
-      throw new Error("Refresh token expired");
+      throw new Error('Refresh token expired');
     }
 
     const user = this.#getUserRowById(record.user_id);
     if (!user) {
-      throw new Error("Account missing");
+      throw new Error('Account missing');
     }
 
     await this.revokeRefreshTokenStmt.run({
@@ -213,7 +209,7 @@ class AuthService {
   }
 
   async forgotPassword(email) {
-    this.#assertPresent(email, "Email is required");
+    this.#assertPresent(email, 'Email is required');
     const user = this.#getUserRowByEmail(email);
     if (!user) {
       return { sent: true };
@@ -230,26 +226,26 @@ class AuthService {
 
     await emailService.send({
       to: user.email,
-      subject: "Reset your Crozz password",
+      subject: 'Reset your Crozz password',
       text: `Use this token within 15 minutes: ${token}`,
     });
     return { sent: true };
   }
 
   async resetPassword(token, newPassword) {
-    this.#assertPresent(token, "Reset token is required");
-    this.#assertPresent(newPassword, "New password is required");
+    this.#assertPresent(token, 'Reset token is required');
+    this.#assertPresent(newPassword, 'New password is required');
 
     const record = this.findPasswordResetStmt.get({
       token: this.#hashToken(token),
     });
 
     if (!record || record.used_at) {
-      throw new Error("Reset token invalid");
+      throw new Error('Reset token invalid');
     }
 
     if (record.expires_at < Date.now()) {
-      throw new Error("Reset token expired");
+      throw new Error('Reset token expired');
     }
 
     const passwordHash = await bcrypt.hash(newPassword, this.bcryptRounds);
@@ -269,7 +265,7 @@ class AuthService {
   }
 
   async forgotUsername(email) {
-    this.#assertPresent(email, "Email is required");
+    this.#assertPresent(email, 'Email is required');
     const user = this.#getUserRowByEmail(email);
     if (!user) {
       return { sent: true };
@@ -277,7 +273,7 @@ class AuthService {
 
     await emailService.send({
       to: user.email,
-      subject: "Your Crozz username",
+      subject: 'Your Crozz username',
       text: `You registered as ${user.username}.`,
     });
     return { sent: true };
@@ -316,9 +312,7 @@ class AuthService {
     const accessToken = this.#createAccessToken(user);
     const accessExpiresAt = new Date(Date.now() + this.accessTtlMs);
 
-    const { refreshToken, refreshExpiresAt } = this.#createRefreshToken(
-      user.id
-    );
+    const { refreshToken, refreshExpiresAt } = this.#createRefreshToken(user.id);
 
     return {
       user,
@@ -393,11 +387,11 @@ class AuthService {
   }
 
   #hashToken(value) {
-    return createHash("sha256").update(value).digest("hex");
+    return createHash('sha256').update(value).digest('hex');
   }
 
   #randomToken() {
-    return randomBytes(48).toString("hex");
+    return randomBytes(48).toString('hex');
   }
 
   #assertPresent(value, message) {

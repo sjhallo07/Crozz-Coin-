@@ -8,15 +8,16 @@ The infrastructure uses a **pay-as-you-go** model where you only pay for what yo
 
 All major cloud providers bill **hourly** with no long-term commitments:
 
-| Component | AWS (Hourly) | GCP (Hourly) | Azure (Hourly) |
-|-----------|--------------|--------------|----------------|
-| **Cluster Control Plane** | $0.10/hr ($144/mo) | $0.10/hr ($73/mo) | Free | 
-| **Worker Nodes (3x)** | $0.0416/hr each ($219/mo) | $0.0296/hr each ($156/mo) | $0.0262/hr each ($138/mo) |
-| **Load Balancer** | $0.025/hr ($16.20/mo) | $0.025/hr ($18/mo) | $0.025/hr ($18.45/mo) |
-| **Storage (100GB)** | $0.10/GB/mo | $0.17/GB/mo | $0.192/GB/mo |
-| **Data Transfer** | $0.09/GB | $0.12/GB | $0.087/GB |
+| Component                 | AWS (Hourly)              | GCP (Hourly)              | Azure (Hourly)            |
+| ------------------------- | ------------------------- | ------------------------- | ------------------------- |
+| **Cluster Control Plane** | $0.10/hr ($144/mo)        | $0.10/hr ($73/mo)         | Free                      |
+| **Worker Nodes (3x)**     | $0.0416/hr each ($219/mo) | $0.0296/hr each ($156/mo) | $0.0262/hr each ($138/mo) |
+| **Load Balancer**         | $0.025/hr ($16.20/mo)     | $0.025/hr ($18/mo)        | $0.025/hr ($18.45/mo)     |
+| **Storage (100GB)**       | $0.10/GB/mo               | $0.17/GB/mo               | $0.192/GB/mo              |
+| **Data Transfer**         | $0.09/GB                  | $0.12/GB                  | $0.087/GB                 |
 
 **Total Hourly Rates:**
+
 - **AWS**: ~$0.53/hour = **$392/month** if running 24/7
 - **GCP**: ~$0.58/hour = **$425/month** if running 24/7
 - **Azure**: ~$0.43/hour = **$312/month** if running 24/7
@@ -24,6 +25,7 @@ All major cloud providers bill **hourly** with no long-term commitments:
 ### 💡 Cost Savings Tips
 
 **You can reduce costs by:**
+
 1. **Shutting down when not in use**: Only pay for hours running
 2. **Using spot instances**: 50-70% discount
 3. **Auto-scaling down**: Scale to minimum (3 pods) during low traffic
@@ -37,20 +39,22 @@ All major cloud providers bill **hourly** with no long-term commitments:
 
 All major cloud providers offer **free trial credits**:
 
-| Provider | Free Credits | Duration | Perfect For |
-|----------|--------------|----------|-------------|
-| **AWS** | $300 | 90 days | Full production testing |
-| **GCP** | $300 | 90 days | Complete implementation |
-| **Azure** | $200 | 30 days | Initial proof-of-concept |
+| Provider      | Free Credits     | Duration  | Perfect For               |
+| ------------- | ---------------- | --------- | ------------------------- |
+| **AWS**       | $300             | 90 days   | Full production testing   |
+| **GCP**       | $300             | 90 days   | Complete implementation   |
+| **Azure**     | $200             | 30 days   | Initial proof-of-concept  |
 | **IBM Cloud** | Always Free Tier | Unlimited | Long-term free hosting ✅ |
 
 **With free credits, you can:**
+
 - ✅ Test the complete Kubernetes setup
 - ✅ Run for **60-90 days** at no cost
 - ✅ Validate all features (auto-scaling, monitoring, security)
 - ✅ Load test and benchmark performance
 
 **IBM Cloud Free Tier (No Expiration):**
+
 - ✅ **1 worker node** (2 vCPU, 4GB RAM)
 - ✅ **20GB block storage**
 - ✅ **Network egress included**
@@ -59,6 +63,7 @@ All major cloud providers offer **free trial credits**:
 - ✅ **Never expires** - perfect for long-term testing!
 
 **Steps to get started:**
+
 1. Sign up for cloud provider free trial
 2. Use the provided credits
 3. Deploy using our automation scripts
@@ -115,6 +120,7 @@ kubectl apply -f k8s/base/
 ```
 
 **Local Testing Benefits:**
+
 - ✅ **Free**: No cloud costs
 - ✅ **Unlimited time**: Test as long as you need
 - ✅ **Fast iteration**: Quick deployments
@@ -144,6 +150,7 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 ## 📅 Recommended Testing Timeline
 
 ### Phase 1: Local Testing (Days 1-7) - FREE
+
 - ✅ Test deployment scripts
 - ✅ Validate Kubernetes manifests
 - ✅ Check health endpoints
@@ -151,6 +158,7 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 - **Cost: $0**
 
 ### Phase 2: Cloud Trial (Days 8-37) - FREE
+
 - ✅ Deploy to AWS/GCP/Azure free trial
 - ✅ Test auto-scaling under load
 - ✅ Validate security policies
@@ -159,6 +167,7 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 - **Cost: $0** (using free credits)
 
 ### Phase 3: Extended Testing (Days 38-60) - LOW COST
+
 - ✅ Continue on free credits (AWS/GCP give 90 days)
 - ✅ OR use minimal setup ($12-30/month)
 - ✅ Long-term stability testing
@@ -166,6 +175,7 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 - **Cost: $0-60** (depending on provider and setup)
 
 ### Phase 4: Production (Day 61+) - FULL COST
+
 - ✅ Scale to production settings
 - ✅ Enable all replicas (3-10)
 - ✅ Full monitoring and alerting
@@ -178,11 +188,13 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 ### FREE Testing: Up to 90 Days
 
 **Option A: Cloud Free Trials**
+
 - **AWS**: 90 days with $300 credits ✅ **RECOMMENDED**
 - **GCP**: 90 days with $300 credits ✅ **RECOMMENDED**
 - **Azure**: 30 days with $200 credits
 
 **Option B: Local Testing**
+
 - **Unlimited time** for free
 - Use Minikube, Kind, or Docker Desktop
 - Perfect for development and initial testing
@@ -190,6 +202,7 @@ kubectl scale deployment crozz-frontend --replicas=1 -n crozz-coin
 ### Recommended Approach
 
 **Week 1-2: Local Testing (FREE)**
+
 ```bash
 # Deploy locally
 minikube start
@@ -198,6 +211,7 @@ minikube start
 ```
 
 **Week 3-12: Cloud Trial (FREE)**
+
 ```bash
 # Sign up for AWS/GCP free trial
 # Deploy to cloud
@@ -205,6 +219,7 @@ minikube start
 ```
 
 **After 90 days: Pay-as-you-go**
+
 - Only charged for actual usage
 - Can start/stop anytime
 - No minimum commitments
@@ -214,11 +229,13 @@ minikube start
 ## 💡 Cost Optimization During Testing
 
 ### 1. Use Free Tiers
+
 - **AWS**: t3.micro included in free tier (first 12 months)
 - **GCP**: e2-micro always free (1 instance)
 - **Azure**: B1S free for 12 months
 
 ### 2. Shut Down When Not Testing
+
 ```bash
 # Stop all pods (keeps configuration)
 kubectl scale deployment --all --replicas=0 -n crozz-coin
@@ -229,11 +246,13 @@ kubectl scale deployment crozz-frontend --replicas=3 -n crozz-coin
 ```
 
 ### 3. Use Spot Instances
+
 - AWS Spot: 50-70% discount
-- GCP Preemptible: 60-91% discount  
+- GCP Preemptible: 60-91% discount
 - Azure Spot: 60-90% discount
 
 ### 4. Test During Business Hours Only
+
 - Run 8 hours/day instead of 24/7
 - Reduces costs by 66%
 - Example: $392/month → $130/month
@@ -242,15 +261,15 @@ kubectl scale deployment crozz-frontend --replicas=3 -n crozz-coin
 
 ## 📊 Testing Cost Calculator
 
-| Testing Scenario | Cloud Provider | Duration | Estimated Cost |
-|------------------|----------------|----------|----------------|
-| **Local Testing** | None (Minikube) | Unlimited | **$0** |
-| **AWS Free Trial** | AWS | 90 days | **$0** ($300 credits) |
-| **GCP Free Trial** | GCP | 90 days | **$0** ($300 credits) |
-| **Azure Free Trial** | Azure | 30 days | **$0** ($200 credits) |
-| **Minimal Setup** | Any | 30 days | **$12-30** |
-| **8hrs/day Testing** | AWS | 30 days | **$130** |
-| **Full Production** | AWS | 30 days | **$392** |
+| Testing Scenario     | Cloud Provider  | Duration  | Estimated Cost        |
+| -------------------- | --------------- | --------- | --------------------- |
+| **Local Testing**    | None (Minikube) | Unlimited | **$0**                |
+| **AWS Free Trial**   | AWS             | 90 days   | **$0** ($300 credits) |
+| **GCP Free Trial**   | GCP             | 90 days   | **$0** ($300 credits) |
+| **Azure Free Trial** | Azure           | 30 days   | **$0** ($200 credits) |
+| **Minimal Setup**    | Any             | 30 days   | **$12-30**            |
+| **8hrs/day Testing** | AWS             | 30 days   | **$130**              |
+| **Full Production**  | AWS             | 30 days   | **$392**              |
 
 ---
 
@@ -306,6 +325,7 @@ kubectl scale deployment crozz-frontend --replicas=3 -n crozz-coin
 ## ⚠️ Important Notes
 
 **During Free Trial:**
+
 - ✅ All features available (no restrictions)
 - ✅ Same performance as paid accounts
 - ✅ Can test production workloads
@@ -314,6 +334,7 @@ kubectl scale deployment crozz-frontend --replicas=3 -n crozz-coin
 - ⚠️ Automatically converts to pay-as-you-go after trial (can cancel before)
 
 **After Free Trial:**
+
 - You can export all configurations
 - Move to different provider
 - Run locally with Minikube
@@ -347,6 +368,7 @@ A: Yes! All Kubernetes configs work across AWS/GCP/Azure. Just apply the cloud-s
 Since you have an **IBM Cloud free tier account**, this is an excellent option for running Crozz Coin:
 
 **IBM Cloud Free Tier Benefits:**
+
 - ✅ **Always Free** - Never expires (unlike AWS/GCP 90-day trials)
 - ✅ **No Credit Card Required** - True free tier
 - ✅ **1 Worker Node** - 2 vCPU, 4GB RAM (perfect for testing)
@@ -426,6 +448,7 @@ kubectl get svc crozz-frontend-service -n crozz-coin
 ### IBM Cloud Free Tier Limitations
 
 **What's Included (FREE Forever):**
+
 - 1 worker node (2 vCPU, 4GB RAM)
 - 20GB block storage
 - Network egress
@@ -433,6 +456,7 @@ kubectl get svc crozz-frontend-service -n crozz-coin
 - No expiration!
 
 **Optimization Tips for Free Tier:**
+
 1. **Run 1 replica** of each service instead of 3
 2. **Reduce resource requests**:
    - Backend: 50m CPU, 64Mi RAM
@@ -445,41 +469,42 @@ kubectl get svc crozz-frontend-service -n crozz-coin
 ```yaml
 # Optimized for IBM Cloud Free Tier
 backend:
-  replicas: 1  # Instead of 3
+  replicas: 1 # Instead of 3
   resources:
     requests:
-      cpu: 50m      # Instead of 100m
-      memory: 64Mi  # Instead of 128Mi
+      cpu: 50m # Instead of 100m
+      memory: 64Mi # Instead of 128Mi
     limits:
-      cpu: 200m     # Instead of 500m
+      cpu: 200m # Instead of 500m
       memory: 256Mi # Instead of 512Mi
 
 frontend:
-  replicas: 1  # Instead of 3
+  replicas: 1 # Instead of 3
   resources:
     requests:
-      cpu: 25m     # Instead of 50m
+      cpu: 25m # Instead of 50m
       memory: 32Mi # Instead of 64Mi
     limits:
-      cpu: 100m    # Instead of 200m
+      cpu: 100m # Instead of 200m
       memory: 128Mi # Instead of 256Mi
 ```
 
 ### Cost Comparison: IBM Cloud Free Tier vs Others
 
-| Feature | IBM Cloud Free | AWS Free Trial | GCP Free Trial |
-|---------|----------------|----------------|----------------|
-| **Duration** | ✅ **Forever** | 90 days | 90 days |
-| **Credits** | N/A | $300 | $300 |
-| **Worker Nodes** | 1 (2vCPU/4GB) | Multiple | Multiple |
-| **Storage** | 20GB | Varies | Varies |
-| **Credit Card** | ❌ Not required | ✅ Required | ✅ Required |
-| **After Trial** | ✅ Still free | 💰 Pay-as-you-go | 💰 Pay-as-you-go |
-| **Best For** | Long-term dev/test | Production testing | Full-scale testing |
+| Feature          | IBM Cloud Free     | AWS Free Trial     | GCP Free Trial     |
+| ---------------- | ------------------ | ------------------ | ------------------ |
+| **Duration**     | ✅ **Forever**     | 90 days            | 90 days            |
+| **Credits**      | N/A                | $300               | $300               |
+| **Worker Nodes** | 1 (2vCPU/4GB)      | Multiple           | Multiple           |
+| **Storage**      | 20GB               | Varies             | Varies             |
+| **Credit Card**  | ❌ Not required    | ✅ Required        | ✅ Required        |
+| **After Trial**  | ✅ Still free      | 💰 Pay-as-you-go   | 💰 Pay-as-you-go   |
+| **Best For**     | Long-term dev/test | Production testing | Full-scale testing |
 
 ### Why IBM Cloud Free Tier is Great for You
 
 **Perfect for:**
+
 - ✅ Long-term development and testing
 - ✅ Learning Kubernetes without costs
 - ✅ Running small production workloads
@@ -487,6 +512,7 @@ frontend:
 - ✅ Educational projects
 
 **Important Notes:**
+
 - Single worker node limits you to **1 replica per deployment**
 - Perfect for testing the complete setup
 - Can upgrade to paid tier anytime for more resources
@@ -514,6 +540,7 @@ kubectl scale deployment --all --replicas=1 -n crozz-coin
 **You get 90 days of FREE testing** with AWS/GCP/Azure trials, plus unlimited local testing with Minikube!
 
 **Start testing today:**
+
 ```bash
 # Option 1: IBM Cloud Free Tier (FREE, unlimited) ⭐
 ibmcloud ks cluster create classic --name crozz-coin-free --machine-type free

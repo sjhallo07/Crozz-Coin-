@@ -14,3 +14,8 @@ pnpm-lock.yaml
 !.env.example
 coverage
 *.log
+publish-output.json
+**/publish-output.json
+bytecode.dump.json
+**/bytecode.dump.json
+*.move

@@ -1,13 +1,9 @@
-import {
-  ConnectButton,
-  useCurrentAccount,
-  useSuiClient,
-} from "@mysten/dapp-kit";
-import { useState } from "react";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import { ConnectButton, useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
+import { useState } from 'react';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
-const metadataId = import.meta.env.VITE_CROZZ_METADATA_ID ?? "";
+const metadataId = import.meta.env.VITE_CROZZ_METADATA_ID ?? '';
 
 const WalletConsole = () => {
   const account = useCurrentAccount();
@@ -18,7 +14,7 @@ const WalletConsole = () => {
 
   const handleInspectMetadata = async () => {
     if (!metadataId) {
-      setError("Set VITE_CROZZ_METADATA_ID in your frontend .env first.");
+      setError('Set VITE_CROZZ_METADATA_ID in your frontend .env first.');
       return;
     }
 
@@ -38,7 +34,7 @@ const WalletConsole = () => {
             digest: result.data?.digest,
             display: result.data?.display?.data,
             fields:
-              result.data?.content?.dataType === "moveObject"
+              result.data?.content?.dataType === 'moveObject'
                 ? result.data.content.fields
                 : undefined,
           },
@@ -48,7 +44,7 @@ const WalletConsole = () => {
       );
     } catch (err) {
       setPayload(null);
-      setError(err instanceof Error ? err.message : "Failed to read metadata");
+      setError(err instanceof Error ? err.message : 'Failed to read metadata');
     } finally {
       setLoading(false);
     }
@@ -76,19 +72,11 @@ const WalletConsole = () => {
           </div>
         </div>
 
-        <Button
-          onClick={handleInspectMetadata}
-          disabled={!account || loading}
-          variant="secondary"
-        >
-          {loading ? "Fetching on-chain data…" : "Read metadata object"}
+        <Button onClick={handleInspectMetadata} disabled={!account || loading} variant="secondary">
+          {loading ? 'Fetching on-chain data…' : 'Read metadata object'}
         </Button>
 
-        {error && (
-          <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">{error}</p>}
         {payload && (
           <pre className="max-h-72 overflow-auto rounded-2xl border border-slate-200/70 bg-slate-950/90 p-4 text-xs text-emerald-200 dark:border-slate-800">
             {payload}

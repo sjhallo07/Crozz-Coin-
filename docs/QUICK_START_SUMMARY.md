@@ -14,6 +14,7 @@ This document provides a quick summary of the new remote testing and tunnel infr
 ```
 
 This single command:
+
 - ✅ Checks prerequisites
 - ✅ Installs dependencies
 - ✅ Sets up environment files
@@ -28,6 +29,7 @@ This single command:
 ```
 
 Multiple tunnel options:
+
 - **Cloudflare Tunnel** (Recommended) - Free, fast, no account needed
 - **localhost.run** - SSH-based, zero installation
 - **Manual options** - Ngrok, Localtunnel, Serveo, Bore
@@ -55,6 +57,7 @@ Multiple tunnel options:
 ```
 
 Tests:
+
 - ✅ Prerequisites installed
 - ✅ Dependencies present
 - ✅ Environment configured
@@ -82,6 +85,7 @@ npm run dev
 ```
 
 **When to use:**
+
 - Daily development work
 - Debugging
 - Local testing
@@ -103,6 +107,7 @@ npm run dev
 ```
 
 **When to use:**
+
 - Client presentations
 - Remote team testing
 - Mobile device testing
@@ -119,6 +124,7 @@ npm run dev
 ```
 
 **When to use:**
+
 - CI/CD pipelines
 - Automated validation
 - Pre-commit checks
@@ -206,14 +212,14 @@ VITE_CROZZ_ADMIN_TOKEN=change-me
 
 ## Tunnel Options Comparison
 
-| Feature | Cloudflare | Ngrok | localhost.run | Localtunnel |
-|---------|-----------|-------|---------------|-------------|
-| **Free Tier** | ✅ Unlimited | ⚠️ Limited | ✅ Unlimited | ✅ Unlimited |
-| **Account Required** | ❌ No | ⚠️ For persistent URLs | ❌ No | ❌ No |
-| **Custom Domains** | ✅ Yes (with CF) | ✅ Yes (paid) | ❌ No | ⚠️ Subdomains |
-| **Installation** | Required | Required | SSH only | NPM package |
-| **Speed** | ⚡ Fast | ⚡ Fast | 🐌 Moderate | 🐌 Moderate |
-| **Stability** | ✅ Excellent | ✅ Excellent | ⚠️ Fair | ⚠️ Fair |
+| Feature              | Cloudflare       | Ngrok                  | localhost.run | Localtunnel   |
+| -------------------- | ---------------- | ---------------------- | ------------- | ------------- |
+| **Free Tier**        | ✅ Unlimited     | ⚠️ Limited             | ✅ Unlimited  | ✅ Unlimited  |
+| **Account Required** | ❌ No            | ⚠️ For persistent URLs | ❌ No         | ❌ No         |
+| **Custom Domains**   | ✅ Yes (with CF) | ✅ Yes (paid)          | ❌ No         | ⚠️ Subdomains |
+| **Installation**     | Required         | Required               | SSH only      | NPM package   |
+| **Speed**            | ⚡ Fast          | ⚡ Fast                | 🐌 Moderate   | 🐌 Moderate   |
+| **Stability**        | ✅ Excellent     | ✅ Excellent           | ⚠️ Fair       | ⚠️ Fair       |
 
 ## Security Notes
 
@@ -236,6 +242,7 @@ VITE_CROZZ_ADMIN_TOKEN=change-me
 ### 🔒 Production Deployment
 
 For real production use:
+
 - Deploy to proper cloud infrastructure (AWS, GCP, Azure)
 - Use production-grade security
 - Implement monitoring and alerts
@@ -301,17 +308,20 @@ Before sharing with clients/team:
 ## Next Steps
 
 1. **First Time Setup**
+
    ```bash
    ./scripts/quick-start.sh
    ```
 
 2. **Daily Development**
+
    ```bash
    cd backend && npm run dev    # Terminal 1
    cd frontend && npm run dev   # Terminal 2
    ```
 
 3. **Client Demo**
+
    ```bash
    ./scripts/quick-start.sh      # Option 3: Start Both
    ./scripts/setup-tunnel.sh     # Option 1: Cloudflare
@@ -338,7 +348,7 @@ The Crozz-Coin ecosystem now has:
 ✅ **Automated testing** - `./scripts/test-ecosystem.sh`  
 ✅ **Multiple tunnel options** - Cloudflare, Ngrok, localhost.run, etc.  
 ✅ **Security best practices** - Documented and configured  
-✅ **Environment guides** - Temporary vs. permanent explained  
+✅ **Environment guides** - Temporary vs. permanent explained
 
 **Start testing in less than 5 minutes! 🚀**
 

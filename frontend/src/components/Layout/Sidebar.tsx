@@ -1,4 +1,4 @@
-import { type SVGProps } from "react";
+import { type SVGProps } from 'react';
 
 const Sidebar = () => {
   return (
@@ -6,11 +6,7 @@ const Sidebar = () => {
       <div className="sidebar-header">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 overflow-hidden rounded-lg bg-brand-500/10 p-1.5">
-            <img
-              src="/crozz-logo.png"
-              alt="Crozz logo"
-              className="h-full w-full object-contain"
-            />
+            <img src="/crozz-logo.png" alt="Crozz logo" className="h-full w-full object-contain" />
           </div>
           <h2 className="text-xl font-bold text-white">CROZZ Admin</h2>
         </div>

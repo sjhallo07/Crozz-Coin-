@@ -58,36 +58,42 @@ npm run dev
 ### 1. Install Dependencies
 
 #### Root Dependencies
+
 ```bash
 cd /path/to/Crozz-Coin-
 npm install
 ```
 
 This installs:
+
 - ESLint with security plugins
 - Prettier for code formatting
 - Husky for Git hooks
 - Security auditing tools
 
 #### Backend Dependencies
+
 ```bash
 cd backend
 npm install
 ```
 
 Includes:
+
 - Express.js framework
 - Sui SDK (@mysten/sui)
 - Security middleware (helmet)
 - Testing tools (Jest, Supertest)
 
 #### Frontend Dependencies
+
 ```bash
 cd frontend
 npm install
 ```
 
 Includes:
+
 - React 18.x
 - Sui dApp Kit
 - TypeScript
@@ -99,19 +105,21 @@ Includes:
 TypeScript is configured with strict security settings:
 
 **Frontend (`frontend/tsconfig.json`)**
+
 ```json
 {
   "compilerOptions": {
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": true
     // ... other strict options
   }
 }
 ```
 
 **Backend (`backend/tsconfig.json`)**
+
 - Supports ES2022 features
 - Enables all strict type checking
 - Configured for Node.js environment
@@ -119,11 +127,13 @@ TypeScript is configured with strict security settings:
 ### 3. Setup Sui Move Development
 
 #### Install Sui CLI
+
 ```bash
 ./scripts/install-sui-cli.sh
 ```
 
 This script:
+
 - Installs Rust toolchain if needed
 - Compiles and installs Sui CLI from source
 - Installs Move Analyzer (LSP)
@@ -131,12 +141,14 @@ This script:
 - Initializes Sui client configuration
 
 #### Verify Sui Installation
+
 ```bash
 sui --version
 sui client active-address
 ```
 
 #### Build Smart Contract
+
 ```bash
 cd smart-contract
 sui move build
@@ -148,6 +160,7 @@ sui move test
 #### ESLint Configuration
 
 ESLint is configured with security-focused plugins:
+
 - `eslint-plugin-security`: Detects common security issues
 - `eslint-plugin-no-secrets`: Prevents committing secrets
 - TypeScript-specific security rules
@@ -155,6 +168,7 @@ ESLint is configured with security-focused plugins:
 Configuration file: `.eslintrc.json`
 
 #### Run Security Checks
+
 ```bash
 # Lint all code
 npm run lint
@@ -172,12 +186,14 @@ npm run security:check
 #### Git Hooks
 
 Pre-commit hooks automatically:
+
 - Check for secrets in staged files
 - Run linting and formatting
 - Prevent committing `.env` files
 - Validate commit message format
 
 Setup:
+
 ```bash
 ./scripts/setup-git-hooks.sh
 ```
@@ -189,6 +205,7 @@ Setup:
 The repository includes VSCode configuration (`.vscode/`):
 
 **Recommended Extensions** (`.vscode/extensions.json`):
+
 - GitHub Copilot
 - Move Language Support
 - ESLint
@@ -200,6 +217,7 @@ The repository includes VSCode configuration (`.vscode/`):
 - Code Spell Checker
 
 **Settings** (`.vscode/settings.json`):
+
 - Auto-format on save
 - Security-focused linting
 - Move language support
@@ -207,13 +225,16 @@ The repository includes VSCode configuration (`.vscode/`):
 - Copilot configuration
 
 **Tasks** (`.vscode/tasks.json`):
+
 - Sui Move build
 - Sui Move test
 - Publish package
 - Call Move functions
 
 #### Install Recommended Extensions
+
 Open VSCode and accept the prompt to install recommended extensions, or:
+
 ```
 Cmd/Ctrl + Shift + P → "Extensions: Show Recommended Extensions"
 ```
@@ -221,12 +242,15 @@ Cmd/Ctrl + Shift + P → "Extensions: Show Recommended Extensions"
 ### 6. Environment Configuration
 
 #### Create Environment File
+
 ```bash
 cp .env.example .env
 ```
 
 #### Configure Variables
+
 Edit `.env` with your settings:
+
 ```env
 # Sui Configuration
 SUI_RPC_URL=https://fullnode.testnet.sui.io:443
@@ -250,11 +274,13 @@ VITE_CROZZ_PACKAGE_ID=0xPACKAGE_ID
 ### 7. Verification Scripts
 
 #### Environment Verification
+
 ```bash
 npm run verify
 ```
 
 Checks:
+
 - Node.js and npm versions
 - TypeScript configuration
 - Sui tools installation
@@ -264,11 +290,13 @@ Checks:
 - Environment files
 
 #### Security Audit
+
 ```bash
 ./scripts/security-audit.sh
 ```
 
 Performs:
+
 - NPM vulnerability scanning
 - Secret detection
 - Environment file security
@@ -293,6 +321,7 @@ The repository includes automated security workflows (`.github/workflows/securit
 - **Move Security**: Builds and tests smart contracts
 
 Runs on:
+
 - Every push to main/develop branches
 - Pull requests
 - Daily at 00:00 UTC
@@ -301,6 +330,7 @@ Runs on:
 #### Pre-commit Security
 
 Husky pre-commit hooks:
+
 1. Check for secrets in staged files
 2. Prevent committing `.env` files
 3. Run lint-staged for code quality
@@ -309,6 +339,7 @@ Husky pre-commit hooks:
 ### Security Best Practices
 
 #### Code Security
+
 - ✅ Use TypeScript strict mode
 - ✅ Enable all ESLint security rules
 - ✅ Never commit secrets or API keys
@@ -317,6 +348,7 @@ Husky pre-commit hooks:
 - ✅ Use helmet.js for Express security headers
 
 #### Dependency Security
+
 - ✅ Run `npm audit` regularly
 - ✅ Keep dependencies up-to-date
 - ✅ Use `npm ci` in CI/CD pipelines
@@ -324,6 +356,7 @@ Husky pre-commit hooks:
 - ✅ Avoid deprecated packages
 
 #### Smart Contract Security
+
 - ✅ Test all Move functions thoroughly
 - ✅ Use capability-based access control
 - ✅ Implement proper error handling
@@ -335,6 +368,7 @@ Husky pre-commit hooks:
 ### NPM Scripts
 
 #### Root Level
+
 ```bash
 npm run install:all      # Install all dependencies
 npm run dev             # Start backend and frontend
@@ -349,6 +383,7 @@ npm run verify          # Verify environment
 ```
 
 #### Backend
+
 ```bash
 cd backend
 npm run dev             # Start dev server with nodemon
@@ -361,6 +396,7 @@ npm run security:audit  # Security audit
 ```
 
 #### Frontend
+
 ```bash
 cd frontend
 npm run dev             # Start Vite dev server
@@ -403,21 +439,25 @@ sui client switch --env testnet
 ### Docker Development
 
 #### Start All Services
+
 ```bash
 docker-compose up -d
 ```
 
 #### Stop Services
+
 ```bash
 docker-compose down
 ```
 
 #### Rebuild Containers
+
 ```bash
 docker-compose up -d --build
 ```
 
 Services:
+
 - Backend: http://localhost:4000
 - Frontend: http://localhost:5173
 
@@ -426,6 +466,7 @@ Services:
 ### GitHub Copilot Configuration
 
 VSCode settings include Copilot optimization:
+
 - Enabled for all file types
 - Code actions enabled
 - Chat and search features enabled
@@ -434,6 +475,7 @@ VSCode settings include Copilot optimization:
 ### AI-Assisted Development
 
 Use Copilot for:
+
 - Security-first code generation
 - Smart contract development
 - Test creation
@@ -443,6 +485,7 @@ Use Copilot for:
 ### Security Prompts
 
 Example prompts for secure development:
+
 ```
 // Generate a secure API endpoint with input validation
 // Add comprehensive error handling with Zod validation
@@ -504,11 +547,13 @@ sui client call \
 ## Verification
 
 ### Run Full Verification
+
 ```bash
 npm run verify
 ```
 
 Expected output:
+
 ```
 ✓ Node.js v20.x.x (>= 18.x required)
 ✓ npm 10.x.x
@@ -535,6 +580,7 @@ Expected output:
 ### Common Issues
 
 #### Sui CLI Installation Failed
+
 ```bash
 # Install Rust manually
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -545,6 +591,7 @@ cargo install --locked --git https://github.com/MystenLabs/sui.git --branch test
 ```
 
 #### Move Build Errors
+
 ```bash
 # Clean and rebuild
 cd smart-contract
@@ -553,6 +600,7 @@ sui move build
 ```
 
 #### TypeScript Errors
+
 ```bash
 # Reinstall dependencies
 rm -rf node_modules package-lock.json
@@ -565,6 +613,7 @@ npm install
 ```
 
 #### Port Already in Use
+
 ```bash
 # Backend (default 4000)
 lsof -ti:4000 | xargs kill -9
@@ -574,6 +623,7 @@ lsof -ti:5173 | xargs kill -9
 ```
 
 #### Git Hooks Not Working
+
 ```bash
 # Reinstall hooks
 rm -rf .husky

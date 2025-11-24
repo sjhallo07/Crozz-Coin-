@@ -5,6 +5,7 @@ This guide will help you set up the Crozz-Coin ecosystem from scratch, including
 ## Prerequisites
 
 Before you begin, ensure you have:
+
 - **Node.js** v18 or later installed
 - **npm** package manager
 - Internet connection for downloading dependencies and accessing testnet
@@ -43,7 +44,7 @@ This will:
 ✅ Generate a new Ed25519 keypair  
 ✅ Update both root `.env` and `backend/.env` files  
 ✅ Configure testnet network settings  
-✅ Set default gas budget to 10,000,000 MIST  
+✅ Set default gas budget to 10,000,000 MIST
 
 ### Manual Setup (Alternative)
 
@@ -57,6 +58,7 @@ node scripts/setup-sui-client.js --update-env --network testnet
 ### What Gets Generated
 
 The script will output:
+
 - **Sui Address**: Your unique address on the Sui blockchain (e.g., `0xabcd...`)
 - **Public Key**: Your public identity (Base64 encoded)
 - **Private Key**: Your secret key (Base64 encoded with `ed25519:` prefix)
@@ -80,6 +82,7 @@ curl --location --request POST 'https://faucet.testnet.sui.io/gas' \
 ```
 
 Or use the web faucet:
+
 - Visit: https://docs.sui.io/guides/developer/getting-started/get-coins
 - Paste your address
 - Request tokens
@@ -89,6 +92,7 @@ You should receive 1 SUI (1,000,000,000 MIST) which is sufficient for multiple t
 ### Verify Your Balance
 
 If you have the Sui CLI installed:
+
 ```bash
 sui client balance YOUR_ADDRESS_HERE
 ```
@@ -155,6 +159,7 @@ VITE_SUI_NETWORK=testnet
 If you want to deploy the Crozz token smart contract:
 
 ### Prerequisites
+
 - Sui CLI installed (`cargo install --locked --git https://github.com/MystenLabs/sui.git --branch mainnet sui`)
 - Your address is funded (see Step 3)
 
@@ -199,6 +204,7 @@ npm run dev
 The backend server should start on `http://localhost:4000`.
 
 **Verify it's running:**
+
 ```bash
 curl http://localhost:4000/api/tokens/summary
 ```
@@ -215,6 +221,7 @@ npm run dev
 The frontend should start on `http://localhost:5173`.
 
 **Open your browser:**
+
 - Navigate to http://localhost:5173
 - You should see the Crozz dashboard
 
@@ -288,6 +295,7 @@ npm run test
 ### "Cannot find package '@mysten/sui'"
 
 **Solution:** Install backend dependencies:
+
 ```bash
 cd backend
 npm install
@@ -300,6 +308,7 @@ npm install
 ### "Invalid private key format"
 
 **Solution:** Ensure the private key has the `ed25519:` prefix:
+
 ```env
 # Correct
 SUI_ADMIN_PRIVATE_KEY=ed25519:AAA...
@@ -311,6 +320,7 @@ SUI_ADMIN_PRIVATE_KEY=AAA...
 ### Backend won't start
 
 **Check:**
+
 1. Port 4000 is not in use: `lsof -i :4000`
 2. Environment variables are set correctly
 3. Dependencies are installed: `cd backend && npm install`
@@ -318,6 +328,7 @@ SUI_ADMIN_PRIVATE_KEY=AAA...
 ### Frontend won't connect to backend
 
 **Check:**
+
 1. Backend is running on port 4000
 2. `VITE_CROZZ_API_BASE_URL=http://localhost:4000` in frontend/.env
 3. CORS is enabled in backend (should be by default)
@@ -350,6 +361,7 @@ SUI_ADMIN_PRIVATE_KEY=AAA...
 ## Getting Help
 
 If you encounter issues:
+
 1. Check the troubleshooting section above
 2. Review the logs in terminal output
 3. Search existing GitHub issues

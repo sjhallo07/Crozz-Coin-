@@ -1,17 +1,17 @@
-import { Router } from "express";
-import { z } from "zod";
-import { requireAuth } from "../middleware/jwtAuth.js";
-import { authService } from "../services/AuthService.js";
+import { Router } from 'express';
+import { z } from 'zod';
+import { requireAuth } from '../middleware/jwtAuth.js';
+import { authService } from '../services/AuthService.js';
 
 const router = Router();
 
 const asyncHandler = (handler) => (req, res, next) =>
   Promise.resolve(handler(req, res, next)).catch((error) => {
-    console.error("[auth-route]", error);
+    console.error('[auth-route]', error);
     const isZodError = error instanceof z.ZodError;
     const status = isZodError ? 422 : error instanceof Error ? 400 : 500;
     const payload = {
-      error: error instanceof Error ? error.message : "Unexpected error",
+      error: error instanceof Error ? error.message : 'Unexpected error',
     };
     if (isZodError) {
       payload.details = error.issues;
@@ -44,7 +44,7 @@ const emailSchema = z.object({
 });
 
 router.post(
-  "/register",
+  '/register',
   asyncHandler(async (req, res) => {
     const payload = registerSchema.parse(req.body ?? {});
     const session = await authService.register(payload);
@@ -53,7 +53,7 @@ router.post(
 );
 
 router.post(
-  "/login",
+  '/login',
   asyncHandler(async (req, res) => {
     const payload = loginSchema.parse(req.body ?? {});
     const session = await authService.login(payload);
@@ -62,7 +62,7 @@ router.post(
 );
 
 router.post(
-  "/refresh",
+  '/refresh',
   asyncHandler(async (req, res) => {
     const payload = refreshSchema.parse(req.body ?? {});
     const session = await authService.refresh(payload.refreshToken);
@@ -71,7 +71,7 @@ router.post(
 );
 
 router.post(
-  "/logout",
+  '/logout',
   asyncHandler(async (req, res) => {
     const payload = refreshSchema.parse(req.body ?? {});
     const result = await authService.logout(payload.refreshToken);
@@ -80,7 +80,7 @@ router.post(
 );
 
 router.post(
-  "/forgot-password",
+  '/forgot-password',
   asyncHandler(async (req, res) => {
     const payload = emailSchema.parse(req.body ?? {});
     await authService.forgotPassword(payload.email);
@@ -89,7 +89,7 @@ router.post(
 );
 
 router.post(
-  "/forgot-username",
+  '/forgot-username',
   asyncHandler(async (req, res) => {
     const payload = emailSchema.parse(req.body ?? {});
     await authService.forgotUsername(payload.email);
@@ -98,19 +98,16 @@ router.post(
 );
 
 router.post(
-  "/reset-password",
+  '/reset-password',
   asyncHandler(async (req, res) => {
     const payload = resetSchema.parse(req.body ?? {});
-    const session = await authService.resetPassword(
-      payload.token,
-      payload.password
-    );
+    const session = await authService.resetPassword(payload.token, payload.password);
     res.json(session);
   })
 );
 
 router.get(
-  "/me",
+  '/me',
   requireAuth(),
   asyncHandler(async (req, res) => {
     res.json({ user: req.user });

@@ -66,11 +66,11 @@ function commandExists(command) {
  */
 function checkNode() {
   log.header('Checking Node.js Environment');
-  
+
   try {
     const nodeVersion = exec('node --version', true)?.trim();
     const npmVersion = exec('npm --version', true)?.trim();
-    
+
     if (nodeVersion) {
       const major = parseInt(nodeVersion.substring(1).split('.')[0]);
       if (major >= 18) {
@@ -80,7 +80,7 @@ function checkNode() {
         errors++;
       }
     }
-    
+
     if (npmVersion) {
       log.success(`npm ${npmVersion}`);
     }
@@ -95,16 +95,16 @@ function checkNode() {
  */
 function checkTypeScript() {
   log.header('Checking TypeScript');
-  
+
   const tsconfigPaths = [
     join(rootDir, 'frontend', 'tsconfig.json'),
     join(rootDir, 'backend', 'tsconfig.json'),
   ];
-  
+
   tsconfigPaths.forEach((path) => {
     if (existsSync(path)) {
       log.success(`Found: ${path.replace(rootDir, '.')}`);
-      
+
       // Validate strict mode
       const config = JSON.parse(readFileSync(path, 'utf8'));
       if (config.compilerOptions?.strict) {
@@ -125,15 +125,15 @@ function checkTypeScript() {
  */
 function checkSui() {
   log.header('Checking Sui Development Tools');
-  
+
   if (commandExists('sui')) {
     const version = exec('sui --version', true)?.trim();
     log.success(`Sui CLI ${version}`);
-    
+
     // Check if client is configured
     const homeDir = process.env.HOME || process.env.USERPROFILE;
     const configPath = join(homeDir, '.sui', 'sui_config', 'client.yaml');
-    
+
     if (existsSync(configPath)) {
       log.success('Sui client configured');
     } else {
@@ -144,7 +144,7 @@ function checkSui() {
     log.warning('Sui CLI not installed. Run: ./scripts/install-sui-cli.sh');
     warnings++;
   }
-  
+
   if (commandExists('move-analyzer')) {
     log.success('Move Analyzer installed');
   } else {
@@ -157,12 +157,12 @@ function checkSui() {
  */
 function checkMovePackage() {
   log.header('Checking Move Smart Contract');
-  
+
   const moveTomlPath = join(rootDir, 'smart-contract', 'Move.toml');
-  
+
   if (existsSync(moveTomlPath)) {
     log.success('Move.toml found');
-    
+
     const content = readFileSync(moveTomlPath, 'utf8');
     if (content.includes('Sui')) {
       log.success('Sui framework dependency configured');
@@ -171,7 +171,7 @@ function checkMovePackage() {
     log.error('Move.toml not found in smart-contract/');
     errors++;
   }
-  
+
   const sourcesPath = join(rootDir, 'smart-contract', 'sources');
   if (existsSync(sourcesPath)) {
     log.success('Move sources directory exists');
@@ -186,12 +186,12 @@ function checkMovePackage() {
  */
 function checkSecurity() {
   log.header('Checking Security Tools');
-  
+
   // Check ESLint
   const eslintConfig = join(rootDir, '.eslintrc.json');
   if (existsSync(eslintConfig)) {
     log.success('ESLint configuration found');
-    
+
     const config = JSON.parse(readFileSync(eslintConfig, 'utf8'));
     if (config.plugins?.includes('security')) {
       log.success('  Security plugin enabled ✓');
@@ -203,7 +203,7 @@ function checkSecurity() {
     log.warning('ESLint configuration not found');
     warnings++;
   }
-  
+
   // Check Prettier
   if (existsSync(join(rootDir, '.prettierrc.json'))) {
     log.success('Prettier configuration found');
@@ -211,7 +211,7 @@ function checkSecurity() {
     log.warning('Prettier configuration not found');
     warnings++;
   }
-  
+
   // Check Git hooks
   if (existsSync(join(rootDir, '.husky'))) {
     log.success('Husky (Git hooks) configured');
@@ -226,13 +226,13 @@ function checkSecurity() {
  */
 function checkDependencies() {
   log.header('Checking Dependencies');
-  
+
   const packages = [
     { dir: '.', name: 'root' },
     { dir: 'backend', name: 'backend' },
     { dir: 'frontend', name: 'frontend' },
   ];
-  
+
   packages.forEach(({ dir, name }) => {
     const nodeModulesPath = join(rootDir, dir, 'node_modules');
     if (existsSync(nodeModulesPath)) {
@@ -242,7 +242,7 @@ function checkDependencies() {
       errors++;
     }
   });
-  
+
   // Check for security vulnerabilities
   log.info('Running security audit...');
   try {
@@ -259,20 +259,20 @@ function checkDependencies() {
  */
 function checkEnvironment() {
   log.header('Checking Environment Configuration');
-  
+
   const envExample = join(rootDir, '.env.example');
   const envFile = join(rootDir, '.env');
-  
+
   if (existsSync(envExample)) {
     log.success('.env.example found');
   } else {
     log.warning('.env.example not found');
     warnings++;
   }
-  
+
   if (existsSync(envFile)) {
     log.success('.env file exists');
-    
+
     // Check for sensitive data patterns (basic check)
     const content = readFileSync(envFile, 'utf8');
     if (content.includes('PRIVATE_KEY') && !content.includes('your_private_key_here')) {
@@ -289,14 +289,14 @@ function checkEnvironment() {
  */
 function checkDocker() {
   log.header('Checking Docker Setup (Optional)');
-  
+
   if (commandExists('docker')) {
     const version = exec('docker --version', true)?.trim();
     log.success(version);
-    
+
     if (commandExists('docker-compose') || commandExists('docker compose')) {
       log.success('Docker Compose available');
-      
+
       const composeFile = join(rootDir, 'docker-compose.yml');
       if (existsSync(composeFile)) {
         log.success('docker-compose.yml found');
@@ -312,11 +312,11 @@ function checkDocker() {
  */
 function checkIDE() {
   log.header('Checking IDE Configuration');
-  
+
   const vscodeDir = join(rootDir, '.vscode');
   if (existsSync(vscodeDir)) {
     log.success('.vscode directory found');
-    
+
     const files = ['settings.json', 'tasks.json', 'extensions.json'];
     files.forEach((file) => {
       if (existsSync(join(vscodeDir, file))) {
@@ -334,7 +334,7 @@ function checkIDE() {
 function printSummary() {
   console.log('\n' + '='.repeat(60));
   log.header('Verification Summary');
-  
+
   if (errors === 0 && warnings === 0) {
     log.success('All checks passed! Environment is ready for development.');
   } else {
@@ -345,16 +345,22 @@ function printSummary() {
       log.warning(`Found ${warnings} warning(s) that should be addressed.`);
     }
   }
-  
+
   console.log('='.repeat(60) + '\n');
 }
 
 // Run all checks
 async function main() {
-  console.log(`${colors.cyan}╔═══════════════════════════════════════════════════════╗${colors.reset}`);
-  console.log(`${colors.cyan}║     Crozz-Coin Development Environment Verification    ║${colors.reset}`);
-  console.log(`${colors.cyan}╚═══════════════════════════════════════════════════════╝${colors.reset}`);
-  
+  console.log(
+    `${colors.cyan}╔═══════════════════════════════════════════════════════╗${colors.reset}`
+  );
+  console.log(
+    `${colors.cyan}║     Crozz-Coin Development Environment Verification    ║${colors.reset}`
+  );
+  console.log(
+    `${colors.cyan}╚═══════════════════════════════════════════════════════╝${colors.reset}`
+  );
+
   checkNode();
   checkTypeScript();
   checkSui();
@@ -364,9 +370,9 @@ async function main() {
   checkEnvironment();
   checkDocker();
   checkIDE();
-  
+
   printSummary();
-  
+
   // Exit with error code if there are critical errors
   process.exit(errors > 0 ? 1 : 0);
 }

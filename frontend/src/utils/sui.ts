@@ -1,7 +1,7 @@
 export const SUI_NETWORKS = {
-  localnet: "http://127.0.0.1:9000",
-  testnet: "https://fullnode.testnet.sui.io:443",
-  mainnet: "https://fullnode.mainnet.sui.io:443",
+  localnet: 'http://127.0.0.1:9000',
+  testnet: 'https://fullnode.testnet.sui.io:443',
+  mainnet: 'https://fullnode.mainnet.sui.io:443',
 } as const;
 
 export type NetworkType = keyof typeof SUI_NETWORKS;
@@ -26,13 +26,13 @@ export const getCurrentNetwork = (): NetworkType => {
   if (network && isValidNetwork(network)) {
     return network;
   }
-  return "testnet";
+  return 'testnet';
 };
 
 export const isMainnet = () => {
-  return getCurrentNetwork() === "mainnet";
+  return getCurrentNetwork() === 'mainnet';
 };
 
 export const isTestnet = () => {
-  return getCurrentNetwork() === "testnet";
+  return getCurrentNetwork() === 'testnet';
 };

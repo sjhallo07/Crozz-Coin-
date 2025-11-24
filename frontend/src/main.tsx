@@ -1,15 +1,15 @@
-import "@mysten/dapp-kit/dist/index.css";
-import "@radix-ui/themes/styles.css";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-import { SuiProviders } from "./providers/SuiProviders";
+import '@mysten/dapp-kit/dist/index.css';
+import '@radix-ui/themes/styles.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+import { SuiProviders } from './providers/SuiProviders';
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 
 if (!rootElement) {
-  throw new Error("Root element #root not found");
+  throw new Error('Root element #root not found');
 }
 
 ReactDOM.createRoot(rootElement).render(

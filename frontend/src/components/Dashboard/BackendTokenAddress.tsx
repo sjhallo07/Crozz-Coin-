@@ -1,7 +1,7 @@
-import axios from "axios";
-import { type ChangeEvent, FormEvent, useState } from "react";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import axios from 'axios';
+import { type ChangeEvent, FormEvent, useState } from 'react';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
 
 interface BackendFormState {
   packageId: string;
@@ -13,19 +13,18 @@ interface BackendFormState {
 }
 
 const initialForm: BackendFormState = {
-  packageId: import.meta.env.VITE_CROZZ_PACKAGE_ID ?? "",
-  module: import.meta.env.VITE_CROZZ_MODULE ?? "crozz_token",
-  functionName: import.meta.env.VITE_CROZZ_VIEW_FUNCTION ?? "get_icon_url",
-  creator: "",
-  collection: "",
-  name: "",
+  packageId: import.meta.env.VITE_CROZZ_PACKAGE_ID ?? '',
+  module: import.meta.env.VITE_CROZZ_MODULE ?? 'crozz_token',
+  functionName: import.meta.env.VITE_CROZZ_VIEW_FUNCTION ?? 'get_icon_url',
+  creator: '',
+  collection: '',
+  name: '',
 };
 
-const API_BASE_URL =
-  import.meta.env.VITE_CROZZ_API_BASE_URL ?? "http://localhost:4000";
+const API_BASE_URL = import.meta.env.VITE_CROZZ_API_BASE_URL ?? 'http://localhost:4000';
 
 const inputClass =
-  "mt-1 block w-full rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-2.5 text-sm text-slate-900 shadow-inner focus:border-brand-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900/60 dark:text-white";
+  'mt-1 block w-full rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-2.5 text-sm text-slate-900 shadow-inner focus:border-brand-400 focus:outline-none dark:border-slate-700 dark:bg-slate-900/60 dark:text-white';
 
 const BackendTokenAddress = () => {
   const [form, setForm] = useState<BackendFormState>(initialForm);
@@ -42,7 +41,7 @@ const BackendTokenAddress = () => {
     event.preventDefault();
 
     if (!form.packageId || !form.module || !form.functionName) {
-      setError("packageId, module, and functionName are required");
+      setError('packageId, module, and functionName are required');
       return;
     }
 
@@ -51,21 +50,18 @@ const BackendTokenAddress = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/sui/token-address`,
-        {
-          packageId: form.packageId,
-          module: form.module,
-          functionName: form.functionName,
-          creator: form.creator,
-          collection: form.collection,
-          name: form.name,
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/sui/token-address`, {
+        packageId: form.packageId,
+        module: form.module,
+        functionName: form.functionName,
+        creator: form.creator,
+        collection: form.collection,
+        name: form.name,
+      });
       setResult(JSON.stringify(response.data.tokenAddress, null, 2));
     } catch (err) {
       console.error(err);
-      setError("Backend request failed. Check server logs for details.");
+      setError('Backend request failed. Check server logs for details.');
     } finally {
       setLoading(false);
     }
@@ -140,7 +136,7 @@ const BackendTokenAddress = () => {
 
         <div className="flex flex-col gap-3">
           <Button type="submit" disabled={loading}>
-            {loading ? "Calling backend…" : "Request via backend"}
+            {loading ? 'Calling backend…' : 'Request via backend'}
           </Button>
 
           {result && (
@@ -154,9 +150,7 @@ const BackendTokenAddress = () => {
             </div>
           )}
           {error && (
-            <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">
-              {error}
-            </p>
+            <p className="text-sm font-semibold text-rose-500 dark:text-rose-400">{error}</p>
           )}
         </div>
       </form>

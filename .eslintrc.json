@@ -4,14 +4,8 @@
     "node": true,
     "es2022": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:security/recommended-legacy"
-  ],
-  "plugins": [
-    "security",
-    "no-secrets"
-  ],
+  "extends": ["eslint:recommended", "plugin:security/recommended-legacy"],
+  "plugins": ["security", "no-secrets"],
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module"
@@ -48,13 +42,7 @@
         "plugin:react-hooks/recommended",
         "plugin:security/recommended-legacy"
       ],
-      "plugins": [
-        "@typescript-eslint",
-        "react",
-        "react-hooks",
-        "security",
-        "no-secrets"
-      ],
+      "plugins": ["@typescript-eslint", "react", "react-hooks", "security", "no-secrets"],
       "parserOptions": {
         "project": "./frontend/tsconfig.json",
         "ecmaVersion": 2022,

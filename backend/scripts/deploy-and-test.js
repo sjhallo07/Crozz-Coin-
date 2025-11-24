@@ -2,14 +2,14 @@
 
 /**
  * Crozz Coin - Complete Deployment and Testing Script
- * 
+ *
  * ⚠️  SECURITY WARNING: TESTNET ONLY
  * This script contains hardcoded wallet credentials for TESTNET demonstration.
  * - NEVER use these credentials on mainnet
  * - NEVER use in production environments
  * - These are TEST credentials with NO REAL VALUE
  * - For production, always use secure key management (environment variables, key vaults, etc.)
- * 
+ *
  * This script automates:
  * 1. Requesting airdrops for all wallets
  * 2. Deploying the smart contract
@@ -40,23 +40,27 @@ const WALLETS = {
   admin: {
     name: 'Admin',
     address: '0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c',
-    privateKey: 'AAAAAAAAAAAAAAEAAAkAAAMAAAADBgAEAAMAAAAAAAAAAAYAAAAAAAcAAAACAwAABQIAAAAACQAAAAAAAAAAAAAABAADCQ=='
+    privateKey:
+      'AAAAAAAAAAAAAAEAAAkAAAMAAAADBgAEAAMAAAAAAAAAAAYAAAAAAAcAAAACAwAABQIAAAAACQAAAAAAAAAAAAAABAADCQ==',
   },
   alice: {
     name: 'Alice',
     address: '0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423',
-    privateKey: 'AAAAAAAAAAAAAAEAAAQAAAUAAAAFAAAAAAAIBAAAAAYAAAAAAAQAAAAACQkDAgAAAAAAAAAAAAAAAAAAAAICBQAABwAHAA=='
+    privateKey:
+      'AAAAAAAAAAAAAAEAAAQAAAUAAAAFAAAAAAAIBAAAAAYAAAAAAAQAAAAACQkDAgAAAAAAAAAAAAAAAAAAAAICBQAABwAHAA==',
   },
   bob: {
     name: 'Bob',
     address: '0x3c71b11ee4615e3eb960e519d6495b7a648a61bdce55c75c70f6f95e3c062d93',
-    privateKey: 'AAAAAAAAAAAAAAEAAAAAAAQABwAAAAAIAAADAAkACQAEAAkAAAAAAAAAAAAEAAUAAAAAAAAFAAAAAAAAAAAABgAAAAkEAA=='
+    privateKey:
+      'AAAAAAAAAAAAAAEAAAAAAAQABwAAAAAIAAADAAkACQAEAAkAAAAAAAAAAAAEAAUAAAAAAAAFAAAAAAAAAAAABgAAAAkEAA==',
   },
   charlie: {
     name: 'Charlie',
     address: '0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f91b5eee78baded01',
-    privateKey: 'AAAAAAAAAAAAAAEAAAAFAAAAAAYAAgAFAAcAAAAAAgUEAAAGAAADAAkABgAAAAAEAAAAAAAAAAkAAAAAAAAAAAMAAAAFBg=='
-  }
+    privateKey:
+      'AAAAAAAAAAAAAAEAAAAFAAAAAAYAAgAFAAcAAAAAAgUEAAAGAAADAAkABgAAAAAEAAAAAAAAAAkAAAAAAAAAAAMAAAAFBg==',
+  },
 };
 
 // Initialize Sui client
@@ -74,27 +78,27 @@ function log(message) {
 
 // Helper function to wait
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Request airdrop from testnet faucet
 async function requestAirdrop(address, name) {
   try {
     log(`\n🌊 Requesting airdrop for ${name} (${address})...`);
-    
+
     const response = await fetch(FAUCET_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        FixedAmountRequest: { recipient: address }
-      })
+        FixedAmountRequest: { recipient: address },
+      }),
     });
 
     if (response.ok) {
       const data = await response.json();
       log(`✅ Airdrop successful for ${name}`);
       if (data.transferred_gas_objects && data.transferred_gas_objects.length > 0) {
-        log(`   Gas objects: ${data.transferred_gas_objects.map(obj => obj.id).join(', ')}`);
+        log(`   Gas objects: ${data.transferred_gas_objects.map((obj) => obj.id).join(', ')}`);
       }
       return true;
     } else {
@@ -215,7 +219,7 @@ async function main() {
   const duration = (endTime - startTime) / 1000;
   log(`\n✨ Completed at: ${endTime.toISOString()}`);
   log(`⏱️  Total duration: ${duration.toFixed(2)} seconds`);
-  
+
   // Write summary to markdown
   const summary = `
 # Deployment Summary
@@ -227,10 +231,12 @@ async function main() {
 - **Network**: Sui Testnet
 
 ## Wallet Balances
-${Object.entries(WALLETS).map(([key, wallet]) => {
-  const suiAmount = (parseInt(balances[key] || '0') / 1_000_000_000).toFixed(4);
-  return `- **${wallet.name}**: ${suiAmount} SUI\n  - Address: \`${wallet.address}\`\n  - Explorer: https://testnet.suivision.xyz/account/${wallet.address}`;
-}).join('\n\n')}
+${Object.entries(WALLETS)
+  .map(([key, wallet]) => {
+    const suiAmount = (parseInt(balances[key] || '0') / 1_000_000_000).toFixed(4);
+    return `- **${wallet.name}**: ${suiAmount} SUI\n  - Address: \`${wallet.address}\`\n  - Explorer: https://testnet.suivision.xyz/account/${wallet.address}`;
+  })
+  .join('\n\n')}
 
 ## Status
 - ✅ Wallets Generated
@@ -253,7 +259,7 @@ ${Object.entries(WALLETS).map(([key, wallet]) => {
 }
 
 // Run the script
-main().catch(error => {
+main().catch((error) => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

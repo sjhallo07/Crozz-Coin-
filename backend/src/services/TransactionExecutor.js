@@ -1,15 +1,15 @@
-import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { Transaction } from "@mysten/sui/transactions";
-import { fromB64 } from "@mysten/sui/utils";
-import { suiClient } from "./SuiClient.js";
-import { transactionService } from "./TransactionService.js";
+import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { Transaction } from '@mysten/sui/transactions';
+import { fromB64 } from '@mysten/sui/utils';
+import { suiClient } from './SuiClient.js';
+import { transactionService } from './TransactionService.js';
 
-const DEFAULT_MODULE = "crozz_token";
-const RETRYABLE_TYPES = new Set(["mint", "burn", "distribute"]);
+const DEFAULT_MODULE = 'crozz_token';
+const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute']);
 
 const buildKeypair = (value) => {
   if (!value) return null;
-  const normalized = value.startsWith("ed25519:") ? value.split(":")[1] : value;
+  const normalized = value.startsWith('ed25519:') ? value.split(':')[1] : value;
   const secretKeyBytes = fromB64(normalized);
 
   if (secretKeyBytes.length === 33 && secretKeyBytes[0] === 0) {
@@ -27,7 +27,7 @@ class TransactionExecutor {
   constructor({ pollInterval = 3000, maxAttempts = 3 } = {}) {
     this.pollInterval = pollInterval;
     this.maxAttempts = maxAttempts;
-    this.dryRun = process.env.CROZZ_EXECUTOR_DRY_RUN === "true";
+    this.dryRun = process.env.CROZZ_EXECUTOR_DRY_RUN === 'true';
     this.packageId = process.env.CROZZ_PACKAGE_ID;
     this.moduleName = process.env.CROZZ_MODULE ?? DEFAULT_MODULE;
     this.treasuryCapId = process.env.CROZZ_TREASURY_CAP_ID;
@@ -36,9 +36,7 @@ class TransactionExecutor {
     this.gasBudget = Number(process.env.SUI_DEFAULT_GAS_BUDGET ?? 10_000_000);
     this.timer = null;
     this.processing = false;
-    this.keypair = this.dryRun
-      ? null
-      : buildKeypair(process.env.SUI_ADMIN_PRIVATE_KEY ?? "");
+    this.keypair = this.dryRun ? null : buildKeypair(process.env.SUI_ADMIN_PRIVATE_KEY ?? '');
     this.signerAddress = this.keypair
       ? this.keypair.getPublicKey().toSuiAddress()
       : process.env.CROZZ_DEFAULT_SIGNER;
@@ -48,16 +46,12 @@ class TransactionExecutor {
     if (this.timer) return;
 
     if (!this.isConfigured()) {
-      console.warn("[tx-executor] Missing configuration. Worker not started.");
+      console.warn('[tx-executor] Missing configuration. Worker not started.');
       return;
     }
 
     this.timer = setInterval(() => void this.tick(), this.pollInterval);
-    console.log(
-      "[tx-executor] Worker started with interval",
-      this.pollInterval,
-      "ms"
-    );
+    console.log('[tx-executor] Worker started with interval', this.pollInterval, 'ms');
   }
 
   stop() {
@@ -71,10 +65,7 @@ class TransactionExecutor {
       return Boolean(this.packageId && this.treasuryCapId);
     }
     return Boolean(
-      this.packageId &&
-        this.treasuryCapId &&
-        this.keypair &&
-        this.keypair.getPublicKey()
+      this.packageId && this.treasuryCapId && this.keypair && this.keypair.getPublicKey()
     );
   }
 
@@ -103,11 +94,11 @@ class TransactionExecutor {
 
   async execute(job) {
     switch (job.type) {
-      case "mint":
+      case 'mint':
         return this.executeMint(job.payload ?? {});
-      case "burn":
+      case 'burn':
         return this.executeBurn(job.payload ?? {});
-      case "distribute":
+      case 'distribute':
         return this.executeDistribute(job.payload ?? {});
       default:
         throw new Error(`Unsupported transaction type: ${job.type}`);
@@ -124,34 +115,30 @@ class TransactionExecutor {
     const amount = this.parseAmount(payload.amount);
     const recipient = payload.recipient ?? this.signerAddress;
     if (!recipient) {
-      throw new Error("Recipient address missing for mint transaction");
+      throw new Error('Recipient address missing for mint transaction');
     }
 
     if (this.dryRun) {
-      return this.mockResult("mint", { amount: amount.toString(), recipient });
+      return this.mockResult('mint', { amount: amount.toString(), recipient });
     }
 
     const tx = this.createTx();
     tx.moveCall({
       target: `${this.packageId}::${this.moduleName}::mint`,
-      arguments: [
-        tx.object(this.treasuryCapId),
-        tx.pure(amount),
-        tx.pure(recipient),
-      ],
+      arguments: [tx.object(this.treasuryCapId), tx.pure(amount), tx.pure(recipient)],
     });
 
-    return this.submit(tx, "mint");
+    return this.submit(tx, 'mint');
   }
 
   async executeBurn(payload) {
     const coinId = payload.coinId;
     if (!coinId) {
-      throw new Error("coinId is required for burn transactions");
+      throw new Error('coinId is required for burn transactions');
     }
 
     if (this.dryRun) {
-      return this.mockResult("burn", { coinId });
+      return this.mockResult('burn', { coinId });
     }
 
     const tx = this.createTx();
@@ -160,44 +147,38 @@ class TransactionExecutor {
       arguments: [tx.object(this.treasuryCapId), tx.object(coinId)],
     });
 
-    return this.submit(tx, "burn");
+    return this.submit(tx, 'burn');
   }
 
   async executeDistribute(payload) {
-    const distributions = Array.isArray(payload.distributions)
-      ? payload.distributions
-      : [];
+    const distributions = Array.isArray(payload.distributions) ? payload.distributions : [];
     if (distributions.length === 0) {
-      throw new Error("distributions array is required");
+      throw new Error('distributions array is required');
     }
 
     if (this.dryRun) {
-      return this.mockResult("distribute", { distributions });
+      return this.mockResult('distribute', { distributions });
     }
 
     const tx = this.createTx();
     distributions.forEach(({ to, amount }) => {
       const parsedAmount = this.parseAmount(amount);
       if (!to) {
-        throw new Error("Each distribution entry requires a recipient address");
+        throw new Error('Each distribution entry requires a recipient address');
       }
 
       tx.moveCall({
         target: `${this.packageId}::${this.moduleName}::mint`,
-        arguments: [
-          tx.object(this.treasuryCapId),
-          tx.pure(parsedAmount),
-          tx.pure(to),
-        ],
+        arguments: [tx.object(this.treasuryCapId), tx.pure(parsedAmount), tx.pure(to)],
       });
     });
 
-    return this.submit(tx, "distribute");
+    return this.submit(tx, 'distribute');
   }
 
   parseAmount(value) {
     try {
-      const amount = typeof value === "bigint" ? value : BigInt(value ?? 0);
+      const amount = typeof value === 'bigint' ? value : BigInt(value ?? 0);
       if (amount <= 0n) {
         throw new Error();
       }
@@ -215,7 +196,7 @@ class TransactionExecutor {
     }
 
     if (!this.keypair) {
-      throw new Error("SUI_ADMIN_PRIVATE_KEY is not configured");
+      throw new Error('SUI_ADMIN_PRIVATE_KEY is not configured');
     }
 
     const response = await this.keypair.signAndExecuteTransaction({

@@ -143,6 +143,7 @@
 ## 📊 Balance Flow Diagram
 
 ### Initial State (After Minting)
+
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐
 │  Alice   │     │   Bob    │     │ Charlie  │
@@ -153,6 +154,7 @@
 ```
 
 ### After Transfer 1 (Alice → Bob: 500)
+
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐
 │  Alice   │     │   Bob    │     │ Charlie  │
@@ -163,6 +165,7 @@
 ```
 
 ### After Transfer 2 (Bob → Charlie: 800)
+
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐
 │  Alice   │     │   Bob    │     │ Charlie  │
@@ -173,6 +176,7 @@
 ```
 
 ### Final State (After Transfer 3: Charlie → Alice: 1,200)
+
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐
 │  Alice   │     │   Bob    │     │ Charlie  │
@@ -239,6 +243,7 @@ Document All Results
 ### Required Information to Capture
 
 #### Deployment Phase
+
 - [ ] Package ID
 - [ ] Package deployment transaction digest
 - [ ] Package explorer URL
@@ -248,6 +253,7 @@ Document All Results
 - [ ] Screenshot of deployment success
 
 #### Minting Phase
+
 - [ ] Mint transaction digest (Alice)
 - [ ] Mint transaction digest (Bob)
 - [ ] Mint transaction digest (Charlie)
@@ -256,6 +262,7 @@ Document All Results
 - [ ] Explorer URLs for mint transactions
 
 #### Transfer Phase
+
 - [ ] Transfer 1 transaction digest
 - [ ] Transfer 1 explorer URL
 - [ ] Transfer 2 transaction digest
@@ -265,6 +272,7 @@ Document All Results
 - [ ] Screenshots of each transfer
 
 #### Verification Phase
+
 - [ ] Final balance screenshot (Alice)
 - [ ] Final balance screenshot (Bob)
 - [ ] Final balance screenshot (Charlie)
@@ -276,10 +284,12 @@ Document All Results
 Fill in after deployment:
 
 ### Package
+
 - **URL**: `https://testnet.suivision.xyz/package/[PACKAGE_ID]`
 - **ID**: `_________________`
 
 ### Transactions
+
 1. **Deployment**
    - Digest: `_________________`
    - URL: `https://testnet.suivision.xyz/txblock/[DIGEST]`
@@ -311,6 +321,7 @@ Fill in after deployment:
 ---
 
 **Legend:**
+
 - ✅ Complete
 - ⏳ Todo
 - ▼ Next step

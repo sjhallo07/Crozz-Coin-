@@ -16,6 +16,7 @@ This guide provides comprehensive instructions for setting up remote access to y
 ## Overview
 
 The Crozz-Coin ecosystem consists of:
+
 - **Backend API** (Port 4000): REST API and WebSocket server
 - **Frontend Dashboard** (Port 5173): React-based UI
 
@@ -49,6 +50,7 @@ cd /path/to/Crozz-Coin-
 ```
 
 The script will:
+
 1. Check prerequisites
 2. Install tunnel software if needed
 3. Start tunnels for both backend and frontend
@@ -77,6 +79,7 @@ npm run dev
 ### Option 1: Cloudflare Tunnel (Recommended)
 
 **Pros:**
+
 - ✅ Free and unlimited
 - ✅ Fast and reliable
 - ✅ No account required
@@ -103,7 +106,7 @@ winget install Cloudflare.cloudflared
 # Terminal 3: Backend tunnel
 cloudflared tunnel --url http://localhost:4000
 
-# Terminal 4: Frontend tunnel  
+# Terminal 4: Frontend tunnel
 cloudflared tunnel --url http://localhost:5173
 ```
 
@@ -117,12 +120,14 @@ cloudflared tunnel --url http://localhost:5173
 ### Option 2: Ngrok
 
 **Pros:**
+
 - ✅ Popular and well-documented
 - ✅ Custom domains (paid)
 - ✅ Request inspection dashboard
 - ✅ Advanced features (auth, IP whitelisting)
 
 **Cons:**
+
 - ⚠️ Requires account for persistent URLs
 - ⚠️ Free tier has connection limits
 
@@ -152,12 +157,14 @@ ngrok http 5173
 ### Option 3: localhost.run (SSH-based)
 
 **Pros:**
+
 - ✅ No installation required
 - ✅ Uses standard SSH
 - ✅ No account needed
 - ✅ Works everywhere SSH works
 
 **Cons:**
+
 - ⚠️ Slower than other options
 - ⚠️ Connection can be unstable
 
@@ -181,6 +188,7 @@ ssh -R 80:localhost:5173 localhost.run
 ### Option 4: Localtunnel
 
 **Pros:**
+
 - ✅ NPM package (easy for Node.js developers)
 - ✅ No account required
 - ✅ Custom subdomains available
@@ -208,6 +216,7 @@ lt --port 5173 --subdomain crozz-frontend
 ### Option 5: Serveo (SSH-based)
 
 **Pros:**
+
 - ✅ No installation
 - ✅ Custom subdomains
 - ✅ SSH forwarding
@@ -234,6 +243,7 @@ cd Crozz-Coin-
 ```
 
 Follow the interactive menu to:
+
 1. Install dependencies
 2. Set up environment files
 3. Start services
@@ -319,6 +329,7 @@ cloudflared tunnel --url http://localhost:5173
 ### Scenario 1: Client Demo
 
 **Setup:**
+
 ```bash
 # Automated
 ./scripts/quick-start.sh
@@ -330,6 +341,7 @@ cloudflared tunnel --url http://localhost:5173
 ```
 
 **Testing:**
+
 1. Client opens frontend URL
 2. Dashboard loads and connects to backend
 3. Client can test all features in real-time
@@ -337,6 +349,7 @@ cloudflared tunnel --url http://localhost:5173
 ### Scenario 2: Mobile Device Testing
 
 **Setup:**
+
 ```bash
 # Start services locally
 ./scripts/quick-start.sh
@@ -350,6 +363,7 @@ cloudflared tunnel --url http://localhost:5173
 ```
 
 **Testing:**
+
 1. Scan QR code (if tunnel service provides one)
 2. Test responsive design
 3. Test touch interactions
@@ -358,6 +372,7 @@ cloudflared tunnel --url http://localhost:5173
 ### Scenario 3: Team Collaboration
 
 **Setup:**
+
 ```bash
 # Team member starts services
 ./scripts/quick-start.sh
@@ -370,6 +385,7 @@ ngrok http 5173 --domain=crozz-frontend.ngrok.io
 ```
 
 **Testing:**
+
 1. Multiple team members access simultaneously
 2. Test collaborative features
 3. Share feedback in real-time
@@ -377,6 +393,7 @@ ngrok http 5173 --domain=crozz-frontend.ngrok.io
 ### Scenario 4: Automated Testing Services
 
 **Setup:**
+
 ```bash
 # Start services
 npm run dev --prefix backend &
@@ -451,6 +468,7 @@ kill $(cat /tmp/crozz-pids.txt)
 ### Temporary vs. Permanent Setup
 
 #### Temporary Setup (Testing/Demos)
+
 - ✅ Use free tunnel services
 - ✅ Accept random URLs
 - ✅ Quick setup, no configuration
@@ -458,6 +476,7 @@ kill $(cat /tmp/crozz-pids.txt)
 - ⚠️ Not suitable for bookmarks
 
 #### Permanent Setup (Staging/Beta)
+
 - ✅ Use paid tunnel services with custom domains
 - ✅ Or deploy to proper hosting (Vercel, Railway, AWS)
 - ✅ Persistent URLs
@@ -465,6 +484,7 @@ kill $(cat /tmp/crozz-pids.txt)
 - ⚠️ Requires configuration/payment
 
 **Recommendation:** For real production use, deploy to proper cloud infrastructure:
+
 - Frontend: Vercel, Netlify, AWS S3 + CloudFront
 - Backend: Railway, Render, AWS ECS, Digital Ocean
 
@@ -473,10 +493,12 @@ kill $(cat /tmp/crozz-pids.txt)
 ### Issue: Tunnel URL not accessible
 
 **Symptoms:**
+
 - Tunnel starts but URL returns 502/504
 - "Connection refused" errors
 
 **Solutions:**
+
 ```bash
 # 1. Verify service is running
 curl http://localhost:4000/api/tokens/summary
@@ -497,11 +519,13 @@ pkill node
 ### Issue: Frontend can't connect to backend
 
 **Symptoms:**
+
 - Dashboard loads but shows "Connection Error"
 - WebSocket fails to connect
 - API requests timeout
 
 **Solutions:**
+
 ```bash
 # 1. Check frontend .env
 cat frontend/.env | grep VITE_CROZZ_API_BASE_URL
@@ -521,10 +545,12 @@ npm run dev
 ### Issue: Tunnel keeps disconnecting
 
 **Symptoms:**
+
 - Tunnel URL stops working after a few minutes
 - Need to restart tunnel frequently
 
 **Solutions:**
+
 ```bash
 # 1. Use more stable tunnel service
 # Cloudflare > Ngrok > localhost.run
@@ -542,10 +568,12 @@ ps aux | grep cloudflared
 ### Issue: Authentication errors
 
 **Symptoms:**
+
 - "Unauthorized" errors
 - Token validation fails
 
 **Solutions:**
+
 ```bash
 # 1. Ensure tokens match
 grep ADMIN_TOKEN .env
@@ -562,11 +590,13 @@ echo "VITE_CROZZ_ADMIN_TOKEN=$ADMIN_TOKEN" >> frontend/.env
 ### Issue: Slow performance over tunnel
 
 **Symptoms:**
+
 - Long load times
 - Laggy interactions
 - Timeout errors
 
 **Solutions:**
+
 ```bash
 # 1. Use faster tunnel service (Cloudflare)
 cloudflared tunnel --url http://localhost:5173
@@ -589,6 +619,7 @@ cd frontend && npm run build && npm run preview
 ### Q: Do I need to pay for tunnel services?
 
 **A:** No, for testing purposes, free tiers are sufficient:
+
 - Cloudflare Tunnel: Free, unlimited
 - Ngrok: Free with limits (20 connections/minute)
 - localhost.run: Free, unlimited
@@ -597,12 +628,14 @@ cd frontend && npm run build && npm run preview
 ### Q: Can I use a custom domain?
 
 **A:** Yes, with paid tunnel services:
+
 - Ngrok: Custom domains from $8/month
 - Cloudflare Tunnel: Free with Cloudflare domain
 
 ### Q: How long can I keep a tunnel open?
 
 **A:** Depends on the service:
+
 - Cloudflare: Indefinitely (restarts on connection loss)
 - Ngrok free: 2-8 hours (auto-restarts)
 - localhost.run: Until SSH connection closes
@@ -610,6 +643,7 @@ cd frontend && npm run build && npm run preview
 ### Q: Is it safe to expose my local server?
 
 **A:** For temporary testing, yes, if you:
+
 - ✅ Use strong authentication
 - ✅ Don't expose production data
 - ✅ Monitor access logs
@@ -620,6 +654,7 @@ cd frontend && npm run build && npm run preview
 ### Q: Can multiple people access the same tunnel?
 
 **A:** Yes! That's the purpose. Share the URL with:
+
 - Clients for demos
 - Team members for testing
 - Stakeholders for reviews
@@ -628,6 +663,7 @@ cd frontend && npm run build && npm run preview
 ### Q: What if my tunnel URL changes?
 
 **A:** Tunnel URLs change on restart (except paid Ngrok). Options:
+
 1. Use persistent tunnel service (Ngrok with custom domain)
 2. Update frontend .env and restart
 3. Use environment variable substitution
@@ -645,6 +681,7 @@ wait
 ```
 
 Or use the provided scripts:
+
 ```bash
 ./scripts/setup-tunnel.sh
 ```
@@ -652,6 +689,7 @@ Or use the provided scripts:
 ### Q: How do I stop all tunnels?
 
 **A:**
+
 ```bash
 # Kill by name
 pkill cloudflared
@@ -666,12 +704,14 @@ kill $(cat /tmp/crozz-pids.txt)
 ### Q: Can I test on my phone?
 
 **A:** Yes! That's a common use case:
+
 1. Start services locally
 2. Create tunnel
 3. Open tunnel URL on phone browser
 4. Test mobile experience
 
 For Sui wallet testing on mobile:
+
 1. Install Sui wallet app
 2. Open tunnel URL in mobile browser
 3. Connect wallet
@@ -680,15 +720,18 @@ For Sui wallet testing on mobile:
 ## Additional Resources
 
 ### Official Documentation
+
 - [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
 - [Ngrok Documentation](https://ngrok.com/docs)
 - [Sui Documentation](https://docs.sui.io/)
 
 ### Crozz-Coin Documentation
+
 - [README.md](../README.md) - Main project documentation
 - [SETUP_GUIDE.md](../SETUP_GUIDE.md) - Detailed setup instructions
 
 ### Community & Support
+
 - [GitHub Issues](https://github.com/sjhallo07/Crozz-Coin-/issues)
 - [Sui Discord](https://discord.gg/sui)
 
@@ -705,12 +748,14 @@ After setting up remote testing:
 ## Summary
 
 Remote testing with tunnels is perfect for:
+
 - ✅ Quick demos and client presentations
 - ✅ Team collaboration across networks
 - ✅ Mobile and cross-device testing
 - ✅ External stakeholder reviews
 
 Remember:
+
 - 🔒 Use strong authentication
 - ⏱️ Tunnels are temporary
 - 🚀 Deploy properly for production

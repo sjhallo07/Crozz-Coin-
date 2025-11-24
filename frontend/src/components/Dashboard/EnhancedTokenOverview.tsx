@@ -1,13 +1,12 @@
-import { useState } from "react";
-import { useDashboardData } from "../../providers/DashboardDataProvider";
-import { formatNumber } from "../../utils/humanize";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
-import PriceChart from "./PriceChart";
+import { useState } from 'react';
+import { useDashboardData } from '../../providers/DashboardDataProvider';
+import { formatNumber } from '../../utils/humanize';
+import Button from '../UI/Button';
+import Card from '../UI/Card';
+import PriceChart from './PriceChart';
 
 const EnhancedTokenOverview = () => {
-  const { tokenSummary, summaryLoading, summaryError, refreshSummary } =
-    useDashboardData();
+  const { tokenSummary, summaryLoading, summaryError, refreshSummary } = useDashboardData();
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -18,9 +17,9 @@ const EnhancedTokenOverview = () => {
 
   // Mock token metadata - in production, fetch from blockchain or API
   const tokenMetadata = {
-    name: "Crozz Coin",
-    symbol: "CROZZ",
-    logo: "/crozz-logo.png", // Use local logo instead of external service
+    name: 'Crozz Coin',
+    symbol: 'CROZZ',
+    logo: '/crozz-logo.png', // Use local logo instead of external service
     currentPrice: 0.0123,
     priceChange24h: 5.67,
   };
@@ -42,20 +41,13 @@ const EnhancedTokenOverview = () => {
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
               {tokenMetadata.name}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {tokenMetadata.symbol}
-            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{tokenMetadata.symbol}</p>
           </div>
         </div>
       }
       actions={
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={handleRefresh}
-          disabled={refreshing}
-        >
-          {refreshing ? "Refreshing…" : "Refresh"}
+        <Button size="sm" variant="ghost" onClick={handleRefresh} disabled={refreshing}>
+          {refreshing ? 'Refreshing…' : 'Refresh'}
         </Button>
       }
     >
@@ -113,13 +105,13 @@ const EnhancedTokenOverview = () => {
           <div className="rounded-2xl border border-brand-200 bg-brand-50 p-3 dark:border-brand-900 dark:bg-brand-950/30">
             <p className="text-sm text-brand-800 dark:text-brand-200">
               💰 Est. Market Cap: $
-              {(
-                parseFloat(tokenSummary.totalSupply) *
-                tokenMetadata.currentPrice
-              ).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {(parseFloat(tokenSummary.totalSupply) * tokenMetadata.currentPrice).toLocaleString(
+                undefined,
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }
+              )}
             </p>
           </div>
         </div>

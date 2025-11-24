@@ -2,8 +2,9 @@
 
 > **Quick Start**: This document provides simple, copy-paste instructions to complete the deployment.
 
-> ⚠️ **CRITICAL SECURITY WARNING**: 
+> ⚠️ **CRITICAL SECURITY WARNING**:
 > This document contains TESTNET-ONLY private keys for demonstration.
+>
 > - **NEVER use these keys on mainnet or in production**
 > - **NEVER share these keys outside of testnet testing**
 > - **ALWAYS generate fresh keys for production**
@@ -12,12 +13,14 @@
 ## 🎯 Current Status
 
 ✅ **COMPLETED:**
+
 - Wallet generation (4 wallets)
 - Smart contract configuration
 - Documentation creation
 - Automation scripts
 
 ⏳ **PENDING:**
+
 - Airdrop requests
 - Contract deployment
 - Token minting
@@ -73,6 +76,7 @@ echo "✅ Airdrops requested for all wallets!"
 ```
 
 **Alternative**: Run the automated script:
+
 ```bash
 ./execute-deployment.sh
 ```
@@ -103,6 +107,7 @@ sui client publish --gas-budget 100000000
 ```
 
 **After deployment, fill in these values:**
+
 ```
 PACKAGE_ID=0x________________
 TREASURY_CAP_ID=0x________________
@@ -111,6 +116,7 @@ ADMIN_CAP_ID=0x________________
 ```
 
 **Update .env file:**
+
 ```bash
 cd ..
 echo "CROZZ_PACKAGE_ID=$PACKAGE_ID" >> .env
@@ -158,6 +164,7 @@ sui client call \
 ```
 
 **Verify mints:**
+
 ```bash
 # Check Alice's coins
 sui client objects --owned-by 0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
@@ -265,6 +272,7 @@ sui client objects --owned-by 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f
 ```
 
 **Expected Results:**
+
 - Alice: 1,700 CROZZ (1000 - 500 + 1200)
 - Bob: 1,700 CROZZ (2000 + 500 - 800)
 - Charlie: 2,600 CROZZ (3000 + 800 - 1200)
@@ -277,6 +285,7 @@ sui client objects --owned-by 0x54be361ca51e8034bc5ad0ca1d80130bbc83c90428206b5f
 Visit the following URLs and capture screenshots:
 
 #### Wallet Explorer Links
+
 ```
 Admin:   https://testnet.suivision.xyz/account/0x899888ddf619e376d1291f858192eb6b157d5df77746f5057dd6f2b03a09685c
 Alice:   https://testnet.suivision.xyz/account/0xf7507e908d69f63a93e48757e40e106d054ff5cef7c6f13437daada6f2c9e423
@@ -285,17 +294,21 @@ Charlie: https://testnet.suivision.xyz/account/0x54be361ca51e8034bc5ad0ca1d80130
 ```
 
 #### Package Explorer Link
+
 ```
 https://testnet.suivision.xyz/package/<YOUR_PACKAGE_ID>
 ```
 
 #### Transaction Links
+
 For each transaction digest you saved:
+
 ```
 https://testnet.suivision.xyz/txblock/<TRANSACTION_DIGEST>
 ```
 
 **Screenshots to capture:**
+
 1. ✅ Deployment transaction on explorer
 2. ✅ Mint transaction for Alice
 3. ✅ Mint transaction for Bob
@@ -317,38 +330,44 @@ Create a file `deployment/FINAL_RESULTS.md` with this content:
 # Crozz Coin - Deployment Results
 
 ## Deployment Information
+
 - **Date**: YYYY-MM-DD
 - **Network**: Sui Testnet
 - **Package ID**: `0x________________`
-- **Package URL**: https://testnet.suivision.xyz/package/________________
+- **Package URL**: https://testnet.suivision.xyz/package/******\_\_\_\_******
 
 ## Deployment Objects
+
 - **TreasuryCap ID**: `0x________________`
 - **Metadata ID**: `0x________________`
 - **AdminCap ID**: `0x________________`
 
 ## Minting Transactions
-| Wallet | Amount | Transaction Digest | Explorer URL |
-|--------|--------|-------------------|--------------|
-| Alice  | 1,000 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
-| Bob    | 2,000 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
-| Charlie | 3,000 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
+
+| Wallet  | Amount      | Transaction Digest | Explorer URL                                             |
+| ------- | ----------- | ------------------ | -------------------------------------------------------- |
+| Alice   | 1,000 CROZZ | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
+| Bob     | 2,000 CROZZ | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
+| Charlie | 3,000 CROZZ | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
 
 ## Transfer Transactions
-| From | To | Amount | Transaction Digest | Explorer URL |
-|------|-----|--------|-------------------|--------------|
-| Alice | Bob | 500 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
-| Bob | Charlie | 800 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
-| Charlie | Alice | 1,200 CROZZ | `_______________` | https://testnet.suivision.xyz/txblock/_______________ |
+
+| From    | To      | Amount      | Transaction Digest | Explorer URL                                             |
+| ------- | ------- | ----------- | ------------------ | -------------------------------------------------------- |
+| Alice   | Bob     | 500 CROZZ   | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
+| Bob     | Charlie | 800 CROZZ   | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
+| Charlie | Alice   | 1,200 CROZZ | `_______________`  | https://testnet.suivision.xyz/txblock/******\_\_\_****** |
 
 ## Final Balances
-| Wallet | Balance | Explorer URL |
-|--------|---------|--------------|
-| Alice  | 1,700 CROZZ | https://testnet.suivision.xyz/account/0xf7507e... |
-| Bob    | 1,700 CROZZ | https://testnet.suivision.xyz/account/0x3c71b1... |
+
+| Wallet  | Balance     | Explorer URL                                      |
+| ------- | ----------- | ------------------------------------------------- |
+| Alice   | 1,700 CROZZ | https://testnet.suivision.xyz/account/0xf7507e... |
+| Bob     | 1,700 CROZZ | https://testnet.suivision.xyz/account/0x3c71b1... |
 | Charlie | 2,600 CROZZ | https://testnet.suivision.xyz/account/0x54be36... |
 
 ## Verification
+
 - [x] Total supply matches (6,000 CROZZ)
 - [x] All transfers successful
 - [x] Final balances correct
@@ -377,19 +396,23 @@ You'll know the deployment is successful when:
 ## 🆘 Troubleshooting
 
 **Issue: Faucet request fails**
+
 - Wait 5 minutes and try again
 - Use web faucet: https://docs.sui.io/guides/developer/getting-started/get-coins
 
 **Issue: Insufficient gas**
+
 - Request more SUI from faucet
 - Increase gas budget in commands
 
 **Issue: Object not found**
+
 - Verify you're using the correct Package ID
 - Check that coin objects exist for the wallet
 - Use `sui client objects` to list owned objects
 
 **Issue: Transaction fails**
+
 - Check wallet has sufficient SUI for gas
 - Verify object IDs are correct
 - Ensure you're on the right network (testnet)

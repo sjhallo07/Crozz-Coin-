@@ -110,6 +110,7 @@
 ## Network Flow
 
 ### Request Flow (Frontend)
+
 ```
 User Browser
     │
@@ -127,6 +128,7 @@ User Browser
 ```
 
 ### API Request Flow (Backend)
+
 ```
 Frontend (React)
     │
@@ -459,36 +461,43 @@ Key Metrics Tracked:
 ## Technology Stack
 
 **Container Runtime:**
+
 - Docker with BuildKit
 - Multi-stage builds
 - Image scanning with Trivy
 
 **Orchestration:**
+
 - Kubernetes 1.24+
 - Helm 3.x
 - Kustomize
 
 **Load Balancing:**
+
 - nginx-ingress-controller
 - Cloud provider load balancers
 
 **Security:**
+
 - cert-manager (TLS certificates)
 - Sealed Secrets (secret encryption)
 - Network Policies (Calico/Cilium)
 - RBAC
 
 **Monitoring:**
+
 - Prometheus (metrics)
 - Grafana (visualization)
 - AlertManager (notifications)
 
 **CI/CD:**
+
 - GitHub Actions
 - Trivy (security scanning)
 - Automated deployments
 
 **Clouds:**
+
 - AWS EKS
 - Google Cloud GKE
 - Azure AKS
@@ -499,22 +508,26 @@ Key Metrics Tracked:
 ## Performance Characteristics
 
 **Availability:**
+
 - SLA: 99.95% uptime
 - Downtime: 4.38 hours/year
 - MTTR: < 30 seconds (auto-healing)
 
 **Scalability:**
+
 - Minimum: 3 replicas (6 pods total)
 - Maximum: 10 replicas (20 pods total)
 - Scale time: < 2 minutes
 - Max throughput: 100,000+ req/s
 
 **Performance:**
+
 - Response time: < 100ms (p95)
 - Latency: < 50ms (p50)
 - Concurrent users: 10,000+
 
 **Resource Usage:**
+
 - CPU per pod: 50-500m
 - Memory per pod: 64-512Mi
 - Storage: 10Gi persistent
