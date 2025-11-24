@@ -30,7 +30,7 @@ router.post('/create', authMiddleware, (req, res) => {
     
     if (count < 1 || count > MAX_WALLETS_PER_REQUEST) {
       return res.status(400).json(
-        errorResponse('Count must be between 1 and 10', { field: 'count' })
+        errorResponse(`Count must be between 1 and ${MAX_WALLETS_PER_REQUEST}`, { field: 'count' })
       );
     }
     
