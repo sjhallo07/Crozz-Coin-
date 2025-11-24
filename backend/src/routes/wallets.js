@@ -8,8 +8,17 @@ import authMiddleware from '../middleware/auth.js';
 const router = Router();
 
 // In-memory wallet storage (for demo purposes)
-// In production, use a secure database
+// ⚠️ WARNING: This is NOT production-ready!
+// In production:
+// - Use encrypted database storage (PostgreSQL with pgcrypto)
+// - Encrypt private keys at rest
+// - Implement proper key rotation
+// - Use hardware wallets for admin keys
+// - Add audit logging for all wallet operations
 const wallets = new Map();
+
+// Configuration constants
+const MAX_WALLETS_PER_REQUEST = 10;
 
 /**
  * POST /api/admin/wallets/create
@@ -40,7 +49,7 @@ router.post('/create', authMiddleware, (req, res) => {
         name: `${prefix} ${wallets.size + 1}`,
         address,
         publicKey,
-        privateKey, // In production, encrypt this!
+        privateKey, // ⚠️ SECURITY: In production, encrypt this with AES-256-GCM or similar!
         createdAt: new Date().toISOString(),
         frozen: false,
         balance: '0',

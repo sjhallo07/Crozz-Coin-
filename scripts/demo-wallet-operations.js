@@ -227,8 +227,8 @@ class WalletOperationsDemo {
           target: `${PACKAGE_ID}::${MODULE_NAME}::mint`,
           arguments: [
             tx.object(TREASURY_CAP_ID),
-            tx.pure.u64(mintAmount),
-            tx.pure.address(wallet.address),
+            tx.pure(mintAmount),
+            tx.pure(wallet.address),
           ],
         });
         
@@ -308,7 +308,7 @@ class WalletOperationsDemo {
           target: `${PACKAGE_ID}::${MODULE_NAME}::transfer`,
           arguments: [
             tx.object(coinId),
-            tx.pure.address(toWallet.address),
+            tx.pure(toWallet.address),
           ],
         });
         
@@ -371,8 +371,8 @@ class WalletOperationsDemo {
         arguments: [
           tx.object(ADMIN_CAP_ID),
           tx.object(REGISTRY_ID),
-          tx.pure.address(wallet.address),
-          tx.pure.bool(true),
+          tx.pure(wallet.address),
+          tx.pure(true),
         ],
       });
       

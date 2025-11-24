@@ -4,6 +4,8 @@ import Card from '../UI/Card';
 import Button from '../UI/Button';
 
 const API_BASE_URL = import.meta.env.VITE_CROZZ_API_BASE_URL || 'http://localhost:4000';
+// ⚠️ SECURITY WARNING: Admin tokens in frontend env vars are exposed in the client build
+// For production, implement proper OAuth/JWT authentication flow with backend session management
 const ADMIN_TOKEN = import.meta.env.VITE_CROZZ_ADMIN_TOKEN;
 
 interface Wallet {
