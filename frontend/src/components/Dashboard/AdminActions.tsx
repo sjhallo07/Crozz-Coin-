@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useCrozzActions } from '../../hooks/useCrozzActions';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
+import WalletManager from './WalletManager';
 
 type AdminActionType =
   | 'mint'
@@ -546,4 +547,14 @@ const AdminActions = () => {
   );
 };
 
-export default AdminActions;
+// Wrapper component that includes WalletManager
+const AdminActionsWithWalletManager = () => {
+  return (
+    <>
+      <AdminActions />
+      <WalletManager />
+    </>
+  );
+};
+
+export default AdminActionsWithWalletManager;

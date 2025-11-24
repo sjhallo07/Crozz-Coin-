@@ -5,7 +5,7 @@ import { suiClient } from './SuiClient.js';
 import { transactionService } from './TransactionService.js';
 
 const DEFAULT_MODULE = 'crozz_token';
-const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute']);
+const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet']);
 
 const buildKeypair = (value) => {
   if (!value) return null;
@@ -100,6 +100,8 @@ class TransactionExecutor {
         return this.executeBurn(job.payload ?? {});
       case 'distribute':
         return this.executeDistribute(job.payload ?? {});
+      case 'freeze_wallet':
+        return this.executeFreezeWallet(job.payload ?? {});
       default:
         throw new Error(`Unsupported transaction type: ${job.type}`);
     }
@@ -174,6 +176,34 @@ class TransactionExecutor {
     });
 
     return this.submit(tx, 'distribute');
+  }
+
+  async executeFreezeWallet(payload) {
+    const { address, freeze = true } = payload;
+    if (!address) {
+      throw new Error('Wallet address is required for freeze operations');
+    }
+
+    if (!this.adminCapId || !this.registryId) {
+      throw new Error('Admin Cap ID and Registry ID required for freeze operations');
+    }
+
+    if (this.dryRun) {
+      return this.mockResult('freeze_wallet', { address, freeze });
+    }
+
+    const tx = this.createTx();
+    tx.moveCall({
+      target: `${this.packageId}::${this.moduleName}::set_wallet_freeze`,
+      arguments: [
+        tx.object(this.adminCapId),
+        tx.object(this.registryId),
+        tx.pure(address),
+        tx.pure(freeze),
+      ],
+    });
+
+    return this.submit(tx, 'freeze_wallet');
   }
 
   parseAmount(value) {
