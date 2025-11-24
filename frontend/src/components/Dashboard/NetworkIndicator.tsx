@@ -1,4 +1,4 @@
-import { getCurrentNetwork, isMainnet, isTestnet } from '../../utils/sui';
+import { getCurrentNetwork } from '../../utils/sui';
 import Card from '../UI/Card';
 
 type NetworkConfig = {
@@ -47,20 +47,20 @@ export default function NetworkIndicator() {
     <Card className="mb-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{config.icon}</span>
+          <span className="text-2xl">{config?.icon ?? '🟡'}</span>
           <div>
             <h3 className="text-lg font-semibold capitalize">{network} Network</h3>
-            <p className="text-sm text-gray-600">{config.description}</p>
+            <p className="text-sm text-gray-600">{config?.description ?? 'Network environment'}</p>
           </div>
         </div>
         <div
-          className={`px-4 py-2 rounded-lg border-2 font-semibold uppercase text-sm ${config.badgeClass}`}
+          className={`px-4 py-2 rounded-lg border-2 font-semibold uppercase text-sm ${config?.badgeClass ?? 'bg-gray-100 text-gray-800 border-gray-300'}`}
         >
           {network}
         </div>
       </div>
 
-      {config.banner && (
+      {config?.banner && (
         <div
           className={`mt-4 p-3 rounded ${
             config.banner.type === 'warning'

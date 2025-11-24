@@ -1,6 +1,6 @@
 import { requireAuth } from '../../middleware/jwtAuth.js';
 import { authService } from '../../services/AuthService.js';
-import { initDatabase } from '../../services/Database.js';
+import { database, initDatabase } from '../../services/Database.js';
 
 describe('requireAuth middleware', () => {
   let req, res, next;
@@ -8,6 +8,16 @@ describe('requireAuth middleware', () => {
   beforeAll(() => {
     initDatabase();
     authService.initStatements();
+  });
+
+  afterEach(() => {
+    // Clean up users table between tests to avoid conflicts
+    try {
+      database.prepare('DELETE FROM users').run();
+      database.prepare('DELETE FROM refresh_tokens').run();
+    } catch (e) {
+      // Ignore errors if tables don't exist
+    }
   });
 
   beforeEach(() => {
@@ -292,20 +302,33 @@ describe('requireAuth middleware', () => {
       // First request
       req.headers.authorization = `Bearer ${session.tokens.accessToken}`;
       const middleware1 = requireAuth();
-      middleware1(req, res, next);
+      middleware1(req, res, () => next.call());
       expect(next.called).toBe(true);
 
       // Second request with new request object
       const req2 = { headers: { authorization: `Bearer ${session.tokens.accessToken}` } };
       const res2 = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis(),
+        status: function (code) {
+          this.statusCode = code;
+          return this;
+        },
+        json: function (data) {
+          this.jsonData = data;
+          return this;
+        },
+        statusCode: null,
+        jsonData: null,
       };
-      const next2 = jest.fn();
+      const next2 = {
+        called: false,
+        call: function () {
+          this.called = true;
+        },
+      };
 
       const middleware2 = requireAuth();
-      middleware2(req2, res2, next2);
-      expect(next2).toHaveBeenCalled();
+      middleware2(req2, res2, () => next2.call());
+      expect(next2.called).toBe(true);
     });
   });
 

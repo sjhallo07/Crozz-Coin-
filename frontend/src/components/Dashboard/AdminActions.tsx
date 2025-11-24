@@ -241,55 +241,53 @@ const AdminActions = () => {
     setError(null);
 
     try {
-      let response;
-
       switch (activeAction) {
         case 'mint':
-          response = await mintTokens({
-            amount: formValues.amount,
+          await mintTokens({
+            amount: formValues.amount ?? '',
             recipient: formValues.recipient || undefined,
           });
           break;
         case 'mintToSelf':
-          response = await mintToSelf({ amount: formValues.amount });
+          await mintToSelf({ amount: formValues.amount ?? '' });
           break;
         case 'burn':
-          response = await burnTokens({ coinId: formValues.coinId });
+          await burnTokens({ coinId: formValues.coinId ?? '' });
           break;
         case 'freezeWallet':
-          response = await setWalletFreeze({
-            target: formValues.target,
+          await setWalletFreeze({
+            target: formValues.target ?? '',
             freeze: true,
           });
           break;
         case 'unfreezeWallet':
-          response = await setWalletFreeze({
-            target: formValues.target,
+          await setWalletFreeze({
+            target: formValues.target ?? '',
             freeze: false,
           });
           break;
         case 'globalFreeze':
-          response = await setGlobalFreeze({ freeze: true });
+          await setGlobalFreeze({ freeze: true });
           break;
         case 'globalUnfreeze':
-          response = await setGlobalFreeze({ freeze: false });
+          await setGlobalFreeze({ freeze: false });
           break;
         case 'updateName':
-          response = await updateName({ name: formValues.name });
+          await updateName({ name: formValues.name ?? '' });
           break;
         case 'updateSymbol':
-          response = await updateSymbol({ symbol: formValues.symbol });
+          await updateSymbol({ symbol: formValues.symbol ?? '' });
           break;
         case 'updateDescription':
-          response = await updateDescription({
-            description: formValues.description,
+          await updateDescription({
+            description: formValues.description ?? '',
           });
           break;
         case 'updateIconUrl':
-          response = await updateIconUrl({ iconUrl: formValues.iconUrl });
+          await updateIconUrl({ iconUrl: formValues.iconUrl ?? '' });
           break;
         case 'freezeMetadata':
-          response = await freezeMetadata();
+          await freezeMetadata();
           break;
       }
 
