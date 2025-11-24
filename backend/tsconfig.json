@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
+    "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Node",
+    "lib": ["ES2022"],
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -19,18 +18,19 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "jsx": "react-jsx",
+    "noPropertyAccessFromIndexSignature": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
-    "types": ["vite/client"],
     "skipLibCheck": true,
-    "noEmit": true,
-    "allowSyntheticDefaultImports": true
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "allowJs": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node", "jest"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "build"],
-  "references": []
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.js", "**/*.spec.js"]
 }
