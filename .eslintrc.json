@@ -12,7 +12,7 @@
   },
   "rules": {
     "no-console": "off",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "no-var": "error",
     "prefer-const": "error",
     "security/detect-object-injection": "warn",
@@ -44,8 +44,7 @@
       ],
       "plugins": ["@typescript-eslint", "react", "react-hooks", "security", "no-secrets"],
       "parserOptions": {
-        "project": ["./frontend/tsconfig.json"],
-        "tsconfigRootDir": ".",
+        "project": true,
         "ecmaVersion": 2022,
         "sourceType": "module",
         "ecmaFeatures": {
