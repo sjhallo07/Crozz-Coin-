@@ -150,6 +150,8 @@ For the entire **Alpha → Beta → Omega** deployment and the official launch o
 
 Please coordinate with IBM marketing/AI specialists so these workflows stay in sync with the white paper’s lifecycle blueprint.
 
+> ℹ️ Budget note: As an entrepreneurial initiative, Crozz Coin must start on the most economical IBM Cloud plan (free tier + minimal PAYG). Upgrades to higher tiers will be driven strictly by real profits and measurable adoption results.
+
 ---
 
 ## 7. Repository guide
