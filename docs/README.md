@@ -1,6 +1,10 @@
 # IBM Cloud Deployment Blueprint for Crozz Coin
 
-This README distills the IBM Cloud deployment strategy for the Crozz Coin ecosystem (Move smart contract + Express APIs + React dashboard). Use it as your starting point when standing up new environments or onboarding operations teams.
+![Crozz Coin Logo](../frontend/public/crozz-logo.png)
+
+**Official project URL:** [https://crozzcoin.com/](https://crozzcoin.com/)
+
+This README distills the IBM Cloud deployment strategy for the Crozz Coin ecosystem (Move smart contract + Express APIs + React dashboard). Use it as your starting point when standing up new environments or onboarding operations teams. The primary mandate is to deploy the **entire Crozz Coin ecosystem on Sui mainnet** and release the CROZZ token using the most advanced, efficient IBM technologies available—zero tolerance for errors, maximum operational rigor.
 
 ---
 
@@ -102,6 +106,25 @@ These requirements ensure IBM reviewers understand the blockchain stack dependen
 
 ---
 
+### 4.1 Legal agreements & governance
+
+1. **Developer service agreement (Marcos Mora)**
+   - Marcos Mora is the principal builder of the Crozz ecosystem. He retains all intellectual-property rights to the codebase, smart contracts, infrastructure definitions, dashboards, and automation scripts until he receives full payment for services rendered **and** submits a transfer invoice to IBM confirming assignment.
+   - Until that notification is accepted, Marcos Mora grants Carlo Hung and IBM a non-exclusive license to operate the platform but carries **zero liability** for any losses, rug pulls, market crashes, misuse of CROZZ tokens, or business decisions made by ecosystem participants.
+   - Any maintenance, upgrades, smart-contract edits, or production configuration changes authored by Marcos Mora must be explicitly authorized in writing by Carlo Hung before execution.
+
+2. **Owner protections (Carlo Hung)**
+   - Carlo Hung is the sole owner and ultimate authority over the Crozz Coin ecosystem. He holds 100% of governance rights, treasury decisions, feature approvals, and access grants/revocations.
+   - No third party (including developers, admins, or IBM staff) may override Carlo Hung’s directives. All operational permissions flow from him and can be rescinded at any time.
+
+3. **User & holder agreement**
+   - Every user/holder must accept the ecosystem terms which state that Carlo Hung’s policies are final. Participation requires acknowledging that permissions, token utilities, or access can be granted or withdrawn solely by Carlo Hung.
+   - Users agree that they assume full responsibility for financial risk, trading outcomes, or smart-contract interactions and that neither Carlo Hung nor Marcos Mora acts as custodian of assets.
+
+> 📌 Keep the signed agreements (developer contract, owner declaration, user ToS) inside `docs/legal/` and reference them during IBM compliance reviews.
+
+---
+
 ## 5. Dashboard & automation highlights
 
 - **Market intelligence**: Code Engine job fetches CoinMarketCap Top-10, SUI price, and Crozz price, caches in Cloudant, and pushes updates via Event Streams to the React dashboard.
@@ -121,6 +144,14 @@ These requirements ensure IBM reviewers understand the blockchain stack dependen
 
 ---
 
+## 6.1 Lifecycle management & IBM NLP request
+
+For the entire **Alpha → Beta → Omega** deployment and the official launch of the Crozz Coin ecosystem and token—covering social media creation, content ideation, marketing plan development, and community building aligned with the mission, vision, and goals from the white paper—we request IBM’s NLP and data-analysis tooling to drive exponential, targeted growth. This includes leveraging watsonx APIs to craft messaging, sentiment analysis to guide campaigns, and analytics pipelines to measure traction against short- and long-term KPIs.
+
+Please coordinate with IBM marketing/AI specialists so these workflows stay in sync with the white paper’s lifecycle blueprint.
+
+---
+
 ## 7. Repository guide
 
 | Path              | Purpose                                                                                   |
@@ -133,6 +164,8 @@ These requirements ensure IBM reviewers understand the blockchain stack dependen
 | `docs/`           | Additional guides (security, testing, quick starts, and this README).                     |
 
 Need deeper details? Start with [`IMPLEMENTATION_SUMMARY.md`](../IMPLEMENTATION_SUMMARY.md) and [`TESTNET_DEPLOYMENT_NOTICE.md`](../TESTNET_DEPLOYMENT_NOTICE.md) for environment-specific caveats.
+
+1 234
 
 ---
 
