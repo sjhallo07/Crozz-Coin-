@@ -149,6 +149,30 @@ Quick deployment and testing on testnet.
 ./scripts/quick-start.sh
 ```
 
+#### `setup-cloud-runtime.ps1`
+Provision IBM Cloud compute targets (VSI builder, Code Engine apps, IBM Kubernetes cluster, GitHub Actions secrets)
+in the recommended order. Supports dry-run previews by default; pass `-Apply` to execute the generated commands.
+
+```powershell
+# Preview Code Engine-only flow
+pwsh ./scripts/setup-cloud-runtime.ps1 -Targets CodeEngine
+
+# Provision VSI + Code Engine + IKS using custom names/region
+pwsh ./scripts/setup-cloud-runtime.ps1 -Targets VSI,CodeEngine,IKS -Region us-south -ResourceGroup Crozz -RegistryNamespace crozz-dev -Apply
+```
+
+Key parameters:
+
+| Parameter                                                   | Description                                                               |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `-Targets`                                                  | Any combination of `VSI`, `CodeEngine`, `IKS`, `GitHubActions`, or `All`. |
+| `-ApiKey`                                                   | IBM Cloud API key (defaults to `IBM_CLOUD_API_KEY`).                      |
+| `-RegistryNamespace`                                        | Container Registry namespace to guard/create.                             |
+| `-VpcName`, `-SubnetName`, `-VsiName`                       | Identifiers for VSI infrastructure.                                       |
+| `-CodeEngineProject`, `-BackendAppName`, `-FrontendAppName` | Names for Code Engine resources.                                          |
+| `-IksClusterName`, `-KustomizePath`                         | IBM Kubernetes Service cluster + manifest path to apply.                  |
+| `-Apply`                                                    | Execute commands instead of printing the ordered plan.                    |
+
 ## Script Usage Examples
 
 ### First-Time Setup

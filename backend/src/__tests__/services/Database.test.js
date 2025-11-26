@@ -280,17 +280,17 @@ describe('Database Service', () => {
 
     it('should enable foreign keys', () => {
       const result = database.pragma('foreign_keys');
-      expect(result).toBe(1);
+      expect(result[0].foreign_keys).toBe(1);
     });
 
     it('should use WAL journal mode', () => {
       const result = database.pragma('journal_mode');
-      expect(result).toBe('wal');
+      expect(result[0].journal_mode).toBe('wal');
     });
 
     it('should have NORMAL synchronous mode', () => {
       const result = database.pragma('synchronous');
-      expect(result).toBe(1); // NORMAL = 1
+      expect(result[0].synchronous).toBe(1); // NORMAL = 1
     });
   });
 
