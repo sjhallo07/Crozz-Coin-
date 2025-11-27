@@ -29,9 +29,9 @@ router.post('/create', authMiddleware, (req, res) => {
   try {
     const { count = 1, prefix = 'Wallet' } = req.body;
     
-    if (count < 1 || count > 10) {
+    if (count < 1 || count > MAX_WALLETS_PER_REQUEST) {
       return res.status(400).json(
-        errorResponse('Count must be between 1 and 10', { field: 'count' })
+        errorResponse(`Count must be between 1 and ${MAX_WALLETS_PER_REQUEST}`, { field: 'count' })
       );
     }
     
@@ -59,7 +59,6 @@ router.post('/create', authMiddleware, (req, res) => {
       wallets.set(walletId, wallet);
       
       // Return wallet without private key in response
-      // eslint-disable-next-line no-unused-vars
       const { privateKey: _pk, ...walletInfo } = wallet;
       createdWallets.push(walletInfo);
     }
@@ -84,8 +83,7 @@ router.post('/create', authMiddleware, (req, res) => {
 router.get('/', authMiddleware, (req, res) => {
   try {
     const walletList = Array.from(wallets.values()).map(wallet => {
-      // eslint-disable-next-line no-unused-vars
-      const { privateKey, ...walletInfo } = wallet;
+      const { privateKey: _pk, ...walletInfo } = wallet;
       return walletInfo;
     });
     
@@ -117,8 +115,7 @@ router.get('/:id', authMiddleware, (req, res) => {
       );
     }
     
-    // eslint-disable-next-line no-unused-vars
-    const { privateKey, ...walletInfo } = wallet;
+    const { privateKey: _pk, ...walletInfo } = wallet;
     
     res.json(
       successResponse('Wallet retrieved successfully', { wallet: walletInfo })
