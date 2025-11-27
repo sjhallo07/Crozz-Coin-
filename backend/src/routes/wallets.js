@@ -251,7 +251,12 @@ router.delete('/:id', authMiddleware, (req, res) => {
  * Transfer a specific CROZZ coin object between wallets
  * 
  * Note: On Sui, transfers require the coin object ID (not amount).
- * The coinId must be a coin owned by the source wallet.
+ * The coinId must be a CROZZ coin object owned by the source wallet.
+ * 
+ * To find coin object IDs owned by a wallet, use the Sui CLI:
+ *   sui client objects --address <WALLET_ADDRESS>
+ * Or query via RPC:
+ *   suiClient.getOwnedObjects({ owner: '<WALLET_ADDRESS>', filter: { StructType: '<PACKAGE>::crozz_token::CROZZ' } })
  */
 router.post('/transfer', authMiddleware, (req, res) => {
   try {
@@ -261,7 +266,7 @@ router.post('/transfer', authMiddleware, (req, res) => {
       return res.status(400).json(
         errorResponse('Source wallet ID, destination address, and coin ID are required', {
           fields: ['fromWalletId', 'toAddress', 'coinId'],
-          note: 'On Sui, transfers require a coin object ID. Use the object ID of a coin owned by the source wallet.',
+          note: 'On Sui, transfers require a coin object ID. Query owned objects to find coin IDs.',
         })
       );
     }

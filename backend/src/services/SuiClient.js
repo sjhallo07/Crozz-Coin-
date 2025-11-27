@@ -3,10 +3,10 @@ import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 // Determine network from environment
 const envNetwork = process.env.SUI_NETWORK ?? 'testnet';
 
-// Get the network URL based on the validated network name
+// Get the network URL using SDK's getFullnodeUrl for consistency
 const getNetworkUrl = (name) => {
   if (name === 'mainnet') return getFullnodeUrl('mainnet');
-  if (name === 'localnet') return 'http://127.0.0.1:9000';
+  if (name === 'localnet') return getFullnodeUrl('localnet');
   return getFullnodeUrl('testnet');
 };
 
