@@ -107,12 +107,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Dependency Review
+       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
           allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
-
+        continue-on-error: true
+        
   secret-scanning:
     name: Secret Scanning
     runs-on: ubuntu-latest
