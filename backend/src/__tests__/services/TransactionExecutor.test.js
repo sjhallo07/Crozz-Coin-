@@ -214,6 +214,87 @@ describe('TransactionExecutor', () => {
     });
   });
 
+  describe('Transaction Execution - Global Freeze', () => {
+    beforeEach(() => {
+      process.env.CROZZ_ADMIN_CAP_ID = '0xadmincap123';
+      process.env.CROZZ_REGISTRY_ID = '0xregistry123';
+      executor = new TransactionExecutor({ pollInterval: 100, maxAttempts: 3 });
+    });
+
+    it('should execute global_freeze transaction in dry-run mode', async () => {
+      const result = await executor.executeGlobalFreeze({ freeze: true });
+
+      expect(result).toMatchObject({
+        mock: true,
+        type: 'global_freeze',
+        payload: { freeze: true },
+      });
+      expect(result.timestamp).toBeDefined();
+    });
+
+    it('should default freeze to true if not provided', async () => {
+      const result = await executor.executeGlobalFreeze({});
+
+      expect(result.payload.freeze).toBe(true);
+    });
+
+    it('should handle unfreeze operation', async () => {
+      const result = await executor.executeGlobalFreeze({ freeze: false });
+
+      expect(result.payload.freeze).toBe(false);
+    });
+
+    it('should throw error when adminCapId is missing', async () => {
+      executor.adminCapId = null;
+
+      await expect(executor.executeGlobalFreeze({ freeze: true })).rejects.toThrow(
+        'Admin Cap ID and Registry ID required for global freeze operations'
+      );
+    });
+
+    it('should throw error when registryId is missing', async () => {
+      executor.registryId = null;
+
+      await expect(executor.executeGlobalFreeze({ freeze: true })).rejects.toThrow(
+        'Admin Cap ID and Registry ID required for global freeze operations'
+      );
+    });
+  });
+
+  describe('Transaction Execution - Transfer', () => {
+    it('should execute transfer transaction in dry-run mode', async () => {
+      const result = await executor.executeTransfer({
+        coinId: '0xcoin123',
+        toAddress: '0xrecipient123',
+      });
+
+      expect(result).toMatchObject({
+        mock: true,
+        type: 'transfer',
+        payload: { coinId: '0xcoin123', toAddress: '0xrecipient123' },
+      });
+      expect(result.timestamp).toBeDefined();
+    });
+
+    it('should throw error when coinId is missing', async () => {
+      await expect(
+        executor.executeTransfer({ toAddress: '0xrecipient123' })
+      ).rejects.toThrow('coinId is required for transfer transactions');
+    });
+
+    it('should throw error when toAddress is missing', async () => {
+      await expect(
+        executor.executeTransfer({ coinId: '0xcoin123' })
+      ).rejects.toThrow('toAddress is required for transfer transactions');
+    });
+
+    it('should throw error when both coinId and toAddress are missing', async () => {
+      await expect(executor.executeTransfer({})).rejects.toThrow(
+        'coinId is required for transfer transactions'
+      );
+    });
+  });
+
   describe('Job Processing', () => {
     it('should process mint job successfully', async () => {
       const job = {
@@ -257,6 +338,37 @@ describe('TransactionExecutor', () => {
       const result = await executor.execute(job);
       expect(result.mock).toBe(true);
       expect(result.type).toBe('distribute');
+    });
+
+    it('should process global_freeze job successfully', async () => {
+      // Set up admin cap and registry for global freeze
+      process.env.CROZZ_ADMIN_CAP_ID = '0xadmincap123';
+      process.env.CROZZ_REGISTRY_ID = '0xregistry123';
+      executor = new TransactionExecutor({ pollInterval: 100, maxAttempts: 3 });
+
+      const job = {
+        id: 'test-job-5',
+        type: 'global_freeze',
+        payload: { freeze: true },
+        attempts: 0,
+      };
+
+      const result = await executor.execute(job);
+      expect(result.mock).toBe(true);
+      expect(result.type).toBe('global_freeze');
+    });
+
+    it('should process transfer job successfully', async () => {
+      const job = {
+        id: 'test-job-6',
+        type: 'transfer',
+        payload: { coinId: '0xcoin123', toAddress: '0xrecipient123' },
+        attempts: 0,
+      };
+
+      const result = await executor.execute(job);
+      expect(result.mock).toBe(true);
+      expect(result.type).toBe('transfer');
     });
 
     it('should throw error for unsupported transaction type', async () => {
