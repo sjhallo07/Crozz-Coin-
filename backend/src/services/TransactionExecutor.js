@@ -5,7 +5,7 @@ import { suiClient } from './SuiClient.js';
 import { transactionService } from './TransactionService.js';
 
 const DEFAULT_MODULE = 'crozz_token';
-const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet']);
+const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet', 'global_freeze', 'transfer']);
 
 const buildKeypair = (value) => {
   if (!value) return null;
@@ -102,6 +102,10 @@ class TransactionExecutor {
         return this.executeDistribute(job.payload ?? {});
       case 'freeze_wallet':
         return this.executeFreezeWallet(job.payload ?? {});
+      case 'global_freeze':
+        return this.executeGlobalFreeze(job.payload ?? {});
+      case 'transfer':
+        return this.executeTransfer(job.payload ?? {});
       default:
         throw new Error(`Unsupported transaction type: ${job.type}`);
     }
@@ -204,6 +208,48 @@ class TransactionExecutor {
     });
 
     return this.submit(tx, 'freeze_wallet');
+  }
+
+  async executeGlobalFreeze(payload) {
+    const { freeze = true } = payload;
+
+    if (!this.adminCapId || !this.registryId) {
+      throw new Error('Admin Cap ID and Registry ID required for global freeze operations');
+    }
+
+    if (this.dryRun) {
+      return this.mockResult('global_freeze', { freeze });
+    }
+
+    const tx = this.createTx();
+    tx.moveCall({
+      target: `${this.packageId}::${this.moduleName}::set_global_freeze`,
+      arguments: [tx.object(this.adminCapId), tx.object(this.registryId), tx.pure(freeze)],
+    });
+
+    return this.submit(tx, 'global_freeze');
+  }
+
+  async executeTransfer(payload) {
+    const { coinId, toAddress } = payload;
+    if (!coinId) {
+      throw new Error('coinId is required for transfer transactions');
+    }
+    if (!toAddress) {
+      throw new Error('toAddress is required for transfer transactions');
+    }
+
+    if (this.dryRun) {
+      return this.mockResult('transfer', { coinId, toAddress });
+    }
+
+    const tx = this.createTx();
+    tx.moveCall({
+      target: `${this.packageId}::${this.moduleName}::transfer`,
+      arguments: [tx.object(coinId), tx.pure(toAddress)],
+    });
+
+    return this.submit(tx, 'transfer');
   }
 
   parseAmount(value) {
