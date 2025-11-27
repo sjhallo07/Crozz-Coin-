@@ -252,12 +252,12 @@ router.delete('/:id', authMiddleware, (req, res) => {
  */
 router.post('/transfer', authMiddleware, (req, res) => {
   try {
-    const { fromWalletId, toAddress, amount } = req.body;
+    const { fromWalletId, toAddress, coinId } = req.body;
     
-    if (!fromWalletId || !toAddress) {
+    if (!fromWalletId || !toAddress || !coinId) {
       return res.status(400).json(
-        errorResponse('Source wallet ID and destination address are required', {
-          fields: ['fromWalletId', 'toAddress'],
+        errorResponse('Source wallet ID, destination address, and coin ID are required', {
+          fields: ['fromWalletId', 'toAddress', 'coinId'],
         })
       );
     }
@@ -279,9 +279,8 @@ router.post('/transfer', authMiddleware, (req, res) => {
     const record = transactionService.enqueue({
       type: 'transfer',
       payload: {
-        fromAddress: fromWallet.address,
+        coinId,
         toAddress,
-        amount,
       },
     });
     

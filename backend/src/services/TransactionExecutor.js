@@ -5,7 +5,7 @@ import { suiClient } from './SuiClient.js';
 import { transactionService } from './TransactionService.js';
 
 const DEFAULT_MODULE = 'crozz_token';
-const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet']);
+const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet', 'transfer']);
 
 const buildKeypair = (value) => {
   if (!value) return null;
@@ -102,6 +102,8 @@ class TransactionExecutor {
         return this.executeDistribute(job.payload ?? {});
       case 'freeze_wallet':
         return this.executeFreezeWallet(job.payload ?? {});
+      case 'transfer':
+        return this.executeTransfer(job.payload ?? {});
       default:
         throw new Error(`Unsupported transaction type: ${job.type}`);
     }
@@ -204,6 +206,28 @@ class TransactionExecutor {
     });
 
     return this.submit(tx, 'freeze_wallet');
+  }
+
+  async executeTransfer(payload) {
+    const { coinId, toAddress } = payload;
+    if (!coinId) {
+      throw new Error('coinId is required for transfer transactions');
+    }
+    if (!toAddress) {
+      throw new Error('toAddress is required for transfer transactions');
+    }
+
+    if (this.dryRun) {
+      return this.mockResult('transfer', { coinId, toAddress });
+    }
+
+    const tx = this.createTx();
+    tx.moveCall({
+      target: `${this.packageId}::${this.moduleName}::transfer`,
+      arguments: [tx.object(coinId), tx.pure(toAddress)],
+    });
+
+    return this.submit(tx, 'transfer');
   }
 
   parseAmount(value) {

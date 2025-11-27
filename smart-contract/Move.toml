@@ -1,9 +1,20 @@
 [package]
 name = "crozz_token"
 version = "1.0.0"
+edition = "2024.beta"
+
+# Network-specific dependencies:
+# For testnet deployment, use:
+#   sui move build --default-move-flavor testnet
+# For mainnet deployment, use:
+#   sui move build --default-move-flavor mainnet
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
 
 [addresses]
 crozz = "0x0"
+
+# Note: The 'crozz' address (0x0) will be replaced with the actual package ID
+# during the publish step using:
+#   sui client publish --gas-budget <BUDGET>

@@ -1,9 +1,23 @@
 import { Router } from 'express';
-import { suiClient } from '../services/SuiClient.js';
+import { suiClient, currentNetwork, isMainnet, isTestnet } from '../services/SuiClient.js';
 
 const router = Router();
 
 const DEFAULT_GAS_BUDGET = Number(process.env.SUI_DEFAULT_GAS_BUDGET ?? 10_000_000);
+
+/**
+ * GET /api/sui/network
+ * Returns current network configuration
+ */
+router.get('/network', (_req, res) => {
+  res.json({
+    network: currentNetwork,
+    isMainnet,
+    isTestnet,
+    packageId: process.env.CROZZ_PACKAGE_ID ?? null,
+    module: process.env.CROZZ_MODULE ?? 'crozz_token',
+  });
+});
 
 router.post('/token-address', async (req, res) => {
   const {
