@@ -1,6 +1,6 @@
+import { initDatabase } from '../../services/Database.js';
 import { transactionExecutor } from '../../services/TransactionExecutor.js';
 import { transactionService } from '../../services/TransactionService.js';
-import { initDatabase } from '../../services/Database.js';
 
 // TransactionExecutor class is not exported, so we'll test the singleton instance
 const TransactionExecutor = transactionExecutor.constructor;
@@ -197,14 +197,12 @@ describe('TransactionExecutor', () => {
       );
     });
 
-    it('should validate each distribution entry has a recipient in non-dry-run mode', async () => {
-      // This test would fail in dry-run mode because validation is skipped
-      // In dry-run mode, we just return mock data
+    it('should validate each distribution entry has a recipient', async () => {
       const distributions = [{ to: '0xaddr1', amount: '100' }, { amount: '200' }];
 
-      // In dry-run mode, this returns a mock result without validation
-      const result = await executor.executeDistribute({ distributions });
-      expect(result.mock).toBe(true);
+      await expect(executor.executeDistribute({ distributions })).rejects.toThrow(
+        'Each distribution entry requires a recipient address'
+      );
     });
 
     it('should validate amounts in distributions', async () => {
@@ -277,15 +275,15 @@ describe('TransactionExecutor', () => {
     });
 
     it('should throw error when coinId is missing', async () => {
-      await expect(
-        executor.executeTransfer({ toAddress: '0xrecipient123' })
-      ).rejects.toThrow('coinId is required for transfer transactions');
+      await expect(executor.executeTransfer({ toAddress: '0xrecipient123' })).rejects.toThrow(
+        'coinId is required for transfer transactions'
+      );
     });
 
     it('should throw error when toAddress is missing', async () => {
-      await expect(
-        executor.executeTransfer({ coinId: '0xcoin123' })
-      ).rejects.toThrow('toAddress is required for transfer transactions');
+      await expect(executor.executeTransfer({ coinId: '0xcoin123' })).rejects.toThrow(
+        'toAddress is required for transfer transactions'
+      );
     });
 
     it('should throw error when both coinId and toAddress are missing', async () => {
@@ -494,20 +492,27 @@ describe('TransactionExecutor', () => {
         payload: { amount: 'invalid', recipient: '0xtest' },
       });
 
-      // Simulate 3 failed attempts
-      for (let i = 0; i < 3; i++) {
-        const nextJob = transactionService.takeNext();
-        if (nextJob) {
-          try {
-            await executor.execute(nextJob);
-          } catch (error) {
-            if (nextJob.attempts < 3) {
-              transactionService.retryLater(nextJob.id, error);
-            } else {
-              transactionService.markFailed(nextJob.id, error);
+      const originalDelay = transactionService.retryDelayMs;
+      transactionService.retryDelayMs = 0;
+
+      try {
+        // Simulate 3 failed attempts
+        for (let i = 0; i < 3; i++) {
+          const nextJob = transactionService.takeNext();
+          if (nextJob) {
+            try {
+              await executor.execute(nextJob);
+            } catch (error) {
+              if (nextJob.attempts < 3) {
+                transactionService.retryLater(nextJob.id, error);
+              } else {
+                transactionService.markFailed(nextJob.id, error);
+              }
             }
           }
         }
+      } finally {
+        transactionService.retryDelayMs = originalDelay;
       }
 
       const failedJob = transactionService.getById(job.id);

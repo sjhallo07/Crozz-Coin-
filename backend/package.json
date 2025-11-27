@@ -17,6 +17,7 @@
     "security:check": "npm run security:audit && npm outdated"
   },
   "dependencies": {
+    "@ibm-cloud/secrets-manager": "^2.0.14",
     "@mysten/sui": "^1.45.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.4.6",
@@ -24,6 +25,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "helmet": "^8.0.0",
+    "ibm-cos-sdk": "^1.14.1",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.17.0",
     "zod": "^3.22.4"

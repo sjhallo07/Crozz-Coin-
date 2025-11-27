@@ -1,11 +1,19 @@
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { Transaction } from '@mysten/sui/transactions';
 import { fromB64 } from '@mysten/sui/utils';
+import { cosStorageService } from './CosStorageService.js';
 import { suiClient } from './SuiClient.js';
 import { transactionService } from './TransactionService.js';
 
 const DEFAULT_MODULE = 'crozz_token';
-const RETRYABLE_TYPES = new Set(['mint', 'burn', 'distribute', 'freeze_wallet', 'global_freeze', 'transfer']);
+const RETRYABLE_TYPES = new Set([
+  'mint',
+  'burn',
+  'distribute',
+  'freeze_wallet',
+  'global_freeze',
+  'transfer',
+]);
 
 const buildKeypair = (value) => {
   if (!value) return null;
@@ -27,6 +35,14 @@ class TransactionExecutor {
   constructor({ pollInterval = 3000, maxAttempts = 3 } = {}) {
     this.pollInterval = pollInterval;
     this.maxAttempts = maxAttempts;
+    this.timer = null;
+    this.processing = false;
+    this.keypair = null;
+    this.signerAddress = null;
+    this.refreshFromEnv();
+  }
+
+  refreshFromEnv() {
     this.dryRun = process.env.CROZZ_EXECUTOR_DRY_RUN === 'true';
     this.packageId = process.env.CROZZ_PACKAGE_ID;
     this.moduleName = process.env.CROZZ_MODULE ?? DEFAULT_MODULE;
@@ -34,12 +50,28 @@ class TransactionExecutor {
     this.adminCapId = process.env.CROZZ_ADMIN_CAP_ID;
     this.registryId = process.env.CROZZ_REGISTRY_ID;
     this.gasBudget = Number(process.env.SUI_DEFAULT_GAS_BUDGET ?? 10_000_000);
-    this.timer = null;
-    this.processing = false;
-    this.keypair = this.dryRun ? null : buildKeypair(process.env.SUI_ADMIN_PRIVATE_KEY ?? '');
-    this.signerAddress = this.keypair
-      ? this.keypair.getPublicKey().toSuiAddress()
-      : process.env.CROZZ_DEFAULT_SIGNER;
+
+    if (this.dryRun) {
+      this.keypair = null;
+      this.signerAddress = process.env.CROZZ_DEFAULT_SIGNER;
+      return;
+    }
+
+    const keyValue = process.env.SUI_ADMIN_PRIVATE_KEY;
+    if (!keyValue) {
+      this.keypair = null;
+      this.signerAddress = process.env.CROZZ_DEFAULT_SIGNER;
+      return;
+    }
+
+    try {
+      this.keypair = buildKeypair(keyValue);
+      this.signerAddress = this.keypair.getPublicKey().toSuiAddress();
+    } catch (error) {
+      console.error('[tx-executor] Failed to build keypair from SUI_ADMIN_PRIVATE_KEY', error);
+      this.keypair = null;
+      this.signerAddress = process.env.CROZZ_DEFAULT_SIGNER;
+    }
   }
 
   start() {
@@ -80,6 +112,7 @@ class TransactionExecutor {
     try {
       const result = await this.execute(job);
       transactionService.markCompleted(job.id, result);
+      await cosStorageService.archiveJobSnapshot(job, 'completed', result);
     } catch (error) {
       console.error(`[tx-executor] Job ${job.id} failed:`, error);
       if (job.attempts < this.maxAttempts && RETRYABLE_TYPES.has(job.type)) {
@@ -87,6 +120,10 @@ class TransactionExecutor {
       } else {
         transactionService.markFailed(job.id, error);
       }
+      await cosStorageService.archiveJobSnapshot(job, 'failed', {
+        message: error instanceof Error ? error.message : String(error),
+        type: job.type,
+      });
     } finally {
       this.processing = false;
     }
@@ -162,20 +199,23 @@ class TransactionExecutor {
       throw new Error('distributions array is required');
     }
 
+    const normalized = distributions.map(({ to, amount }) => {
+      const parsedAmount = this.parseAmount(amount);
+      if (!to) {
+        throw new Error('Each distribution entry requires a recipient address');
+      }
+      return { to, amount: parsedAmount };
+    });
+
     if (this.dryRun) {
       return this.mockResult('distribute', { distributions });
     }
 
     const tx = this.createTx();
-    distributions.forEach(({ to, amount }) => {
-      const parsedAmount = this.parseAmount(amount);
-      if (!to) {
-        throw new Error('Each distribution entry requires a recipient address');
-      }
-
+    normalized.forEach(({ to, amount }) => {
       tx.moveCall({
         target: `${this.packageId}::${this.moduleName}::mint`,
-        arguments: [tx.object(this.treasuryCapId), tx.pure(parsedAmount), tx.pure(to)],
+        arguments: [tx.object(this.treasuryCapId), tx.pure(amount), tx.pure(to)],
       });
     });
 

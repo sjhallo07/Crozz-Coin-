@@ -1,6 +1,6 @@
 # Crozz Token Testnet Validation Report
 
-**Generated:** 2025-11-23 17:57:23 UTC  
+**Generated:** 2025-11-27 07:54:23 UTC  
 **Network:** Testnet  
 **Status:** In Progress...
 
@@ -26,12 +26,12 @@ assessing readiness for mainnet deployment.
 
 ### 2. Sui CLI
 
-- ❌ **Sui CLI**: Not installed
+- ✅ **Sui CLI**: Installed (sui 1.60.0-833c3bbde1f0-dirty)
 
 ### 3. Backend API
 
-- ❌ **Health Endpoint**: Not responding
-- ❌ **Token Summary**: Not responding
+- ✅ **Health Endpoint**: Responding
+- ✅ **Token Summary**: Responding
 
 ### 4. Smart Contract
 
@@ -46,13 +46,13 @@ assessing readiness for mainnet deployment.
 ### 6. Backend Tests
 
 - ❌ **Backend Tests**: Failed
-  - Tests: 15 failed, 135 passed, 150 total
+  - See logs for details
 
 ### 7. Security Configuration
 
 - ❌ **Admin Token**: Using default/weak token (SECURITY RISK)
 - ✅ **JWT Secret**: Configured
-- ⚠️ **Executor Mode**: LIVE (transactions will be executed)
+- ✅ **Executor Mode**: DRY RUN (safe for testing)
 
 ---
 
@@ -113,9 +113,9 @@ Before deploying to mainnet, ensure all items are completed:
 
 ## Summary
 
-**Total Tests:** 14  
-**Passed:** 9 ✅  
-**Failed:** 5 ❌
+**Total Tests:** 15  
+**Passed:** 13 ✅  
+**Failed:** 2 ❌
 
 **Status:** 🔴 TESTS FAILED
 
@@ -123,5 +123,5 @@ Some tests have failed. Review and resolve all issues before considering mainnet
 
 ---
 
-**Report Generated:** 2025-11-23 17:57:23 UTC  
-**Report Location:** `/home/runner/work/Crozz-Coin-/Crozz-Coin-/TESTNET_VALIDATION_REPORT.md`
+**Report Generated:** 2025-11-27 07:54:23 UTC  
+**Report Location:** `/c/Users/LENOVO/Crozz Coin/Crozz-Coin-/TESTNET_VALIDATION_REPORT.md`

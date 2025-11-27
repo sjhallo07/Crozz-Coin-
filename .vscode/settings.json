@@ -54,7 +54,7 @@
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
-  "cSpell.words": ["Crozz"],
+  "cSpell.words": ["apikey", "Crozz", "Keypair", "LASTEXITCODE", "localnet", "mysten", "RETRYABLE"],
   "chat.agent.maxRequests": 50,
   "chatgpt.runCodexInWindowsSubsystemForLinux": true,
   "chatgpt.openOnStartup": true

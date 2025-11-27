@@ -52,6 +52,28 @@ const FAUCET_URLS = {
   localnet: 'http://127.0.0.1:9123/gas',
 };
 
+const upsertEnvValue = (content, key, value) => {
+  const lines = content ? content.split(/\r?\n/) : [];
+  let updated = false;
+  const prefix = `${key}=`;
+  const newLines = lines.map((line) => {
+    if (line.startsWith(prefix)) {
+      updated = true;
+      return `${key}=${value}`;
+    }
+    return line;
+  });
+
+  if (!updated) {
+    newLines.push(`${key}=${value}`);
+  }
+
+  return {
+    content: newLines.join('\n'),
+    action: updated ? 'Updated' : 'Added',
+  };
+};
+
 if (showHelp) {
   console.log(`
 Sui Client Address Setup Script
@@ -125,68 +147,52 @@ console.log();
 
 // Update .env file if requested
 if (updateEnv) {
-  console.log('📝 Updating environment files...\n');
+  console.log('🧾 Updating environment files...\n');
 
-  // Update backend .env
   const backendEnvPath = join(ROOT_DIR, 'backend', '.env');
-  let backendEnvContent = '';
+  let backendEnvContent = existsSync(backendEnvPath) ? readFileSync(backendEnvPath, 'utf-8') : '';
 
-  if (existsSync(backendEnvPath)) {
-    backendEnvContent = readFileSync(backendEnvPath, 'utf-8');
-    console.log('   ℹ️  Backend .env file found, updating values...');
+  if (backendEnvContent.trim().length) {
+    console.log('   📄 Updating backend .env file...');
   } else {
     console.log('   ℹ️  Creating backend .env file...');
   }
 
-  // Update or add environment variables for backend
-  const backendUpdates = {
+  const envUpdates = {
     SUI_ADMIN_PRIVATE_KEY: `ed25519:${privateKeyBase64}`,
     SUI_RPC_URL: NETWORK_URLS[network] || NETWORK_URLS.testnet,
     SUI_DEFAULT_GAS_BUDGET: gasBudget,
     VITE_SUI_NETWORK: network,
   };
 
-  for (const [key, value] of Object.entries(backendUpdates)) {
-    const regex = new RegExp(`^${key}=.*$`, 'm');
-    if (regex.test(backendEnvContent)) {
-      backendEnvContent = backendEnvContent.replace(regex, `${key}=${value}`);
-      console.log(`   ✓ Updated backend ${key}`);
-    } else {
-      backendEnvContent += `\n${key}=${value}`;
-      console.log(`   ✓ Added backend ${key}`);
-    }
+  for (const [key, value] of Object.entries(envUpdates)) {
+    const { content, action } = upsertEnvValue(backendEnvContent, key, value);
+    backendEnvContent = content;
+    console.log(`   ✓ ${action} backend ${key}`);
   }
 
   writeFileSync(backendEnvPath, backendEnvContent.trim() + '\n');
   console.log('   ✅ Backend .env file updated!');
   console.log();
 
-  // Update root .env
   const rootEnvPath = join(ROOT_DIR, '.env');
-  let rootEnvContent = '';
+  let rootEnvContent = existsSync(rootEnvPath) ? readFileSync(rootEnvPath, 'utf-8') : '';
+  const envExamplePath = join(ROOT_DIR, '.env.example');
 
-  if (existsSync(rootEnvPath)) {
-    rootEnvContent = readFileSync(rootEnvPath, 'utf-8');
-    console.log('   ℹ️  Root .env file found, updating values...');
-  } else {
-    console.log('   ℹ️  Creating root .env file...');
-    // Start with .env.example if available
-    const envExamplePath = join(ROOT_DIR, '.env.example');
-    if (existsSync(envExamplePath)) {
-      rootEnvContent = readFileSync(envExamplePath, 'utf-8');
-    }
+  if (!rootEnvContent && existsSync(envExamplePath)) {
+    rootEnvContent = readFileSync(envExamplePath, 'utf-8');
   }
 
-  // Update root .env with same values
-  for (const [key, value] of Object.entries(backendUpdates)) {
-    const regex = new RegExp(`^${key}=.*$`, 'm');
-    if (regex.test(rootEnvContent)) {
-      rootEnvContent = rootEnvContent.replace(regex, `${key}=${value}`);
-      console.log(`   ✓ Updated root ${key}`);
-    } else {
-      rootEnvContent += `\n${key}=${value}`;
-      console.log(`   ✓ Added root ${key}`);
-    }
+  if (rootEnvContent.trim().length) {
+    console.log('   📄 Updating root .env file...');
+  } else {
+    console.log('   ℹ️  Creating root .env file...');
+  }
+
+  for (const [key, value] of Object.entries(envUpdates)) {
+    const { content, action } = upsertEnvValue(rootEnvContent, key, value);
+    rootEnvContent = content;
+    console.log(`   ✓ ${action} root ${key}`);
   }
 
   writeFileSync(rootEnvPath, rootEnvContent.trim() + '\n');
@@ -215,7 +221,7 @@ console.log('2. Verify your balance:');
 console.log('   sui client balance', address);
 console.log();
 console.log('3. Use the address for Crozz operations:');
-console.log('   - Set CROZZ_DEFAULT_SIGNER=' + address);
+console.log('   - Set ' + 'CROZZ_DEFAULT_SIGNER' + '=' + address);
 console.log('   - Use this address as the recipient for mint operations');
 console.log('   - Configure as the admin signer for privileged operations');
 console.log();

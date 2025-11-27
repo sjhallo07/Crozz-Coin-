@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Smoke-test script for the CROZZ token package: mints sample tokens, updates and freezes metadata, and queries icon URL and total supply via `sui client call`.
 set -euo pipefail
 
 # CROZZ token smoke test script
@@ -9,7 +10,7 @@ TREASURY_CAP_ID="<your_treasury_cap_id>"
 METADATA_ID="<your_metadata_id>"
 RECIPIENT_ADDRESS="<recipient_address>"
 ICON_URL="https://new-crozz-icon.com/icon.png"
-GAS_BUDGET="10000000"
+GAS_BUDGET="${SUI_DEFAULT_GAS_BUDGET:-10000000}"
 
 if [[ "$PACKAGE_ID" == "<your_package_id>" ]]; then
   echo "[!] Please edit scripts/test_crozz.sh with real IDs before running." >&2

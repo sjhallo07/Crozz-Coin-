@@ -7,11 +7,25 @@ import eventsRouter from './routes/events.js';
 import suiRouter from './routes/sui.js';
 import tokensRouter from './routes/tokens.js';
 import walletsRouter from './routes/wallets.js';
-import { initDatabase } from './services/Database.js';
 import { authService } from './services/AuthService.js';
-import { transactionService } from './services/TransactionService.js';
+import { cosStorageService } from './services/CosStorageService.js';
+import { initDatabase } from './services/Database.js';
+import { hydrateSecretsFromEnv } from './services/SecretsManagerService.js';
 import { transactionExecutor } from './services/TransactionExecutor.js';
+import { transactionService } from './services/TransactionService.js';
 import { webSocketService } from './services/WebSocketService.js';
+
+try {
+  const { resolved } = await hydrateSecretsFromEnv();
+  if (resolved) {
+    console.log(`[secrets] Loaded ${resolved} secret reference${resolved === 1 ? '' : 's'}`);
+  }
+} catch (error) {
+  console.warn('[secrets] Failed to hydrate secret references:', error.message);
+}
+
+cosStorageService.refreshFromEnv();
+transactionExecutor.refreshFromEnv();
 
 // Initialize database and services
 initDatabase();

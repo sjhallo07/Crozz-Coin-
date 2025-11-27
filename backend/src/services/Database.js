@@ -88,4 +88,4 @@ function initDatabase() {
   }
 }
 
-export { DB_PATH, database, initDatabase };
+export { database, DB_PATH, initDatabase };

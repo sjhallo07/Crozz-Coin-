@@ -11,7 +11,8 @@
     "ms-azuretools.vscode-docker",
     "yzhang.markdown-all-in-one",
     "streetsidesoftware.code-spell-checker",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "ibm.ibm-developer"
   ],
   "unwantedRecommendations": ["ms-vscode.vscode-typescript-next"]
 }
