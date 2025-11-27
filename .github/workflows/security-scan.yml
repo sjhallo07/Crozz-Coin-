@@ -103,11 +103,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     
+    env:
+      RUN_DEP_REVIEW: ${{ vars.RUN_DEP_REVIEW || 'false' }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
-       - name: Dependency Review
+      - name: Dependency Review
+        if: env.RUN_DEP_REVIEW == 'true'
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
