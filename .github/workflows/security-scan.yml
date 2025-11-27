@@ -102,6 +102,8 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    env:
+      RUN_DEP_REVIEW: ${{ vars.RUN_DEP_REVIEW || 'false' }}
     
     env:
       RUN_DEP_REVIEW: ${{ vars.RUN_DEP_REVIEW || 'false' }}
