@@ -3,10 +3,13 @@ name = "crozz_token"
 version = "1.0.0"
 edition = "2024.beta"
 
-# Network-specific dependencies:
-# For testnet deployment, use:
-#   sui move build --default-move-flavor testnet
-# For mainnet deployment, use:
+# Network-specific builds:
+# The Sui dependency below uses 'framework/testnet' revision.
+# For TESTNET deployment: Use as-is and run `sui move build`
+# For MAINNET deployment: Change 'framework/testnet' to 'framework/mainnet'
+#   Then run `sui move build` and `sui client publish --gas-budget <BUDGET>`
+#
+# Alternative: Use the Sui CLI's --default-move-flavor flag:
 #   sui move build --default-move-flavor mainnet
 
 [dependencies]

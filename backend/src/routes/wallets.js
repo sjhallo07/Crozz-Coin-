@@ -248,7 +248,10 @@ router.delete('/:id', authMiddleware, (req, res) => {
 
 /**
  * POST /api/admin/wallets/transfer
- * Transfer tokens between wallets
+ * Transfer a specific CROZZ coin object between wallets
+ * 
+ * Note: On Sui, transfers require the coin object ID (not amount).
+ * The coinId must be a coin owned by the source wallet.
  */
 router.post('/transfer', authMiddleware, (req, res) => {
   try {
@@ -258,6 +261,7 @@ router.post('/transfer', authMiddleware, (req, res) => {
       return res.status(400).json(
         errorResponse('Source wallet ID, destination address, and coin ID are required', {
           fields: ['fromWalletId', 'toAddress', 'coinId'],
+          note: 'On Sui, transfers require a coin object ID. Use the object ID of a coin owned by the source wallet.',
         })
       );
     }
