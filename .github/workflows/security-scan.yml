@@ -108,6 +108,9 @@ jobs:
     env:
       RUN_DEP_REVIEW: ${{ vars.RUN_DEP_REVIEW || 'false' }}
     
+    env:
+      RUN_DEP_REVIEW: ${{ vars.RUN_DEP_REVIEW || 'false' }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
