@@ -1,5 +1,6 @@
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 
@@ -13,6 +14,20 @@ interface OwnedObject {
 // Constants
 const CROZZ_DECIMALS_MULTIPLIER = 1_000_000_000; // 10^9 for 9 decimals
 const CROZZ_PACKAGE_ID = import.meta.env.VITE_CROZZ_PACKAGE_ID ?? '';
+const PLACEHOLDER_PACKAGE_ID = '0xPACKAGE';
+const MAX_OBJECTS_LIMIT = 50;
+const CROZZ_MODULE_NAME = 'crozz_token';
+const CROZZ_TOKEN_SYMBOL = 'CROZZ';
+
+// Helper function to safely copy to clipboard
+const copyToClipboard = async (text: string, description: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success(`${description} copied to clipboard`);
+  } catch {
+    toast.error('Failed to copy to clipboard');
+  }
+};
 
 const UserObjectsDisplay = () => {
   const account = useCurrentAccount();
@@ -40,7 +55,7 @@ const UserObjectsDisplay = () => {
           showOwner: true,
           showContent: true,
         },
-        limit: 50,
+        limit: MAX_OBJECTS_LIMIT,
       });
 
       const formattedObjects: OwnedObject[] = ownedObjects.data
@@ -55,9 +70,9 @@ const UserObjectsDisplay = () => {
       setObjects(formattedObjects);
 
       // Try to get CROZZ token balance if package ID is set
-      if (CROZZ_PACKAGE_ID && CROZZ_PACKAGE_ID !== '0xPACKAGE') {
+      if (CROZZ_PACKAGE_ID && CROZZ_PACKAGE_ID !== PLACEHOLDER_PACKAGE_ID) {
         try {
-          const coinType = `${CROZZ_PACKAGE_ID}::crozz_token::CROZZ`;
+          const coinType = `${CROZZ_PACKAGE_ID}::${CROZZ_MODULE_NAME}::${CROZZ_TOKEN_SYMBOL}`;
           const balance = await suiClient.getBalance({
             owner: account.address,
             coinType,
@@ -95,7 +110,7 @@ const UserObjectsDisplay = () => {
   };
 
   const isCrozzToken = (type: string) => {
-    return type.includes('crozz_token') || type.includes('CROZZ');
+    return type.includes(CROZZ_MODULE_NAME) || type.includes(CROZZ_TOKEN_SYMBOL);
   };
 
   return (
@@ -115,7 +130,7 @@ const UserObjectsDisplay = () => {
                 {account.address}
               </code>
               <button
-                onClick={() => navigator.clipboard.writeText(account.address)}
+                onClick={() => copyToClipboard(account.address, 'Address')}
                 className="rounded-lg bg-blue-500 px-3 py-2 text-xs font-medium text-white hover:bg-blue-600"
               >
                 Copy
@@ -198,7 +213,7 @@ const UserObjectsDisplay = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => navigator.clipboard.writeText(obj.objectId)}
+                      onClick={() => copyToClipboard(obj.objectId, 'Object ID')}
                       className="shrink-0 rounded bg-slate-100 px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                     >
                       Copy
