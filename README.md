@@ -1,8 +1,20 @@
-# Crozz-Coin
+# Crozz Coin
+
+**Official CROZZ Community Token - Created by Carlo Hung**
 
 > ⚠️ **IMPORTANT**: This repository contains PUBLIC testnet credentials for educational purposes.
 > See [`TESTNET_DEPLOYMENT_NOTICE.md`](TESTNET_DEPLOYMENT_NOTICE.md) for critical security information.
 > **NEVER use these patterns for production/mainnet deployments.**
+
+## Token Information
+
+| Property | Value |
+|----------|-------|
+| **Name** | Crozz Coin |
+| **Symbol** | CROZZ |
+| **Decimals** | 9 |
+| **Blockchain** | Sui |
+| **Creator** | Carlo Hung |
 
 ## 🚀 Quick Deployment
 

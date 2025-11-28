@@ -71,7 +71,7 @@ address crozz {
                 9,
                 b"CROZZ",
                 b"Crozz Coin",
-                b"Official CROZZ Community Token",
+                b"Official CROZZ Community Token - Created by Carlo Hung",
                 icon_url,
                 ctx
             );

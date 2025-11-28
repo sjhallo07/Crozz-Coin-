@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useCrozzActions } from '../../hooks/useCrozzActions';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
+import UserObjectsDisplay from './UserObjectsDisplay';
 
 const UserActions = () => {
   const { account, verifyHuman, interact, guardedTransfer, transfer, getBalance } =
@@ -264,6 +265,11 @@ const UserActions = () => {
       )}
 
       {error && <p className="text-sm font-semibold text-rose-600 dark:text-rose-400">{error}</p>}
+      
+      {/* User Object IDs Display */}
+      <div className="mt-6">
+        <UserObjectsDisplay />
+      </div>
     </Card>
   );
 };
