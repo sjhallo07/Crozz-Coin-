@@ -1,5 +1,5 @@
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 
@@ -10,6 +10,10 @@ interface OwnedObject {
   digest: string;
 }
 
+// Constants
+const CROZZ_DECIMALS_MULTIPLIER = 1_000_000_000; // 10^9 for 9 decimals
+const CROZZ_PACKAGE_ID = import.meta.env.VITE_CROZZ_PACKAGE_ID ?? '';
+
 const UserObjectsDisplay = () => {
   const account = useCurrentAccount();
   const suiClient = useSuiClient();
@@ -18,9 +22,7 @@ const UserObjectsDisplay = () => {
   const [objects, setObjects] = useState<OwnedObject[]>([]);
   const [coinBalance, setCoinBalance] = useState<string | null>(null);
 
-  const crozzPackageId = import.meta.env.VITE_CROZZ_PACKAGE_ID ?? '';
-
-  const fetchUserObjects = async () => {
+  const fetchUserObjects = useCallback(async () => {
     if (!account?.address) {
       setError('Please connect your wallet first');
       return;
@@ -53,9 +55,9 @@ const UserObjectsDisplay = () => {
       setObjects(formattedObjects);
 
       // Try to get CROZZ token balance if package ID is set
-      if (crozzPackageId && crozzPackageId !== '0xPACKAGE') {
+      if (CROZZ_PACKAGE_ID && CROZZ_PACKAGE_ID !== '0xPACKAGE') {
         try {
-          const coinType = `${crozzPackageId}::crozz_token::CROZZ`;
+          const coinType = `${CROZZ_PACKAGE_ID}::crozz_token::CROZZ`;
           const balance = await suiClient.getBalance({
             owner: account.address,
             coinType,
@@ -71,13 +73,13 @@ const UserObjectsDisplay = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [account?.address, suiClient]);
 
   useEffect(() => {
     if (account?.address) {
       fetchUserObjects();
     }
-  }, [account?.address]);
+  }, [account?.address, fetchUserObjects]);
 
   const shortenId = (id: string) => {
     if (id.length <= 16) return id;
@@ -131,7 +133,7 @@ const UserObjectsDisplay = () => {
               CROZZ Token Balance
             </div>
             <div className="mt-1 text-2xl font-bold text-emerald-900 dark:text-emerald-200">
-              {(Number(coinBalance) / 1_000_000_000).toLocaleString()} CROZZ
+              {(Number(coinBalance) / CROZZ_DECIMALS_MULTIPLIER).toLocaleString()} CROZZ
             </div>
             <div className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-500">
               {Number(coinBalance).toLocaleString()} MIST
