@@ -127,16 +127,16 @@ const UserObjectsDisplay = () => {
         </div>
 
         {/* CROZZ Balance */}
-        {coinBalance && (
+        {coinBalance !== null && (
           <div className="rounded-xl border border-emerald-200/70 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 dark:border-emerald-800 dark:from-emerald-900/30 dark:to-teal-900/30">
             <div className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
               CROZZ Token Balance
             </div>
             <div className="mt-1 text-2xl font-bold text-emerald-900 dark:text-emerald-200">
-              {(Number(coinBalance) / CROZZ_DECIMALS_MULTIPLIER).toLocaleString()} CROZZ
+              {(BigInt(coinBalance) / BigInt(CROZZ_DECIMALS_MULTIPLIER)).toLocaleString()} CROZZ
             </div>
             <div className="mt-0.5 text-xs text-emerald-600 dark:text-emerald-500">
-              {Number(coinBalance).toLocaleString()} MIST
+              {BigInt(coinBalance).toLocaleString()} MIST
             </div>
           </div>
         )}
