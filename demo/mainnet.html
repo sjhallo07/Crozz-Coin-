@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crozz Coin Dashboard - Mainnet Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .freeze-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header with Mainnet Warning -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="../frontend/public/crozz-logo.png" alt="Crozz Coin" class="h-10 w-10" 
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;%3E%3Crect fill=&quot;%23EF4444&quot; width=&quot;100&quot; height=&quot;100&quot; rx=&quot;20&quot;/%3E%3Ctext x=&quot;50&quot; y=&quot;55&quot; font-size=&quot;50&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot;%3EC%3C/text%3E%3C/svg%3E'">
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <p class="text-xs text-gray-500">Crozz Coin Management</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase bg-green-500 text-white">
+                    MAINNET
+                </span>
+                <span class="text-red-600 text-xs font-semibold animate-pulse">⚠️ LIVE</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                    👨‍💼 Admin Mode
+                </span>
+                <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+                    Connect Wallet
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Network Indicator - Mainnet -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">🟢</span>
+                    <div>
+                        <h3 class="text-lg font-semibold">Mainnet Network</h3>
+                        <p class="text-sm text-gray-600">Production environment - real assets</p>
+                    </div>
+                </div>
+                <div class="px-4 py-2 rounded-lg border-2 font-semibold uppercase text-sm bg-green-100 text-green-800 border-green-300">
+                    MAINNET
+                </div>
+            </div>
+            <div class="mt-4 p-3 rounded bg-red-50 border-l-4 border-red-500">
+                <p class="text-sm text-red-800 font-medium">
+                    ⚠️ WARNING: You are connected to MAINNET. All transactions use real assets and are irreversible.
+                </p>
+            </div>
+        </div>
+
+        <!-- Token Overview Card -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-lg">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <img src="../frontend/public/crozz-logo.png" alt="Crozz Coin" class="h-12 w-12 rounded-full"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;%3E%3Crect fill=&quot;%23EF4444&quot; width=&quot;100&quot; height=&quot;100&quot; rx=&quot;50&quot;/%3E%3Ctext x=&quot;50&quot; y=&quot;55&quot; font-size=&quot;40&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot;%3EC%3C/text%3E%3C/svg%3E'">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Crozz Coin</h2>
+                        <p class="text-sm text-gray-500">CROZZ</p>
+                    </div>
+                </div>
+                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">
+                    🔄 Refresh
+                </button>
+            </div>
+
+            <!-- Price Chart -->
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 mb-6 text-white">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-sm opacity-80">Current Price (Mainnet)</p>
+                        <p class="text-3xl font-bold">$0.0456</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm opacity-80">24h Change</p>
+                        <p class="text-xl font-semibold text-yellow-200">+12.34%</p>
+                    </div>
+                </div>
+                <div class="h-24 flex items-end justify-between gap-1">
+                    <div class="bg-white/30 rounded w-full" style="height: 50%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 60%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 55%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 75%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 70%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 85%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 80%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 95%"></div>
+                    <div class="bg-white/30 rounded w-full" style="height: 90%"></div>
+                    <div class="bg-white/40 rounded w-full" style="height: 100%"></div>
+                </div>
+            </div>
+
+            <!-- Token Stats -->
+            <div class="grid gap-4 md:grid-cols-4">
+                <div class="rounded-xl border border-gray-200 bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-widest text-gray-500">Total Supply</dt>
+                    <dd class="mt-2 text-2xl font-semibold text-gray-900">10B</dd>
+                    <p class="mt-1 text-xs text-gray-500">Maximum supply</p>
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-widest text-gray-500">Circulating</dt>
+                    <dd class="mt-2 text-2xl font-semibold text-gray-900">2.5B</dd>
+                    <p class="mt-1 text-xs text-gray-500">In circulation</p>
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-widest text-gray-500">Holders</dt>
+                    <dd class="mt-2 text-2xl font-semibold text-gray-900">15,234</dd>
+                    <p class="mt-1 text-xs text-gray-500">Unique wallets</p>
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-widest text-gray-500">Market Cap</dt>
+                    <dd class="mt-2 text-2xl font-semibold text-gray-900">$114M</dd>
+                    <p class="mt-1 text-xs text-gray-500">USD valuation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mainnet Info Box -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-lg border-2 border-green-200">
+            <h3 class="text-lg font-semibold mb-4 text-green-800">🌐 Mainnet Configuration</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-sm font-medium text-gray-700 mb-2">Network Details</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><strong>RPC URL:</strong> <code class="bg-gray-100 px-2 py-1 rounded">https://fullnode.mainnet.sui.io:443</code></li>
+                        <li><strong>Explorer:</strong> <a href="https://suiscan.xyz/mainnet" class="text-indigo-600 hover:underline">suiscan.xyz/mainnet</a></li>
+                        <li><strong>Chain ID:</strong> mainnet</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-700 mb-2">Security Requirements</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>✅ Multi-signature enabled</li>
+                        <li>✅ Hardware wallet required</li>
+                        <li>✅ Audit completed</li>
+                        <li>✅ Monitoring active</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SuiVision Link -->
+        <div class="glass-card rounded-2xl p-6 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">🔗 Sui Blockchain Explorers</h3>
+            <div class="grid md:grid-cols-3 gap-4">
+                <a href="https://suiscan.xyz" target="_blank" class="block p-4 border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                    <p class="font-semibold text-indigo-600">SuiScan</p>
+                    <p class="text-xs text-gray-500 mt-1">Official Explorer</p>
+                </a>
+                <a href="https://suivision.xyz" target="_blank" class="block p-4 border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                    <p class="font-semibold text-indigo-600">SuiVision</p>
+                    <p class="text-xs text-gray-500 mt-1">Token Analytics</p>
+                </a>
+                <a href="https://explorer.sui.io" target="_blank" class="block p-4 border border-gray-200 rounded-xl hover:shadow-md transition text-center">
+                    <p class="font-semibold text-indigo-600">Sui Explorer</p>
+                    <p class="text-xs text-gray-500 mt-1">Official Sui Explorer</p>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-gray-500">
+        <p>Crozz Coin Dashboard Demo | Token: CROZZ | Network: Sui Mainnet</p>
+        <p class="mt-2">Created by Carlo Hung | © 2025</p>
+    </footer>
+</body>
+</html>

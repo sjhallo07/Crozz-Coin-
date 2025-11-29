@@ -16,6 +16,30 @@ The CROZZ token logo features a distinctive red geometric cross/plus design with
 
 ---
 
+## 🖥️ Dashboard Screenshots
+
+### Testnet Dashboard
+![Testnet Dashboard](https://github.com/user-attachments/assets/1170feee-5274-4fa8-8695-f6539aff43c2)
+
+The testnet dashboard shows:
+- Token name "Crozz Coin" with CROZZ symbol
+- Network indicator showing TESTNET (yellow badge)
+- 4 wallet addresses (Admin, Alice, Bob, Charlie)
+- Bob wallet shown as "Frozen" (demonstrating freeze functionality)
+- Admin Actions with Mint, Burn, and Freeze controls
+- Transaction Jobs table showing completed operations
+
+### Mainnet Dashboard  
+![Mainnet Dashboard](https://github.com/user-attachments/assets/a953acd1-b86d-405d-8d97-b19c19aec103)
+
+The mainnet dashboard shows:
+- MAINNET indicator (green badge) with "⚠️ LIVE" warning
+- Red warning banner about irreversible transactions
+- Mainnet configuration with RPC URL and security requirements
+- Links to Sui blockchain explorers (SuiScan, SuiVision)
+
+---
+
 ## 🔗 Token Information
 
 | Property | Value |
