@@ -60,6 +60,18 @@ Transfer CROZZ tokens with anti-bot protection.
 - **Smart Contract Function**: `guarded_transfer`
 - **Requirements**: Verified session and recent interaction
 
+### View User Object IDs
+
+Display all owned objects on the Sui blockchain for the connected wallet.
+
+- **Component**: `UserObjectsDisplay`
+- **Features**:
+  - Shows connected wallet address with copy button
+  - Displays CROZZ token balance
+  - Lists all owned objects with their IDs, types, versions, and digests
+  - Highlights CROZZ token objects
+  - Supports one-click copy of object IDs
+
 ## Admin Actions
 
 Admin Actions are wallet-based operations that require holding the AdminCap or TreasuryCap objects. These are organized into three categories:
@@ -206,6 +218,11 @@ All smart contract interactions are managed through the `useCrozzActions` hook l
 - **UserActions**: `frontend/src/components/Dashboard/UserActions.tsx`
   - Handles user-level operations
   - Always visible to connected wallets
+  - Includes UserObjectsDisplay for showing owned objects
+- **UserObjectsDisplay**: `frontend/src/components/Dashboard/UserObjectsDisplay.tsx`
+  - Displays user wallet address and object IDs
+  - Shows CROZZ token balance
+  - Lists all owned blockchain objects
 - **AdminActions**: `frontend/src/components/Dashboard/AdminActions.tsx`
   - Handles admin-level operations
   - Requires wallet connection
